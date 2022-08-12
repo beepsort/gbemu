@@ -1,0 +1,309 @@
+#ifndef __CPU_INSTRUCTION_LOAD_H__
+#define __CPU_INSTRUCTION_LOAD_H__
+
+#include "cpu_instruction.h"
+#include "cpu_instruction_alu.h"
+#include "cpu_registers.h"
+#include "memory.h"
+
+namespace CPU
+{
+    enum class AddressMutOperation
+    {
+        INC,
+        DEC,
+        NONE
+    };
+
+    /* 8-bit load instructions 8 */
+
+    class LD_r_r: public CpuInstruction
+    {
+    /**
+     * @brief 8-bit register to register load instructions
+     * All 1 byte opcodes with no further operands
+     * All take 1 M-cycle to complete
+     */
+    private:
+        uint8_t* dest;
+        uint8_t* src;
+    public:
+        LD_r_r(uint8_t* dest, uint8_t* src): dest(dest), src(src) {}
+        bool tick();
+    };
+
+    class LD_r_n: public CpuInstruction
+    {
+    /**
+     * @brief 8-bit immediate to register load instructions
+     * All 1 byte opcodes with 1 byte operand
+     * All take 2 M-cycles to complete
+     */
+    private:
+        uint8_t* dest;
+        uint16_t* pc;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        LD_r_n(uint8_t* dest, uint16_t* pc, MEMORY::AddressDispatcher& memory): dest(dest), pc(pc), memory(memory) {}
+        bool tick();
+    };
+
+    class LD_r_absrr: public CpuInstruction
+    {
+    /**
+     * @brief Load data from memory at 16-bit absolute address in register to 8-bit register
+     * All 1 byte opcodes with no operands
+     * All take 2 M-cycles to complete
+     * Takes optional AddressMutOperation to allow address src register to be mutated _after_ the memory load
+     */
+    private:
+        uint8_t* dest;
+        uint16_t* src_addr;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+        AddressMutOperation post_operation;
+    public:
+        LD_r_absrr(uint8_t* dest, uint16_t* src_addr, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
+        : dest(dest), src_addr(src_addr), memory(memory), post_operation(post_operation) {}
+        bool tick();
+    };
+
+    class LD_absrr_r: public CpuInstruction
+    {
+    /**
+     * @brief Load data from 8-bit register to memory at 16-bit absolute address in register
+     * All 1 byte opcodes with no operands
+     * All take 2 M-cycles to complete
+     * Takes optional AddressMutOperation to allow address dest register to be mutated _after_ the memory write
+     */
+    private:
+        uint16_t* dest_addr;
+        uint8_t* src;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+        AddressMutOperation post_operation;
+    public:
+        LD_absrr_r(uint16_t* dest_addr, uint8_t* src, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
+        : dest_addr(dest_addr), src(src), memory(memory), post_operation(post_operation) {}
+        bool tick();
+    };
+
+    class LD_absrr_n: public CpuInstruction
+    {
+    /**
+     * @brief Load data from 8-bit register to memory at 16-bit absolute address in register
+     * All 1 byte opcodes with no operands
+     * All take 2 M-cycles to complete
+     */
+    private:
+        uint16_t* dest_addr;
+        uint16_t* pc;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        LD_absrr_n(uint16_t* dest_addr, uint16_t* pc, MEMORY::AddressDispatcher& memory): dest_addr(dest_addr), pc(pc), memory(memory) {}
+        bool tick();
+    };
+
+    class LD_r_absnn: public CpuInstruction
+    {
+    /**
+     * @brief Load data from 16-bit address stored in the operand to 8-bit register
+     * All 1 byte opcodes with single 2 byte operand
+     * All take 4 M-cycles to complete
+     */
+    private:
+        uint8_t* dest;
+        uint16_t* pc;
+        uint16_t load_addr;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        LD_r_absnn(uint8_t* dest, uint16_t* pc, MEMORY::AddressDispatcher& memory): dest(dest), pc(pc), memory(memory) {}
+        bool tick();
+    };
+
+    class LD_absnn_r: public CpuInstruction
+    {
+    /**
+     * @brief Load data from 8-bit register to 16-bit address stored in the operand
+     * All 1 byte opcodes with single 2 byte operand
+     * All take 4 M-cycles to complete
+     */
+    private:
+        uint8_t* src;
+        uint16_t* pc;
+        uint16_t write_addr;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        LD_absnn_r(uint16_t* pc, uint8_t* src, MEMORY::AddressDispatcher& memory): pc(pc), src(src), memory(memory) {}
+        bool tick();
+    };
+
+    class LD_r_relr: public CpuInstruction
+    {
+    /**
+     * @brief Load data from 16-bit address constructed from 0xFF MSB + src register as LSB,
+     * Data is stored in the target register
+     * All 1 byte opcodes with no operands
+     * All take 2 M-cycles to complete
+     */
+    private:
+        uint8_t* dest;
+        uint8_t* src_addr_lsb;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        LD_r_relr(uint8_t* dest, uint8_t* src_addr_lsb, MEMORY::AddressDispatcher& memory): dest(dest), src_addr_lsb(src_addr_lsb), memory(memory) {}
+        bool tick();
+    };
+
+    class LD_relr_r: public CpuInstruction
+    {
+    /**
+     * @brief Load data from register,
+     * Store in 16-bit address constructed from 0xFF MSB + dest register as LSB
+     * All 1 byte opcodes with no operands
+     * All take 2 M-cycles to complete
+     */
+    private:
+        uint8_t* dest_addr_lsb;
+        uint8_t* src;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        LD_relr_r(uint8_t* dest_addr_lsb, uint8_t* src, MEMORY::AddressDispatcher& memory): dest_addr_lsb(dest_addr_lsb), src(src), memory(memory) {}
+        bool tick();
+    };
+
+    class LD_r_reln: public CpuInstruction
+    {
+    /**
+     * @brief Load data from 16-bit address constructed from 0xFF MSB + single byte operand
+     * Data is stored in the target register
+     * All 1 byte opcodes with 1 byte operand
+     * All take 3 M-cycles to complete
+     */
+    private:
+        uint8_t* dest;
+        uint16_t* pc;
+        uint16_t load_addr;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        LD_r_reln(uint8_t* dest, uint16_t* pc, MEMORY::AddressDispatcher& memory): dest(dest), pc(pc), memory(memory) {} // src_addr_lsb(src_addr_lsb)
+        bool tick();
+    };
+
+    class LD_reln_r: public CpuInstruction
+    {
+    /**
+     * @brief Load data from register,
+     * Store in 16-bit address constructed from 0xFF MSB + single byte operand
+     * All 1 byte opcodes with 1 byte operand
+     * All take 3 M-cycles to complete
+     */
+    private:
+        uint16_t* pc;
+        uint8_t* src;
+        uint16_t write_addr;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        LD_reln_r(uint16_t* pc, uint8_t* src, MEMORY::AddressDispatcher& memory): pc(pc), src(src), memory(memory) {}
+        bool tick();
+    };
+
+    /* 16-bit load instructions */
+
+    class LD_rr_nn: public CpuInstruction
+    {
+    /**
+     * @brief Load 2 bytes from operand and store in 16-bit register
+     * All 1 byte opcodes with 2 byte operand
+     * All take 3 M-cycles to complete
+     */
+    private:
+        uint16_t* pc;
+        uint16_t* dest;
+        uint16_t operand;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        LD_rr_nn(uint16_t* dest, uint16_t* pc, MEMORY::AddressDispatcher& memory): dest(dest), pc(pc), memory(memory) {}
+        bool tick();
+    };
+
+    class LD_absnn_rr: public CpuInstruction
+    {
+    /**
+     * @brief Load 2 bytes from 16-bit register and store in memory, at address provided as operand
+     * All 1 byte opcodes with 2 byte operand
+     * All take 5 M-cycles to complete
+     */
+    private:
+        uint16_t* src;
+        uint16_t* pc;
+        uint16_t dest_addr;
+        uint8_t step = 0;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        LD_absnn_rr(uint16_t* pc, uint16_t* src, MEMORY::AddressDispatcher& memory): pc(pc), src(src), memory(memory) {}
+        bool tick();
+    };
+
+    class LD_rr_rr: public CpuInstruction
+    {
+    /**
+     * @brief Load 2 bytes from 16-bit register and store destination 16-bit register
+     * All 1 byte opcodes with no operands
+     * All take 2 M-cycles to complete
+     */
+    private:
+        uint16_t* src;
+        uint16_t* dest;
+        uint8_t step = 0;
+    public:
+        LD_rr_rr(uint16_t* dest, uint16_t* src): dest(dest), src(src) {}
+        bool tick();
+    };
+
+    class PUSH_rr: public CpuInstruction
+    {
+    /**
+     * @brief Push to stack memory from 16-bit register
+     * 1 byte opcodes with no operands
+     * 4 M-cycles to complete
+     */
+    private:
+        uint16_t* src;
+        uint16_t* sp;
+        MEMORY::AddressDispatcher& memory;
+        uint8_t step = 0;
+    public:
+        PUSH_rr(uint16_t* sp, uint16_t* src, MEMORY::AddressDispatcher& memory): sp(sp), src(src), memory(memory) {}
+        bool tick();
+    };
+
+    class POP_rr: public CpuInstruction
+    {
+    /**
+     * @brief Pop to 16-bit register from stack memory
+     * 1 byte opcodes with no operands
+     * 3 M-cycles to complete
+     * Note: in the case of PUSH AF, the FLAGS register is overwritten, changing their values
+     */
+    private:
+        uint16_t* sp;
+        uint16_t* dest;
+        MEMORY::AddressDispatcher& memory;
+        uint8_t step = 0;
+    public:
+        POP_rr(uint16_t* dest, uint16_t* sp, MEMORY::AddressDispatcher& memory): dest(dest), sp(sp), memory(memory) {}
+        bool tick();
+    };
+};
+
+#endif
