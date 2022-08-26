@@ -11,12 +11,13 @@ namespace CPU
     class Cpu
     {
     private:
-        CpuInstruction* currentInstruction;
+        CpuInstruction* currentInstruction = nullptr;
         CpuRegisters registers;
         MEMORY::AddressDispatcher addressDispatcher;
     public:
         Cpu(ROMDATA& rom);
         void tick();
+        void report();
     };
 };
 

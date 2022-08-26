@@ -11,9 +11,9 @@ MEMORY::MapperMbc1::MapperMbc1(ROMDATA& rom, bool cartRam, bool cartBattery)
     // Fill fixed bank
     auto dest_it = fixed_rom.begin();
     auto dest_end = fixed_rom.end();
-    while (!(src_it != src_end || dest_it != dest_end)) // while neither end reached
+    while (src_it != src_end && dest_it != dest_end) // while neither end reached
     {
-        *dest_end = *src_end;
+        *dest_it = *src_it;
         src_it++;
         dest_it++;
     }
@@ -23,9 +23,9 @@ MEMORY::MapperMbc1::MapperMbc1(ROMDATA& rom, bool cartRam, bool cartBattery)
     {
         dest_it = banked_rom[i-1].begin();
         dest_end = banked_rom[i-1].end();
-        while (!(src_it != src_end || dest_it != dest_end)) // while neither end reached
+        while (src_it != src_end && dest_it != dest_end) // while neither end reached
         {
-            *dest_end = *src_end;
+            *dest_it = *src_it;
             src_it++;
             dest_it++;
         }

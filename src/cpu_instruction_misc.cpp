@@ -2,6 +2,7 @@
 
 bool CPU::NOP::tick()
 {
-    // do nothing, finish after first M-cycle
+    // Do no useful work, only inc PC
+    ++*registers.PC;
     return true;
 }

@@ -13,8 +13,8 @@ namespace MEMORY
     class MapperStatic : public CartMapper
     {
     private:
-        std::array<uint8_t, CART_ROM_HI+1> rom;
-        std::array<uint8_t, CART_RAM_HI-CART_RAM_LO+1> ram;
+        std::array<uint8_t, CART_ROM_HI+1> rom = {};
+        std::array<uint8_t, CART_RAM_HI-CART_RAM_LO+1> ram = {};
     public:
         MapperStatic(ROMDATA& rom);
         bool is_mapped(uint16_t addr);

@@ -15,6 +15,19 @@ void CPU::Cpu::tick()
 {
     if (currentInstruction == nullptr)
     {
-        currentInstruction = decode_opcode(addressDispatcher.read(*(registers.PC++)), registers, addressDispatcher);
+        uint8_t opcode = addressDispatcher.read(*registers.PC);
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "opcode: %02X\n", opcode);
+        currentInstruction = decode_opcode(opcode, registers, addressDispatcher);
     }
+    bool instruction_complete = currentInstruction->tick();
+    if (instruction_complete)
+    {
+        delete currentInstruction;
+        currentInstruction = nullptr;
+    }
+}
+
+void CPU::Cpu::report()
+{
+    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "PC: %04X\n", *registers.PC);
 }

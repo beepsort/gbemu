@@ -16,6 +16,11 @@ void display_help(char* exec_name)
 int main(int argc, char** argv)
 {
     SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
+    char* debug_env = std::getenv("DEBUG");
+    if (debug_env != nullptr)
+    {
+        SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
+    }
     if (argc!=2)
     {
         display_help(argv[0]);
@@ -33,6 +38,12 @@ int main(int argc, char** argv)
     std::string title(str_begin, str_end);
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Loaded: %s\n", title.c_str());
     CPU::Cpu gameboy(rom);
+    gameboy.report();
+    for (int i=0; i<10; i++)
+    {
+        gameboy.tick();
+        gameboy.report();
+    }
     SDL_Quit();
     return 0;
 }

@@ -6,12 +6,12 @@
 MEMORY::MapperStatic::MapperStatic(ROMDATA& rom)
 {
     auto src_it = rom.cbegin();
-    auto src_end = rom.cbegin();
+    auto src_end = rom.cend();
     auto dest_it = this->rom.begin();
     auto dest_end = this->rom.end();
-    while (!(src_it != src_end || dest_it != dest_end)) // while neither end reached
+    while (src_it != src_end && dest_it != dest_end) // while neither end reached
     {
-        *dest_end = *src_end;
+        *dest_it = *src_it;
         src_it++;
         dest_it++;
     }

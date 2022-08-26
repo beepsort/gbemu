@@ -13,7 +13,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
     switch (opcode)
     {
         case 0x00:
-            return new NOP();
+            return new NOP(registers);
         case 0x01:
             return new LD_rr_nn(registers.BC, registers.PC, memory);
         case 0x02:
@@ -439,6 +439,6 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xFE:
             return new CP_r_n(registers.A, registers.PC, registers, memory);
         default:
-            return new NOP();
+            return new NOP(registers);
     }
 }
