@@ -44,6 +44,7 @@ namespace CPU
     {
     private:
         bool (*const condition)(CpuRegisters&);
+        int16_t jump_offset = 0;
         uint8_t step = 0;
         CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;

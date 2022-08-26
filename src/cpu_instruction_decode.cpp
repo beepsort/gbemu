@@ -52,6 +52,8 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
             return new DEC_r(registers.D, registers);
         case 0x16:
             return new LD_r_n(registers.D, registers.PC, memory);
+        case 0x18:
+            return new JR_N(registers, memory, CPU::cond_TRUE);
         case 0x19:
             return new ADD_HL_rr(registers.DE, registers);
         case 0x1A:
@@ -64,6 +66,8 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
             return new DEC_r(registers.E, registers);
         case 0x1E:
             return new LD_r_n(registers.E, registers.PC, memory);
+        case 0x20:
+            return new JR_N(registers, memory, CPU::cond_NZ);
         case 0x21:
             return new LD_rr_nn(registers.HL, registers.PC, memory);
         case 0x22:
@@ -78,6 +82,8 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
             return new LD_r_n(registers.H, registers.PC, memory);
         case 0x27:
             return new DAA(registers);
+        case 0x28:
+            return new JR_N(registers, memory, CPU::cond_Z);
         case 0x29:
             return new ADD_HL_rr(registers.HL, registers);
         case 0x2A:
@@ -92,6 +98,8 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
             return new LD_r_n(registers.L, registers.PC, memory);
         case 0x2F:
             return new CPL(registers);
+        case 0x30:
+            return new JR_N(registers, memory, CPU::cond_NC);
         case 0x31:
             return new LD_rr_nn(registers.SP, registers.PC, memory);
         case 0x32:
@@ -104,6 +112,8 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
             return new DEC_absrr(registers.HL, registers, memory);
         case 0x36:
             return new LD_absrr_n(registers.HL, registers.PC, memory);
+        case 0x38:
+            return new JR_N(registers, memory, CPU::cond_C);
         case 0x39:
             return new ADD_HL_rr(registers.SP, registers);
         case 0x3A:
