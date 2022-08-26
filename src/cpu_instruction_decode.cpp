@@ -1,8 +1,13 @@
 #include "cpu_instruction_alu.h"
+#include "cpu_instruction_control.h"
 #include "cpu_instruction_decode.h"
 #include "cpu_instruction_load.h"
 #include "cpu_instruction_misc.h"
 
+/*
+ * For a full overview of the Sharp SM83 CPU opcodes
+ * https://meganesulli.com/generate-gb-opcodes/
+ */
 CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
 {
     switch (opcode)
@@ -367,18 +372,28 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
             return new CP_r_r(registers.A, registers.A, registers);
         case 0xC1:
             return new POP_rr(registers.BC, registers.SP, memory);
+        case 0xC2:
+            return new JP_NN(registers, memory, &cond_NZ);
+        case 0xC3:
+            return new JP_NN(registers, memory, &cond_TRUE);
         case 0xC5:
             return new PUSH_rr(registers.SP, registers.BC, memory);
         case 0xC6:
             return new ADD_r_n(registers.A, registers.PC, registers, memory);
+        case 0xCA:
+            return new JP_NN(registers, memory, &cond_Z);
         case 0xCE:
             return new ADD_r_n(registers.A, registers.PC, registers, memory, true);
         case 0xD1:
             return new POP_rr(registers.DE, registers.SP, memory);
+        case 0xD2:
+            return new JP_NN(registers, memory, &cond_NC);
         case 0xD5:
             return new PUSH_rr(registers.SP, registers.DE, memory);
         case 0xD6:
             return new SUB_r_n(registers.A, registers.PC, registers, memory);
+        case 0xDA:
+            return new JP_NN(registers, memory, &cond_C);
         case 0xDE:
             return new SUB_r_n(registers.A, registers.PC, registers, memory, true);
         case 0xE0:
@@ -391,6 +406,8 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
             return new PUSH_rr(registers.SP, registers.HL, memory);
         case 0xE6:
             return new AND_r_n(registers.A, registers.PC, registers, memory);
+        case 0xE9:
+            return new JP_HL(registers.PC, registers.HL);
         case 0xEA:
             return new LD_absnn_r(registers.PC, registers.A, memory);
         case 0xEE:
