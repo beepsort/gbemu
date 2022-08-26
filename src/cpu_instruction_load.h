@@ -27,8 +27,10 @@ namespace CPU
     private:
         uint8_t* dest;
         uint8_t* src;
+        CPU::CpuRegisters& registers;
     public:
-        LD_r_r(uint8_t* dest, uint8_t* src): dest(dest), src(src) {}
+        LD_r_r(CpuRegisters& registers, uint8_t* dest, uint8_t* src)
+        : registers(registers), dest(dest), src(src) {}
         bool tick();
     };
 
@@ -41,11 +43,12 @@ namespace CPU
      */
     private:
         uint8_t* dest;
-        uint16_t* pc;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        LD_r_n(uint8_t* dest, uint16_t* pc, MEMORY::AddressDispatcher& memory): dest(dest), pc(pc), memory(memory) {}
+        LD_r_n(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
+        : registers(registers), dest(dest), memory(memory) {}
         bool tick();
     };
 
@@ -61,11 +64,12 @@ namespace CPU
         uint8_t* dest;
         uint16_t* src_addr;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
         AddressMutOperation post_operation;
     public:
-        LD_r_absrr(uint8_t* dest, uint16_t* src_addr, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
-        : dest(dest), src_addr(src_addr), memory(memory), post_operation(post_operation) {}
+        LD_r_absrr(CpuRegisters& registers, uint8_t* dest, uint16_t* src_addr, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
+        : registers(registers), dest(dest), src_addr(src_addr), memory(memory), post_operation(post_operation) {}
         bool tick();
     };
 
@@ -81,11 +85,12 @@ namespace CPU
         uint16_t* dest_addr;
         uint8_t* src;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
         AddressMutOperation post_operation;
     public:
-        LD_absrr_r(uint16_t* dest_addr, uint8_t* src, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
-        : dest_addr(dest_addr), src(src), memory(memory), post_operation(post_operation) {}
+        LD_absrr_r(CpuRegisters& registers, uint16_t* dest_addr, uint8_t* src, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
+        : registers(registers), dest_addr(dest_addr), src(src), memory(memory), post_operation(post_operation) {}
         bool tick();
     };
 
@@ -98,11 +103,12 @@ namespace CPU
      */
     private:
         uint16_t* dest_addr;
-        uint16_t* pc;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        LD_absrr_n(uint16_t* dest_addr, uint16_t* pc, MEMORY::AddressDispatcher& memory): dest_addr(dest_addr), pc(pc), memory(memory) {}
+        LD_absrr_n(CpuRegisters& registers, uint16_t* dest_addr, MEMORY::AddressDispatcher& memory)
+        : registers(registers), dest_addr(dest_addr), memory(memory) {}
         bool tick();
     };
 
@@ -115,12 +121,13 @@ namespace CPU
      */
     private:
         uint8_t* dest;
-        uint16_t* pc;
         uint16_t load_addr;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        LD_r_absnn(uint8_t* dest, uint16_t* pc, MEMORY::AddressDispatcher& memory): dest(dest), pc(pc), memory(memory) {}
+        LD_r_absnn(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
+        : registers(registers), dest(dest), memory(memory) {}
         bool tick();
     };
 
@@ -133,12 +140,13 @@ namespace CPU
      */
     private:
         uint8_t* src;
-        uint16_t* pc;
         uint16_t write_addr;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        LD_absnn_r(uint16_t* pc, uint8_t* src, MEMORY::AddressDispatcher& memory): pc(pc), src(src), memory(memory) {}
+        LD_absnn_r(CpuRegisters& registers, uint8_t* src, MEMORY::AddressDispatcher& memory)
+        : registers(registers), src(src), memory(memory) {}
         bool tick();
     };
 
@@ -154,9 +162,11 @@ namespace CPU
         uint8_t* dest;
         uint8_t* src_addr_lsb;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        LD_r_relr(uint8_t* dest, uint8_t* src_addr_lsb, MEMORY::AddressDispatcher& memory): dest(dest), src_addr_lsb(src_addr_lsb), memory(memory) {}
+        LD_r_relr(CpuRegisters& registers, uint8_t* dest, uint8_t* src_addr_lsb, MEMORY::AddressDispatcher& memory)
+        : registers(registers), dest(dest), src_addr_lsb(src_addr_lsb), memory(memory) {}
         bool tick();
     };
 
@@ -172,9 +182,11 @@ namespace CPU
         uint8_t* dest_addr_lsb;
         uint8_t* src;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        LD_relr_r(uint8_t* dest_addr_lsb, uint8_t* src, MEMORY::AddressDispatcher& memory): dest_addr_lsb(dest_addr_lsb), src(src), memory(memory) {}
+        LD_relr_r(CpuRegisters& registers, uint8_t* dest_addr_lsb, uint8_t* src, MEMORY::AddressDispatcher& memory)
+        : registers(registers), dest_addr_lsb(dest_addr_lsb), src(src), memory(memory) {}
         bool tick();
     };
 
@@ -188,12 +200,13 @@ namespace CPU
      */
     private:
         uint8_t* dest;
-        uint16_t* pc;
         uint16_t load_addr;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        LD_r_reln(uint8_t* dest, uint16_t* pc, MEMORY::AddressDispatcher& memory): dest(dest), pc(pc), memory(memory) {} // src_addr_lsb(src_addr_lsb)
+        LD_r_reln(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
+        : registers(registers), dest(dest), memory(memory) {} // src_addr_lsb(src_addr_lsb)
         bool tick();
     };
 
@@ -206,13 +219,14 @@ namespace CPU
      * All take 3 M-cycles to complete
      */
     private:
-        uint16_t* pc;
         uint8_t* src;
         uint16_t write_addr;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        LD_reln_r(uint16_t* pc, uint8_t* src, MEMORY::AddressDispatcher& memory): pc(pc), src(src), memory(memory) {}
+        LD_reln_r(CpuRegisters& registers, uint8_t* src, MEMORY::AddressDispatcher& memory)
+        : registers(registers), src(src), memory(memory) {}
         bool tick();
     };
 
@@ -226,13 +240,14 @@ namespace CPU
      * All take 3 M-cycles to complete
      */
     private:
-        uint16_t* pc;
         uint16_t* dest;
         uint16_t operand;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        LD_rr_nn(uint16_t* dest, uint16_t* pc, MEMORY::AddressDispatcher& memory): dest(dest), pc(pc), memory(memory) {}
+        LD_rr_nn(CpuRegisters& registers, uint16_t* dest, MEMORY::AddressDispatcher& memory)
+        : registers(registers), dest(dest), memory(memory) {}
         bool tick();
     };
 
@@ -245,12 +260,13 @@ namespace CPU
      */
     private:
         uint16_t* src;
-        uint16_t* pc;
         uint16_t dest_addr;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        LD_absnn_rr(uint16_t* pc, uint16_t* src, MEMORY::AddressDispatcher& memory): pc(pc), src(src), memory(memory) {}
+        LD_absnn_rr(CpuRegisters& registers, uint16_t* src, MEMORY::AddressDispatcher& memory)
+        : registers(registers), src(src), memory(memory) {}
         bool tick();
     };
 
@@ -265,8 +281,10 @@ namespace CPU
         uint16_t* src;
         uint16_t* dest;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
     public:
-        LD_rr_rr(uint16_t* dest, uint16_t* src): dest(dest), src(src) {}
+        LD_rr_rr(CpuRegisters& registers, uint16_t* dest, uint16_t* src)
+        : registers(registers), dest(dest), src(src) {}
         bool tick();
     };
 
@@ -280,10 +298,12 @@ namespace CPU
     private:
         uint16_t* src;
         uint16_t* sp;
-        MEMORY::AddressDispatcher& memory;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
     public:
-        PUSH_rr(uint16_t* sp, uint16_t* src, MEMORY::AddressDispatcher& memory): sp(sp), src(src), memory(memory) {}
+        PUSH_rr(CpuRegisters& registers, uint16_t* sp, uint16_t* src, MEMORY::AddressDispatcher& memory)
+        : registers(registers), sp(sp), src(src), memory(memory) {}
         bool tick();
     };
 
@@ -298,10 +318,12 @@ namespace CPU
     private:
         uint16_t* sp;
         uint16_t* dest;
-        MEMORY::AddressDispatcher& memory;
         uint8_t step = 0;
+        CPU::CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
     public:
-        POP_rr(uint16_t* dest, uint16_t* sp, MEMORY::AddressDispatcher& memory): dest(dest), sp(sp), memory(memory) {}
+        POP_rr(CpuRegisters& registers, uint16_t* dest, uint16_t* sp, MEMORY::AddressDispatcher& memory)
+        : registers(registers), dest(dest), sp(sp), memory(memory) {}
         bool tick();
     };
 };

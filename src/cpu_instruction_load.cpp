@@ -12,9 +12,10 @@ bool CPU::LD_r_n::tick()
 {
     if (step++ == 0)
     {
-        *dest = (uint8_t) memory.read(++*pc);
+        *dest = (uint8_t) memory.read(++*registers.PC);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -36,6 +37,7 @@ bool CPU::LD_r_absrr::tick()
         }
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -57,6 +59,7 @@ bool CPU::LD_absrr_r::tick()
         }
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -64,10 +67,11 @@ bool CPU::LD_absrr_n::tick()
 {
     if (step++ == 0)
     {
-        uint8_t data = memory.read(++*pc);
+        uint8_t data = memory.read(++*registers.PC);
         memory.write(*dest_addr, data);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -76,15 +80,16 @@ bool CPU::LD_r_absnn::tick()
     switch (step++)
     {
         case 0:
-            load_addr = memory.read(++*pc);
+            load_addr = memory.read(++*registers.PC);
             return false;
         case 1:
-            load_addr |= memory.read(++*pc) << 8;
+            load_addr |= memory.read(++*registers.PC) << 8;
             return false;
         case 2:
             *dest = memory.read(load_addr);
             return false;
         default:
+            ++*registers.PC;
             return true;
     }
 }
@@ -94,15 +99,16 @@ bool CPU::LD_absnn_r::tick()
     switch (step++)
     {
         case 0:
-            write_addr = memory.read(++*pc);
+            write_addr = memory.read(++*registers.PC);
             return false;
         case 1:
-            write_addr |= memory.read(++*pc) << 8;
+            write_addr |= memory.read(++*registers.PC) << 8;
             return false;
         case 2:
             memory.write(write_addr, *src);
             return false;
         default:
+            ++*registers.PC;
             return true;
     }
 }
@@ -116,6 +122,7 @@ bool CPU::LD_r_relr::tick()
         *dest = memory.read(read_addr);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -128,6 +135,7 @@ bool CPU::LD_relr_r::tick()
         memory.write(write_addr, *src);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -137,12 +145,13 @@ bool CPU::LD_r_reln::tick()
     {
         case 0:
             load_addr = 0xFF << 8;
-            load_addr |= ++*pc;
+            load_addr |= ++*registers.PC;
             return false;
         case 1:
             *dest = memory.read(load_addr);
             return false;
         default:
+            ++*registers.PC;
             return true;
     }
 }
@@ -153,12 +162,13 @@ bool CPU::LD_reln_r::tick()
     {
         case 0:
             write_addr = 0xFF << 8;
-            write_addr = memory.read(++*pc);
+            write_addr = memory.read(++*registers.PC);
             return false;
         case 1:
             memory.write(write_addr, *src);
             return false;
         default:
+            ++*registers.PC;
             return true;
     }
 }
@@ -171,15 +181,16 @@ bool CPU::LD_rr_nn::tick()
     {
         case 0:
             // Load LSB from operand
-            operand = memory.read(++*pc);
+            operand = memory.read(++*registers.PC);
             return false;
         case 1:
             // Load MSB from operand
-            operand |= memory.read(++*pc) << 8;
+            operand |= memory.read(++*registers.PC) << 8;
             // Store in 16-bit register
             *dest = operand;
             return false;
         default:
+            ++*registers.PC;
             return true;
     }
 }
@@ -189,10 +200,10 @@ bool CPU::LD_absnn_rr::tick()
     switch (step++)
     {
         case 0:
-            dest_addr = memory.read(++*pc);
+            dest_addr = memory.read(++*registers.PC);
             return false;
         case 1:
-            dest_addr |= memory.read(++*pc) << 8;
+            dest_addr |= memory.read(++*registers.PC) << 8;
             return false;
         case 2:
         {
@@ -207,6 +218,7 @@ bool CPU::LD_absnn_rr::tick()
             return false;
         }
         default:
+            ++*registers.PC;
             return true;
     }
 }
@@ -219,6 +231,7 @@ bool CPU::LD_rr_rr::tick()
             *dest = *src;
             return false;
         default:
+            ++*registers.PC;
             return true;
     }
 }
@@ -242,6 +255,7 @@ bool CPU::PUSH_rr::tick()
             return false;
         }
         default:
+            ++*registers.PC;
             return true;
     }
 }
@@ -261,6 +275,7 @@ bool CPU::POP_rr::tick()
             return false;
         }
         default:
+            ++*registers.PC;
             return true;
     }
 }

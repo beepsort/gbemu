@@ -53,14 +53,13 @@ namespace CPU
      */
     private:
         uint8_t* dest;
-        uint16_t* pc;
         MEMORY::AddressDispatcher& memory;
         CpuRegisters& registers;
         bool check_carry;
         uint8_t step = 0;
     public:
-        ADD_r_n(uint8_t* dest, uint16_t* pc, CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool check_carry=false)
-        : dest(dest), pc(pc), memory(memory), registers(registers), check_carry(check_carry) {}
+        ADD_r_n(uint8_t* dest, CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool check_carry=false)
+        : dest(dest), memory(memory), registers(registers), check_carry(check_carry) {}
         bool tick();
     };
 
@@ -132,14 +131,13 @@ namespace CPU
      */
     private:
         uint8_t* dest;
-        uint16_t* pc;
         MEMORY::AddressDispatcher& memory;
         CpuRegisters& registers;
         bool check_carry;
         uint8_t step = 0;
     public:
-        SUB_r_n(uint8_t* dest, uint16_t* pc, CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool check_carry=false)
-        : dest(dest), pc(pc), memory(memory), registers(registers), check_carry(check_carry) {}
+        SUB_r_n(uint8_t* dest, CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool check_carry=false)
+        : dest(dest), memory(memory), registers(registers), check_carry(check_carry) {}
         bool tick();
     };
 
@@ -209,13 +207,12 @@ namespace CPU
      */
     private:
         uint8_t* dest;
-        uint16_t* pc;
         MEMORY::AddressDispatcher& memory;
         CpuRegisters& registers;
         uint8_t step = 0;
     public:
-        AND_r_n(uint8_t* dest, uint16_t* pc, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
-        : dest(dest), pc(pc), memory(memory), registers(registers) {}
+        AND_r_n(uint8_t* dest, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : dest(dest), memory(memory), registers(registers) {}
         bool tick();
     };
 
@@ -283,13 +280,12 @@ namespace CPU
      */
     private:
         uint8_t* dest;
-        uint16_t* pc;
         MEMORY::AddressDispatcher& memory;
         CpuRegisters& registers;
         uint8_t step = 0;
     public:
-        XOR_r_n(uint8_t* dest, uint16_t* pc, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
-        : dest(dest), pc(pc), memory(memory), registers(registers) {}
+        XOR_r_n(uint8_t* dest, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : dest(dest), memory(memory), registers(registers) {}
         bool tick();
     };
 
@@ -357,13 +353,12 @@ namespace CPU
      */
     private:
         uint8_t* dest;
-        uint16_t* pc;
         MEMORY::AddressDispatcher& memory;
         CpuRegisters& registers;
         uint8_t step = 0;
     public:
-        OR_r_n(uint8_t* dest, uint16_t* pc, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
-        : dest(dest), pc(pc), memory(memory), registers(registers) {}
+        OR_r_n(uint8_t* dest, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : dest(dest), memory(memory), registers(registers) {}
         bool tick();
     };
 
@@ -430,13 +425,12 @@ namespace CPU
      */
     private:
         uint8_t* dest;
-        uint16_t* pc;
         MEMORY::AddressDispatcher& memory;
         CpuRegisters& registers;
         uint8_t step = 0;
     public:
-        CP_r_n(uint8_t* dest, uint16_t* pc, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
-        : dest(dest), pc(pc), memory(memory), registers(registers) {}
+        CP_r_n(uint8_t* dest, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : dest(dest), memory(memory), registers(registers) {}
         bool tick();
     };
 

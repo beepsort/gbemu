@@ -45,6 +45,7 @@ bool CPU::ADD_r_r::tick()
     }
     registers.set_flag_zero(*dest == 0);
     registers.set_flag_sub(false);
+    ++*registers.PC;
     return true;
 }
 
@@ -52,7 +53,7 @@ bool CPU::ADD_r_n::tick()
 {
     if (step++ == 0)
     {
-        uint8_t src = memory.read(++*pc);
+        uint8_t src = memory.read(++*registers.PC);
         registers.set_flag_carry(is_add_carry(*dest, src));
         registers.set_flag_halfcarry(is_add_halfcarry(*dest, src));
         *dest += src;
@@ -66,6 +67,7 @@ bool CPU::ADD_r_n::tick()
         registers.set_flag_sub(false);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -87,6 +89,7 @@ bool CPU::ADD_r_absrr::tick()
         registers.set_flag_sub(false);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -113,6 +116,7 @@ bool CPU::SUB_r_r::tick()
     }
     registers.set_flag_zero(*dest == 0);
     registers.set_flag_sub(true);
+    ++*registers.PC;
     return true;
 }
 
@@ -120,7 +124,7 @@ bool CPU::SUB_r_n::tick()
 {
     if (step++ == 0)
     {
-        uint8_t src = memory.read(++*pc);
+        uint8_t src = memory.read(++*registers.PC);
         registers.set_flag_carry(is_sub_carry(*dest, src));
         registers.set_flag_halfcarry(is_sub_halfcarry(*dest, src));
         *dest -= src;
@@ -134,6 +138,7 @@ bool CPU::SUB_r_n::tick()
         registers.set_flag_sub(true);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -155,6 +160,7 @@ bool CPU::SUB_r_absrr::tick()
         registers.set_flag_sub(true);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -165,6 +171,7 @@ bool CPU::AND_r_r::tick()
     registers.set_flag_sub(false);
     registers.set_flag_halfcarry(true);
     registers.set_flag_carry(false);
+    ++*registers.PC;
     return true;
 }
 
@@ -172,7 +179,7 @@ bool CPU::AND_r_n::tick()
 {
     if (step++ == 0)
     {
-        uint8_t src = memory.read(++*pc);
+        uint8_t src = memory.read(++*registers.PC);
         *dest &= src;
         registers.set_flag_zero(*dest == 0);
         registers.set_flag_sub(false);
@@ -180,6 +187,7 @@ bool CPU::AND_r_n::tick()
         registers.set_flag_carry(false);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -195,6 +203,7 @@ bool CPU::AND_r_absrr::tick()
         registers.set_flag_carry(false);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -205,6 +214,7 @@ bool CPU::XOR_r_r::tick()
     registers.set_flag_sub(false);
     registers.set_flag_halfcarry(true);
     registers.set_flag_carry(false);
+    ++*registers.PC;
     return true;
 }
 
@@ -212,7 +222,7 @@ bool CPU::XOR_r_n::tick()
 {
     if (step++ == 0)
     {
-        uint8_t src = memory.read(++*pc);
+        uint8_t src = memory.read(++*registers.PC);
         *dest ^= src;
         registers.set_flag_zero(*dest == 0);
         registers.set_flag_sub(false);
@@ -220,6 +230,7 @@ bool CPU::XOR_r_n::tick()
         registers.set_flag_carry(false);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -235,6 +246,7 @@ bool CPU::XOR_r_absrr::tick()
         registers.set_flag_carry(false);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -245,6 +257,7 @@ bool CPU::OR_r_r::tick()
     registers.set_flag_sub(false);
     registers.set_flag_halfcarry(true);
     registers.set_flag_carry(false);
+    ++*registers.PC;
     return true;
 }
 
@@ -252,7 +265,7 @@ bool CPU::OR_r_n::tick()
 {
     if (step++ == 0)
     {
-        uint8_t src = memory.read(++*pc);
+        uint8_t src = memory.read(++*registers.PC);
         *dest |= src;
         registers.set_flag_zero(*dest == 0);
         registers.set_flag_sub(false);
@@ -260,6 +273,7 @@ bool CPU::OR_r_n::tick()
         registers.set_flag_carry(false);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -275,6 +289,7 @@ bool CPU::OR_r_absrr::tick()
         registers.set_flag_carry(false);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -285,6 +300,7 @@ bool CPU::CP_r_r::tick()
     uint8_t result = *dest - *src;
     registers.set_flag_zero(result == 0);
     registers.set_flag_sub(true);
+    ++*registers.PC;
     return true;
 }
 
@@ -292,7 +308,7 @@ bool CPU::CP_r_n::tick()
 {
     if (step++ == 0)
     {
-        uint8_t src = memory.read(++*pc);
+        uint8_t src = memory.read(++*registers.PC);
         registers.set_flag_carry(is_sub_carry(*dest, src));
         registers.set_flag_halfcarry(is_sub_halfcarry(*dest, src));
         uint8_t result = *dest - src;
@@ -300,6 +316,7 @@ bool CPU::CP_r_n::tick()
         registers.set_flag_sub(true);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -315,6 +332,7 @@ bool CPU::CP_r_absrr::tick()
         registers.set_flag_sub(true);
         return false;
     }
+    ++*registers.PC;
     return true;
 }
 
@@ -324,6 +342,7 @@ bool CPU::INC_r::tick()
     *dest = *dest != UINT8_MAX ? *dest+1 : 0;
     registers.set_flag_zero(*dest == 0);
     registers.set_flag_sub(false);
+    ++*registers.PC;
     return true;
 }
 
@@ -341,6 +360,7 @@ bool CPU::INC_absrr::tick()
             registers.set_flag_sub(false);
             return false;
         default:
+            ++*registers.PC;
             return true;
     }
 }
@@ -351,6 +371,7 @@ bool CPU::DEC_r::tick()
     *dest = *dest != 0 ? *dest-1 : UINT8_MAX;
     registers.set_flag_zero(*dest == 0);
     registers.set_flag_sub(true);
+    ++*registers.PC;
     return true;
 }
 
@@ -368,6 +389,7 @@ bool CPU::DEC_absrr::tick()
             registers.set_flag_sub(true);
             return false;
         default:
+            ++*registers.PC;
             return true;
     }
 }
@@ -387,6 +409,7 @@ bool CPU::DAA::tick()
     registers.set_flag_carry(is_add_carry(*registers.A, adjust_val));
     *registers.A += adjust_val;
     registers.set_flag_zero(*registers.A == 0);
+    ++*registers.PC;
     return true;
 }
 
@@ -395,6 +418,7 @@ bool CPU::CPL::tick()
     *(registers.A) = ~*(registers.A);
     registers.set_flag_sub(true);
     registers.set_flag_halfcarry(true);
+    ++*registers.PC;
     return true;
 }
 
@@ -408,6 +432,7 @@ bool CPU::ADD_HL_rr::tick()
     registers.set_flag_halfcarry(is_add_halfcarry(*dest, *src));
     *dest += *src;
     registers.set_flag_sub(false);
+    ++*registers.PC;
     return true;
 }
 
@@ -417,6 +442,7 @@ bool CPU::INC_rr::tick()
     *dest = *dest != UINT16_MAX ? *dest+1 : 0;
     registers.set_flag_zero(*dest == 0);
     registers.set_flag_sub(false);
+    ++*registers.PC;
     return true;
 }
 
@@ -426,5 +452,6 @@ bool CPU::DEC_rr::tick()
     *dest = *dest != 0 ? *dest-1 : UINT16_MAX;
     registers.set_flag_zero(*dest == 0);
     registers.set_flag_sub(true);
+    ++*registers.PC;
     return true;
 }
