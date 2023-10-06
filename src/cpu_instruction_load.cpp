@@ -2,24 +2,24 @@
 
 /* 8-bit load instructions */
 
-bool CPU::LD_r_r::tick()
+CPU::InstructionResult CPU::LD_r_r::tick()
 {
     *dest = *src;
-    return true;
+    return InstructionResult::FINISHED;
 }
 
-bool CPU::LD_r_n::tick()
+CPU::InstructionResult CPU::LD_r_n::tick()
 {
     if (step++ == 0)
     {
         *dest = (uint8_t) memory.read(++*registers.PC);
-        return false;
+        return InstructionResult::RUNNING;
     }
     ++*registers.PC;
-    return true;
+    return InstructionResult::FINISHED;
 }
 
-bool CPU::LD_r_absrr::tick()
+CPU::InstructionResult CPU::LD_r_absrr::tick()
 {
     if (step++ == 0)
     {
@@ -35,13 +35,13 @@ bool CPU::LD_r_absrr::tick()
             case AddressMutOperation::NONE:
                 break;
         }
-        return false;
+        return InstructionResult::RUNNING;
     }
     ++*registers.PC;
-    return true;
+    return InstructionResult::FINISHED;
 }
 
-bool CPU::LD_absrr_r::tick()
+CPU::InstructionResult CPU::LD_absrr_r::tick()
 {
     if (step++ == 0)
     {
@@ -57,225 +57,225 @@ bool CPU::LD_absrr_r::tick()
             case AddressMutOperation::NONE:
                 break;
         }
-        return false;
+        return InstructionResult::RUNNING;
     }
     ++*registers.PC;
-    return true;
+    return InstructionResult::FINISHED;
 }
 
-bool CPU::LD_absrr_n::tick()
+CPU::InstructionResult CPU::LD_absrr_n::tick()
 {
     if (step++ == 0)
     {
         uint8_t data = memory.read(++*registers.PC);
         memory.write(*dest_addr, data);
-        return false;
+        return InstructionResult::RUNNING;
     }
     ++*registers.PC;
-    return true;
+    return InstructionResult::FINISHED;
 }
 
-bool CPU::LD_r_absnn::tick()
+CPU::InstructionResult CPU::LD_r_absnn::tick()
 {
     switch (step++)
     {
         case 0:
             load_addr = memory.read(++*registers.PC);
-            return false;
+            return InstructionResult::RUNNING;
         case 1:
             load_addr |= memory.read(++*registers.PC) << 8;
-            return false;
+            return InstructionResult::RUNNING;
         case 2:
             *dest = memory.read(load_addr);
-            return false;
+            return InstructionResult::RUNNING;
         default:
             ++*registers.PC;
-            return true;
+            return InstructionResult::FINISHED;
     }
 }
 
-bool CPU::LD_absnn_r::tick()
+CPU::InstructionResult CPU::LD_absnn_r::tick()
 {
     switch (step++)
     {
         case 0:
             write_addr = memory.read(++*registers.PC);
-            return false;
+            return InstructionResult::RUNNING;
         case 1:
             write_addr |= memory.read(++*registers.PC) << 8;
-            return false;
+            return InstructionResult::RUNNING;
         case 2:
             memory.write(write_addr, *src);
-            return false;
+            return InstructionResult::RUNNING;
         default:
             ++*registers.PC;
-            return true;
+            return InstructionResult::FINISHED;
     }
 }
 
-bool CPU::LD_r_relr::tick()
+CPU::InstructionResult CPU::LD_r_relr::tick()
 {
     if (step++ == 0)
     {
         uint16_t read_addr = 0xFF << 8;
         read_addr |= *src_addr_lsb;
         *dest = memory.read(read_addr);
-        return false;
+        return InstructionResult::RUNNING;
     }
     ++*registers.PC;
-    return true;
+    return InstructionResult::FINISHED;
 }
 
-bool CPU::LD_relr_r::tick()
+CPU::InstructionResult CPU::LD_relr_r::tick()
 {
     if (step++ == 0)
     {
         uint16_t write_addr = 0xFF << 8;
         write_addr |= *dest_addr_lsb;
         memory.write(write_addr, *src);
-        return false;
+        return InstructionResult::RUNNING;
     }
     ++*registers.PC;
-    return true;
+    return InstructionResult::FINISHED;
 }
 
-bool CPU::LD_r_reln::tick()
+CPU::InstructionResult CPU::LD_r_reln::tick()
 {
     switch (step++)
     {
         case 0:
             load_addr = 0xFF << 8;
             load_addr |= ++*registers.PC;
-            return false;
+            return InstructionResult::RUNNING;
         case 1:
             *dest = memory.read(load_addr);
-            return false;
+            return InstructionResult::RUNNING;
         default:
             ++*registers.PC;
-            return true;
+            return InstructionResult::FINISHED;
     }
 }
 
-bool CPU::LD_reln_r::tick()
+CPU::InstructionResult CPU::LD_reln_r::tick()
 {
     switch (step++)
     {
         case 0:
             write_addr = 0xFF << 8;
             write_addr = memory.read(++*registers.PC);
-            return false;
+            return InstructionResult::RUNNING;
         case 1:
             memory.write(write_addr, *src);
-            return false;
+            return InstructionResult::RUNNING;
         default:
             ++*registers.PC;
-            return true;
+            return InstructionResult::FINISHED;
     }
 }
 
 /* 16-bit load instructions */
 
-bool CPU::LD_rr_nn::tick()
+CPU::InstructionResult CPU::LD_rr_nn::tick()
 {
     switch (step++)
     {
         case 0:
             // Load LSB from operand
             operand = memory.read(++*registers.PC);
-            return false;
+            return InstructionResult::RUNNING;
         case 1:
             // Load MSB from operand
             operand |= memory.read(++*registers.PC) << 8;
             // Store in 16-bit register
             *dest = operand;
-            return false;
+            return InstructionResult::RUNNING;
         default:
             ++*registers.PC;
-            return true;
+            return InstructionResult::FINISHED;
     }
 }
 
-bool CPU::LD_absnn_rr::tick()
+CPU::InstructionResult CPU::LD_absnn_rr::tick()
 {
     switch (step++)
     {
         case 0:
             dest_addr = memory.read(++*registers.PC);
-            return false;
+            return InstructionResult::RUNNING;
         case 1:
             dest_addr |= memory.read(++*registers.PC) << 8;
-            return false;
+            return InstructionResult::RUNNING;
         case 2:
         {
             uint8_t register_lsb = (uint8_t)(*src & 0x00FF);
             memory.write(dest_addr, register_lsb);
-            return false;
+            return InstructionResult::RUNNING;
         }
         case 3:
         {
             uint8_t register_msb = (uint8_t)((*src & 0xFF00) >> 8);
             memory.write(dest_addr+1, register_msb);
-            return false;
+            return InstructionResult::RUNNING;
         }
         default:
             ++*registers.PC;
-            return true;
+            return InstructionResult::FINISHED;
     }
 }
 
-bool CPU::LD_rr_rr::tick()
+CPU::InstructionResult CPU::LD_rr_rr::tick()
 {
     switch (step++)
     {
         case 0:
             *dest = *src;
-            return false;
+            return InstructionResult::RUNNING;
         default:
             ++*registers.PC;
-            return true;
+            return InstructionResult::FINISHED;
     }
 }
 
-bool CPU::PUSH_rr::tick()
+CPU::InstructionResult CPU::PUSH_rr::tick()
 {
     switch (step++)
     {
         case 0:
-            return false;
+            return InstructionResult::RUNNING;
         case 1:
         {
             uint8_t register_msb = (uint8_t)((*src & 0xFF00) >> 8);
             memory.write(--*sp, register_msb);
-            return false;
+            return InstructionResult::RUNNING;
         }
         case 2:
         {
             uint8_t register_lsb = (uint8_t)(*src & 0x00FF);
             memory.write(--*sp, register_lsb);
-            return false;
+            return InstructionResult::RUNNING;
         }
         default:
             ++*registers.PC;
-            return true;
+            return InstructionResult::FINISHED;
     }
 }
 
-bool CPU::POP_rr::tick()
+CPU::InstructionResult CPU::POP_rr::tick()
 {
     switch (step++)
     {
         case 0:
         {
             *dest = memory.read((*sp)++);
-            return false;
+            return InstructionResult::RUNNING;
         }
         case 1:
         {
             *dest |= memory.read((*sp)++) << 8;
-            return false;
+            return InstructionResult::RUNNING;
         }
         default:
             ++*registers.PC;
-            return true;
+            return InstructionResult::FINISHED;
     }
 }

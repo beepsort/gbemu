@@ -23,10 +23,11 @@ namespace MEMORY
     const static uint16_t OAM_LO = 0xFE00;
     const static uint16_t OAM_HI = 0xFE9F;
     const static uint16_t IO_REG_LO = 0xFF00;
+    const static uint16_t INTERRUPT_FLAG = 0xFF0F;
     const static uint16_t IO_REG_HI = 0xFF7F;
     const static uint16_t HRAM_LO = 0xFF80;
     const static uint16_t HRAM_HI = 0xFFFE;
-    const static uint16_t INTERUPT_ENABLE = 0xFFFF;
+    const static uint16_t INTERRUPT_ENABLE = 0xFFFF;
 
     class CartMapper
     {

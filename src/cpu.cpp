@@ -11,7 +11,7 @@ CPU::Cpu::Cpu(ROMDATA& rom)
  * for a single memory read or write to take place. An M-cycle
  * totals 4 CPU clock cycles, also called T-cycles
  */
-void CPU::Cpu::tick()
+const CPU::CpuRegisters& CPU::Cpu::tick()
 {
     if (currentInstruction == nullptr)
     {
@@ -19,12 +19,13 @@ void CPU::Cpu::tick()
         SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "opcode: %02X\n", opcode);
         currentInstruction = decode_opcode(opcode, registers, addressDispatcher);
     }
-    bool instruction_complete = currentInstruction->tick();
-    if (instruction_complete)
+    InstructionResult instruction_result = currentInstruction->tick();
+    if (instruction_result == InstructionResult::FINISHED)
     {
         delete currentInstruction;
         currentInstruction = nullptr;
     }
+    return registers;
 }
 
 void CPU::Cpu::report()

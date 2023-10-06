@@ -31,7 +31,7 @@ namespace CPU
     public:
         LD_r_r(CpuRegisters& registers, uint8_t* dest, uint8_t* src)
         : registers(registers), dest(dest), src(src) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_r_n: public CpuInstruction
@@ -49,7 +49,7 @@ namespace CPU
     public:
         LD_r_n(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
         : registers(registers), dest(dest), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_r_absrr: public CpuInstruction
@@ -70,7 +70,7 @@ namespace CPU
     public:
         LD_r_absrr(CpuRegisters& registers, uint8_t* dest, uint16_t* src_addr, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
         : registers(registers), dest(dest), src_addr(src_addr), memory(memory), post_operation(post_operation) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_absrr_r: public CpuInstruction
@@ -91,7 +91,7 @@ namespace CPU
     public:
         LD_absrr_r(CpuRegisters& registers, uint16_t* dest_addr, uint8_t* src, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
         : registers(registers), dest_addr(dest_addr), src(src), memory(memory), post_operation(post_operation) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_absrr_n: public CpuInstruction
@@ -109,7 +109,7 @@ namespace CPU
     public:
         LD_absrr_n(CpuRegisters& registers, uint16_t* dest_addr, MEMORY::AddressDispatcher& memory)
         : registers(registers), dest_addr(dest_addr), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_r_absnn: public CpuInstruction
@@ -128,7 +128,7 @@ namespace CPU
     public:
         LD_r_absnn(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
         : registers(registers), dest(dest), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_absnn_r: public CpuInstruction
@@ -147,7 +147,7 @@ namespace CPU
     public:
         LD_absnn_r(CpuRegisters& registers, uint8_t* src, MEMORY::AddressDispatcher& memory)
         : registers(registers), src(src), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_r_relr: public CpuInstruction
@@ -167,7 +167,7 @@ namespace CPU
     public:
         LD_r_relr(CpuRegisters& registers, uint8_t* dest, uint8_t* src_addr_lsb, MEMORY::AddressDispatcher& memory)
         : registers(registers), dest(dest), src_addr_lsb(src_addr_lsb), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_relr_r: public CpuInstruction
@@ -187,7 +187,7 @@ namespace CPU
     public:
         LD_relr_r(CpuRegisters& registers, uint8_t* dest_addr_lsb, uint8_t* src, MEMORY::AddressDispatcher& memory)
         : registers(registers), dest_addr_lsb(dest_addr_lsb), src(src), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_r_reln: public CpuInstruction
@@ -207,7 +207,7 @@ namespace CPU
     public:
         LD_r_reln(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
         : registers(registers), dest(dest), memory(memory) {} // src_addr_lsb(src_addr_lsb)
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_reln_r: public CpuInstruction
@@ -227,7 +227,7 @@ namespace CPU
     public:
         LD_reln_r(CpuRegisters& registers, uint8_t* src, MEMORY::AddressDispatcher& memory)
         : registers(registers), src(src), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     /* 16-bit load instructions */
@@ -248,7 +248,7 @@ namespace CPU
     public:
         LD_rr_nn(CpuRegisters& registers, uint16_t* dest, MEMORY::AddressDispatcher& memory)
         : registers(registers), dest(dest), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_absnn_rr: public CpuInstruction
@@ -267,7 +267,7 @@ namespace CPU
     public:
         LD_absnn_rr(CpuRegisters& registers, uint16_t* src, MEMORY::AddressDispatcher& memory)
         : registers(registers), src(src), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class LD_rr_rr: public CpuInstruction
@@ -285,7 +285,7 @@ namespace CPU
     public:
         LD_rr_rr(CpuRegisters& registers, uint16_t* dest, uint16_t* src)
         : registers(registers), dest(dest), src(src) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class PUSH_rr: public CpuInstruction
@@ -304,7 +304,7 @@ namespace CPU
     public:
         PUSH_rr(CpuRegisters& registers, uint16_t* sp, uint16_t* src, MEMORY::AddressDispatcher& memory)
         : registers(registers), sp(sp), src(src), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 
     class POP_rr: public CpuInstruction
@@ -324,7 +324,7 @@ namespace CPU
     public:
         POP_rr(CpuRegisters& registers, uint16_t* dest, uint16_t* sp, MEMORY::AddressDispatcher& memory)
         : registers(registers), dest(dest), sp(sp), memory(memory) {}
-        bool tick();
+        InstructionResult tick();
     };
 };
 

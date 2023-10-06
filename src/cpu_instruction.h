@@ -3,12 +3,20 @@
 
 namespace CPU
 {
+    enum class InstructionResult
+    {
+        RUNNING,
+        FINISHED,
+        HALT,
+        STOP
+    };
+
     class CpuInstruction
     {
     public:
         // progress instruction by 1 M-cycle
         // return boolean true when instruction is complete
-        virtual bool tick() = 0;
+        virtual InstructionResult tick() = 0;
     };
 };
 

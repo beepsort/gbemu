@@ -27,6 +27,8 @@ namespace CPU
         uint8_t* L = (uint8_t*) HL + 1;
         uint16_t* SP = new uint16_t(0x0000);
         uint16_t* PC = new uint16_t(0x0100);
+        // Interupt Master Enable
+        bool IME = true;
 
         /* CPU Flags */
         bool get_flag_zero()

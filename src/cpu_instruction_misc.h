@@ -9,11 +9,11 @@ namespace CPU
     class NOP: public CpuInstruction
     {
     private:
-        CPU::CpuRegisters& registers;
+        CpuRegisters& registers;
     public:
-        NOP(CPU::CpuRegisters& registers)
+        NOP(CpuRegisters& registers)
         : registers(registers) {}
-        bool tick();
+        InstructionResult tick();
     };
 };
 

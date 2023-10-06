@@ -16,7 +16,7 @@ namespace CPU
         MEMORY::AddressDispatcher addressDispatcher;
     public:
         Cpu(ROMDATA& rom);
-        void tick();
+        const CpuRegisters& tick();
         void report();
     };
 };

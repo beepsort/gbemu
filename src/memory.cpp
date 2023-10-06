@@ -75,7 +75,7 @@ uint8_t MEMORY::AddressDispatcher::read(uint16_t addr)
     {
         return highRam[addr - HRAM_LO];
     }
-    else if (addr == INTERUPT_ENABLE)
+    else if (addr == INTERRUPT_ENABLE)
     {
         // TODO: Check interrupt enable register behaviour
         return 0x00;
@@ -116,7 +116,7 @@ void MEMORY::AddressDispatcher::write(uint16_t addr, uint8_t data)
     {
         highRam[addr - HRAM_LO] = data;
     }
-    else if (addr == INTERUPT_ENABLE)
+    else if (addr == INTERRUPT_ENABLE)
     {
         // TODO: Check interrupt enable register behaviour
         // do nothing
