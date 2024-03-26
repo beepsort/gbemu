@@ -1,9 +1,9 @@
 #include <stdexcept>
 
-#include "memory.h"
-#include "memory_static.h"
-#include "memory_mbc1.h"
-#include "memory_mbc3.h"
+#include "gbmemory.h"
+#include "gbmemory_static.h"
+#include "gbmemory_mbc1.h"
+#include "gbmemory_mbc3.h"
 
 MEMORY::CartMapper* MEMORY::CartMapper::create_mapper(ROMDATA& rom)
 {

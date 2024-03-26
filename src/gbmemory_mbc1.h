@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "rom.h"
-#include "memory.h"
+#include "gbmemory.h"
 
 namespace MEMORY
 {

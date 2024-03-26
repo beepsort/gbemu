@@ -3,7 +3,7 @@
 
 #include "cpu_registers.h"
 #include "cpu_instruction.h"
-#include "memory.h"
+#include "gbmemory.h"
 #include "rom.h"
 
 namespace CPU

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "../cpu_instruction_alu.h"
-#include "../cpu_registers.h"
+#include "cpu_instruction_alu.h"
+#include "cpu_registers.h"
 #include "cpu_init_helper.h"
 
 TEST(ADD_r_r_test, OnePlusOne) {

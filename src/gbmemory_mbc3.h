@@ -6,7 +6,7 @@
 #include <cstddef>
 #include <vector>
 
-#include "memory.h"
+#include "gbmemory.h"
 
 namespace MEMORY
 {

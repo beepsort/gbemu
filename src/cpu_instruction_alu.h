@@ -5,7 +5,7 @@
 
 #include "cpu_instruction.h"
 #include "cpu_registers.h"
-#include "memory.h"
+#include "gbmemory.h"
 
 namespace CPU
 {
