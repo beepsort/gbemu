@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include "memory_mbc1.h"
+#include "gbmemory_mbc1.h"
 
 MEMORY::MapperMbc1::MapperMbc1(ROMDATA& rom, bool cartRam, bool cartBattery)
     : banked_rom(num_rom_banks(rom))

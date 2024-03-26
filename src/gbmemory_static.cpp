@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <SDL2/SDL_log.h>
 
-#include "memory_static.h"
+#include "gbmemory_static.h"
 
 MEMORY::MapperStatic::MapperStatic(ROMDATA& rom)
 {

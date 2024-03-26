@@ -1,4 +1,4 @@
-#include "memory_mbc3.h"
+#include "gbmemory_mbc3.h"
 
 MEMORY::MapperMbc3::MapperMbc3(ROMDATA& rom, bool cartRam, bool cartBattery, bool cartTimer)
 {

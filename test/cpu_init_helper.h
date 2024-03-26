@@ -1,9 +1,9 @@
 #ifndef __CPU_INIT_HELPER_H__
 #define __CPU_INIT_HELPER_H__
 
-#include "../cpu_registers.h"
-#include "../memory.h"
-#include "../rom.h"
+#include "cpu_registers.h"
+#include "gbmemory.h"
+#include "rom.h"
 #include <SDL2/SDL_log.h>
 #include <vector>
 
