@@ -14,14 +14,12 @@ MEMORY::CartMapper* MEMORY::CartMapper::create_mapper(ROMDATA& rom)
     switch (mapper_type)
     {
     case 0x00:
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Detected mapper type: static\n");
         return new MEMORY::MapperStatic(rom);
     case 0x03:
         cartBattery = true;
     case 0x02:
         cartRam = true;
     case 0x01:
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Detected mapper type: MBC1\n");
         return new MEMORY::MapperMbc1(rom, cartRam, cartBattery);
     case 0x10:
         cartRam = true;
@@ -29,7 +27,6 @@ MEMORY::CartMapper* MEMORY::CartMapper::create_mapper(ROMDATA& rom)
         cartTimer = true;
         cartBattery = true;
     case 0x11:
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Detected mapper type: MBC3\n"); 
         return new MEMORY::MapperMbc3(rom, cartRam, cartBattery, cartTimer);
     case 0x13:
         cartBattery = true;

@@ -38,45 +38,41 @@ namespace CPU
 
         bool get_flag_sub()
         {
-            return *FLAGS & FLAG_ZERO;
+            return *FLAGS & FLAG_SUB;
         }
 
         bool get_flag_halfcarry()
         {
-            return *FLAGS & FLAG_ZERO;
+            return *FLAGS & FLAG_HALFCARRY;
         }
 
         bool get_flag_carry()
         {
-            return *FLAGS & FLAG_ZERO;
+            return *FLAGS & FLAG_CARRY;
         }
 
-        // TODO: These flag setters do not work!!!!
-        // using bitwise OR will not work for setting flags to zero
-        // instead we can take a bitwise compliment of the flag mask
-        // and use a bitwise and operation
         void set_flag_zero(bool value)
         {
-            uint8_t mask = value ? FLAG_ZERO : 0;
-            *FLAGS |= mask;
+            if (value==true) *FLAGS |= FLAG_ZERO;
+            else *FLAGS &= ~FLAG_ZERO;
         }
 
         void set_flag_sub(bool value)
         {
-            uint8_t mask = value ? FLAG_SUB : 0;
-            *FLAGS |= mask;
+            if (value==true) *FLAGS |= FLAG_SUB;
+            else *FLAGS &= ~FLAG_SUB;
         }
 
         void set_flag_halfcarry(bool value)
         {
-            uint8_t mask = value ? FLAG_HALFCARRY : 0;
-            *FLAGS |= mask;
+            if (value==true) *FLAGS |= FLAG_HALFCARRY;
+            else *FLAGS &= ~FLAG_HALFCARRY;
         }
 
         void set_flag_carry(bool value)
         {
-            uint8_t mask = value ? FLAG_CARRY : 0;
-            *FLAGS |= mask;
+            if (value==true) *FLAGS |= FLAG_CARRY;
+            else *FLAGS &= ~FLAG_CARRY;
         }
     };
 };

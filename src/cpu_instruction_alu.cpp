@@ -4,7 +4,7 @@
 
 bool is_add_carry(uint8_t a, uint8_t b)
 {
-    return b > 0 && a > UINT8_MAX - b;
+    return b > 0 && a > (UINT8_MAX - b);
 }
 
 bool is_add_halfcarry(uint8_t a, uint8_t b)
