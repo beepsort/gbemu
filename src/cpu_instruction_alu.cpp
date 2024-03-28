@@ -212,7 +212,7 @@ CPU::InstructionResult CPU::XOR_r_r::tick()
     *dest ^= *src;
     registers.set_flag_zero(*dest == 0);
     registers.set_flag_sub(false);
-    registers.set_flag_halfcarry(true);
+    registers.set_flag_halfcarry(false);
     registers.set_flag_carry(false);
     ++*registers.PC;
     return InstructionResult::FINISHED;
@@ -226,7 +226,7 @@ CPU::InstructionResult CPU::XOR_r_n::tick()
         *dest ^= src;
         registers.set_flag_zero(*dest == 0);
         registers.set_flag_sub(false);
-        registers.set_flag_halfcarry(true);
+        registers.set_flag_halfcarry(false);
         registers.set_flag_carry(false);
         return InstructionResult::RUNNING;
     }
@@ -242,7 +242,7 @@ CPU::InstructionResult CPU::XOR_r_absrr::tick()
         *dest ^= src;
         registers.set_flag_zero(*dest == 0);
         registers.set_flag_sub(false);
-        registers.set_flag_halfcarry(true);
+        registers.set_flag_halfcarry(false);
         registers.set_flag_carry(false);
         return InstructionResult::RUNNING;
     }
