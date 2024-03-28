@@ -378,3 +378,129 @@ TEST(XOR_r_absrr_test, OpposingBitsXor) {
     EXPECT_FALSE(helper.registers.get_flag_halfcarry());
 }
 
+TEST(OR_r_r_test, FfOrFf) {
+    CpuInitHelper helper;
+    uint8_t *src = helper.registers.A;
+    uint8_t *dest = helper.registers.B;
+    *src = 0xFF;
+    *dest = 0xFF;
+    CPU::OR_r_r({dest, src, helper.registers}).tick();
+    EXPECT_EQ(*src, 0xFF);
+    EXPECT_EQ(*dest, 0xFF);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(OR_r_r_test, OpposingBitsOr) {
+    CpuInitHelper helper;
+    uint8_t *src = helper.registers.A;
+    uint8_t *dest = helper.registers.B;
+    *src = 0xAA;
+    *dest = 0x55;
+    CPU::OR_r_r({dest, src, helper.registers}).tick();
+    EXPECT_EQ(*src, 0xAA);
+    EXPECT_EQ(*dest, 0xFF);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(OR_r_r_test, ZeroOrZero) {
+    CpuInitHelper helper;
+    uint8_t *src = helper.registers.A;
+    uint8_t *dest = helper.registers.B;
+    *src = 0x00;
+    *dest = 0x00;
+    CPU::OR_r_r({dest, src, helper.registers}).tick();
+    EXPECT_EQ(*src, 0x00);
+    EXPECT_EQ(*dest, 0x00);
+    EXPECT_TRUE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(OR_r_n_test, FfOrFf) {
+    CpuInitHelper helper;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0xFF);
+    uint8_t *dest = helper.registers.B;
+    *dest = 0xFF;
+    CPU::OR_r_n({dest, helper.registers, helper.addressDispatcher}).tick();
+    EXPECT_EQ(*dest, 0xFF);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(OR_r_n_test, OpposingBitsOr) {
+    CpuInitHelper helper;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x55);
+    uint8_t *dest = helper.registers.B;
+    *dest = 0xAA;
+    CPU::OR_r_n({dest, helper.registers, helper.addressDispatcher}).tick();
+    EXPECT_EQ(*dest, 0xFF);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(OR_r_n_test, ZeroOrZero) {
+    CpuInitHelper helper;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x00);
+    uint8_t *dest = helper.registers.B;
+    *dest = 0x00;
+    CPU::OR_r_n({dest, helper.registers, helper.addressDispatcher}).tick();
+    EXPECT_EQ(*dest, 0x00);
+    EXPECT_TRUE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(OR_r_absrr_test, FfOrFf) {
+    CpuInitHelper helper;
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 0xFF);
+    uint8_t *dest = helper.registers.B;
+    *dest = 0xFF;
+    CPU::OR_r_absrr({dest, helper.registers.HL, helper.registers, helper.addressDispatcher}).tick();
+    EXPECT_EQ(*dest, 0xFF);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(OR_r_absrr_test, OpposingBitsOr) {
+    CpuInitHelper helper;
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 0x55);
+    uint8_t *dest = helper.registers.B;
+    *dest = 0xAA;
+    CPU::OR_r_absrr({dest, helper.registers.HL, helper.registers, helper.addressDispatcher}).tick();
+    EXPECT_EQ(*dest, 0xFF);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(OR_r_absrr_test, ZeroOrZero) {
+    CpuInitHelper helper;
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 0x00);
+    uint8_t *dest = helper.registers.B;
+    *dest = 0x00;
+    CPU::OR_r_absrr({dest, helper.registers.HL, helper.registers, helper.addressDispatcher}).tick();
+    EXPECT_EQ(*dest, 0x00);
+    EXPECT_TRUE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
