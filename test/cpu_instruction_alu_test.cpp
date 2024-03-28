@@ -150,6 +150,21 @@ TEST(SUB_r_r_test, OneMinusOne) {
     EXPECT_FALSE(helper.registers.get_flag_halfcarry());
 }
 
+TEST(SUB_r_r_test, ZeroMinusZero) {
+    CpuInitHelper helper;
+    uint8_t *src = helper.registers.A;
+    uint8_t *dest = helper.registers.B;
+    *src = 0;
+    *dest = 0;
+    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    EXPECT_EQ(*src, 0);
+    EXPECT_EQ(*dest, 0);
+    EXPECT_TRUE(helper.registers.get_flag_zero());
+    EXPECT_TRUE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
 TEST(SUB_r_r_test, ZeroMinusOne_Underflow) {
     CpuInitHelper helper;
     uint8_t *src = helper.registers.A;
@@ -163,5 +178,62 @@ TEST(SUB_r_r_test, ZeroMinusOne_Underflow) {
     EXPECT_TRUE(helper.registers.get_flag_sub());
     EXPECT_TRUE(helper.registers.get_flag_carry());
     EXPECT_TRUE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(SUB_r_r_test, ZeroMinusMax_Underflow) {
+    CpuInitHelper helper;
+    uint8_t *src = helper.registers.A;
+    uint8_t *dest = helper.registers.B;
+    *src = 255;
+    *dest = 0;
+    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    EXPECT_EQ(*src, 255);
+    EXPECT_EQ(*dest, 1);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_TRUE(helper.registers.get_flag_sub());
+    EXPECT_TRUE(helper.registers.get_flag_carry());
+    EXPECT_TRUE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(SUB_r_r_test, Minus_HalfCarry) {
+    CpuInitHelper helper;
+    uint8_t *src = helper.registers.A;
+    uint8_t *dest = helper.registers.B;
+    *src = 0x08;
+    *dest = 0xF0;
+    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    EXPECT_EQ(*src, 0x08);
+    EXPECT_EQ(*dest, 0xE8);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_TRUE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_TRUE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(SUB_r_n_test, OneMinusOne) {
+    CpuInitHelper helper;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 1);
+    uint8_t *dest = helper.registers.B;
+    *dest = 1;
+    CPU::SUB_r_n({dest, helper.registers, helper.addressDispatcher}).tick();
+    EXPECT_EQ(*dest, 0);
+    EXPECT_TRUE(helper.registers.get_flag_zero());
+    EXPECT_TRUE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(SUB_r_absrr_test, OneMinusOne) {
+    CpuInitHelper helper;
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 1);
+    uint8_t *dest = helper.registers.B;
+    *dest = 1;
+    CPU::SUB_r_absrr({dest, helper.registers.HL, helper.registers, helper.addressDispatcher}).tick();
+    EXPECT_EQ(*dest, 0);
+    EXPECT_TRUE(helper.registers.get_flag_zero());
+    EXPECT_TRUE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
 }
 
