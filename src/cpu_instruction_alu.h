@@ -639,6 +639,7 @@ namespace CPU
     private:
         uint16_t* dest;
         CpuRegisters& registers;
+        uint8_t step = 0;
     public:
         INC_rr(uint16_t* dest, CpuRegisters& registers)
         : dest(dest), registers(registers) {}
@@ -661,6 +662,7 @@ namespace CPU
     private:
         uint16_t* dest;
         CpuRegisters& registers;
+        uint8_t step = 0;
     public:
         DEC_rr(uint16_t* dest, CpuRegisters& registers)
         : dest(dest), registers(registers) {}

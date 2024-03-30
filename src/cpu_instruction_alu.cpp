@@ -456,22 +456,31 @@ CPU::InstructionResult CPU::ADD_HL_rr::tick()
 
 CPU::InstructionResult CPU::INC_rr::tick()
 {
-    registers.set_flag_halfcarry(is_add_halfcarry(*dest, 1));
-    *dest = *dest != UINT16_MAX ? *dest+1 : 0;
-    registers.set_flag_zero(*dest == 0);
-    registers.set_flag_sub(false);
+    if (step++ == 0)
+    {
+        registers.set_flag_halfcarry(is_add_halfcarry(*dest, 1));
+        *dest = *dest != UINT16_MAX ? *dest+1 : 0;
+        registers.set_flag_zero(*dest == 0);
+        registers.set_flag_sub(false);
+        return InstructionResult::FINISHED;
+    }
     ++*registers.PC;
-    return InstructionResult::FINISHED;
+    return InstructionResult::RUNNING;
 }
 
 CPU::InstructionResult CPU::DEC_rr::tick()
 {
-    registers.set_flag_halfcarry(is_sub_halfcarry(*dest, 1));
-    *dest = *dest != 0 ? *dest-1 : UINT16_MAX;
-    registers.set_flag_zero(*dest == 0);
-    registers.set_flag_sub(true);
+    if (step++ == 0)
+    {
+        registers.set_flag_halfcarry(is_sub_halfcarry(*dest, 1));
+        *dest = *dest != 0 ? *dest-1 : UINT16_MAX;
+        registers.set_flag_zero(*dest == 0);
+        registers.set_flag_sub(true);
+        ++*registers.PC;
+        return InstructionResult::FINISHED;
+    }
     ++*registers.PC;
-    return InstructionResult::FINISHED;
+    return InstructionResult::RUNNING;
 }
 
 CPU::InstructionResult CPU::RLA_r::tick()
