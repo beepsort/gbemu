@@ -787,7 +787,7 @@ TEST(DEC_absrr_test, DecOne) {
     EXPECT_FALSE(helper.registers.get_flag_halfcarry());
 }
 
-TEST(DAA_test, Daa_LeastSigFix) {
+TEST(DAA_test, Daa_AddLeastSigFix) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     uint8_t *src = helper.registers.B;
@@ -802,7 +802,7 @@ TEST(DAA_test, Daa_LeastSigFix) {
     EXPECT_FALSE(helper.registers.get_flag_halfcarry());
 }
 
-TEST(DAA_test, Daa_HalfCarryFix) {
+TEST(DAA_test, Daa_AddHalfCarryFix) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     uint8_t *src = helper.registers.B;
@@ -817,7 +817,7 @@ TEST(DAA_test, Daa_HalfCarryFix) {
     EXPECT_FALSE(helper.registers.get_flag_halfcarry());
 }
 
-TEST(DAA_test, Daa_MostSigFix) {
+TEST(DAA_test, Daa_AddMostSigFix) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     uint8_t *src = helper.registers.B;
@@ -832,7 +832,7 @@ TEST(DAA_test, Daa_MostSigFix) {
     EXPECT_FALSE(helper.registers.get_flag_halfcarry());
 }
 
-TEST(DAA_test, Daa_MostSigFixMedium) {
+TEST(DAA_test, Daa_AddMostSigFixOverflow) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     uint8_t *src = helper.registers.B;
@@ -847,7 +847,7 @@ TEST(DAA_test, Daa_MostSigFixMedium) {
     EXPECT_FALSE(helper.registers.get_flag_halfcarry());
 }
 
-TEST(DAA_test, Daa_MostSigFixLarge) {
+TEST(DAA_test, Daa_AddBothFix) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     uint8_t *src = helper.registers.B;
@@ -860,4 +860,94 @@ TEST(DAA_test, Daa_MostSigFixLarge) {
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_carry());
     EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(DAA_test, Daa_SubLeastSigFix) {
+    CpuInitHelper helper;
+    uint8_t *dest = helper.registers.A;
+    uint8_t *src = helper.registers.B;
+    *dest = 0x36;
+    *src = 0x27;
+    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    EXPECT_EQ(*dest, 0x0F);
+    CPU::DAA({helper.registers}).tick();
+    EXPECT_EQ(*dest, 0x09);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(DAA_test, Daa_SubMostSigFix) {
+    CpuInitHelper helper;
+    uint8_t *dest = helper.registers.A;
+    uint8_t *src = helper.registers.B;
+    *dest = 0x99;
+    *src = 0x10;
+    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    EXPECT_EQ(*dest, 0xA9);
+    CPU::DAA({helper.registers}).tick();
+    EXPECT_EQ(*dest, 0x09);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_TRUE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(DAA_test, Daa_SubUnderflowFix) {
+    CpuInitHelper helper;
+    uint8_t *dest = helper.registers.A;
+    uint8_t *src = helper.registers.B;
+    *dest = 0x27;
+    *src = 0x36;
+    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    EXPECT_EQ(*dest, 0xF1);
+    CPU::DAA({helper.registers}).tick();
+    EXPECT_EQ(*dest, 0x91);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_TRUE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(DAA_test, Daa_SubBothFix) {
+    CpuInitHelper helper;
+    uint8_t *dest = helper.registers.A;
+    uint8_t *src = helper.registers.B;
+    *dest = 0x11;
+    *src = 0x22;
+    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    EXPECT_EQ(*dest, 0xEF);
+    CPU::DAA({helper.registers}).tick();
+    EXPECT_EQ(*dest, 0x89);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_TRUE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(CPL_test, Cpl_Zeros) {
+    CpuInitHelper helper;
+    uint8_t *dest = helper.registers.A;
+    *dest = 0x00;
+    CPU::CPL({helper.registers}).tick();
+    EXPECT_EQ(*dest, 0xFF);
+    EXPECT_TRUE(helper.registers.get_flag_sub());
+    EXPECT_TRUE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(CPL_test, Cpl_Ones) {
+    CpuInitHelper helper;
+    uint8_t *dest = helper.registers.A;
+    *dest = 0xFF;
+    CPU::CPL({helper.registers}).tick();
+    EXPECT_EQ(*dest, 0x00);
+    EXPECT_TRUE(helper.registers.get_flag_sub());
+    EXPECT_TRUE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(CPL_test, Cpl_Alternating) {
+    CpuInitHelper helper;
+    uint8_t *dest = helper.registers.A;
+    *dest = 0xAA;
+    CPU::CPL({helper.registers}).tick();
+    EXPECT_EQ(*dest, 0x55);
+    EXPECT_TRUE(helper.registers.get_flag_sub());
+    EXPECT_TRUE(helper.registers.get_flag_halfcarry());
 }
