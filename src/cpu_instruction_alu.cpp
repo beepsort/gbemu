@@ -29,7 +29,7 @@ bool is_add_carry(uint16_t a, uint16_t b)
 
 bool is_add_halfcarry(uint16_t a, uint16_t b)
 {
-    return (((a & 0x0F00) + (b & 0x0F00)) & 0x1000) == 0x1000;
+    return (((a & 0x0FFF) + (b & 0x0FFF)) & 0x1000) == 0x1000;
 }
 
 bool is_sub_carry(uint16_t a, uint16_t b)
@@ -39,7 +39,7 @@ bool is_sub_carry(uint16_t a, uint16_t b)
 
 bool is_sub_halfcarry(uint16_t a, uint16_t b)
 {
-    return (a & 0x0F00) < (b & 0x0F00);
+    return (a & 0x0FFF) < (b & 0x0FFF);
 }
 
 CPU::InstructionResult CPU::ADD_r_r::tick()
@@ -442,10 +442,14 @@ CPU::InstructionResult CPU::CPL::tick()
 
 CPU::InstructionResult CPU::ADD_HL_rr::tick()
 {
-    registers.set_flag_carry(is_add_carry(*dest, *src));
-    registers.set_flag_halfcarry(is_add_halfcarry(*dest, *src));
-    *dest += *src;
-    registers.set_flag_sub(false);
+    if (step++ == 0)
+    {
+        registers.set_flag_carry(is_add_carry(*dest, *src));
+        registers.set_flag_halfcarry(is_add_halfcarry(*dest, *src));
+        *dest += *src;
+        registers.set_flag_sub(false);
+        return InstructionResult::RUNNING;
+    }
     ++*registers.PC;
     return InstructionResult::FINISHED;
 }

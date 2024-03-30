@@ -604,7 +604,7 @@ namespace CPU
     /**
      * @brief Add 16-bit register to HL register and store result in the HL register
      * 1 byte opcodes with no further operands
-     * 1 M-cycle to complete
+     * 2 M-cycle to complete
      * - 0 H C
      * Flags:
      * Zero: not modified
@@ -616,6 +616,7 @@ namespace CPU
         uint16_t* src;
         uint16_t* dest;
         CpuRegisters& registers;
+        uint8_t step = 0;
     public:
         ADD_HL_rr(uint16_t* src, CpuRegisters& registers)
         : dest(registers.HL), src(src), registers(registers) {}
