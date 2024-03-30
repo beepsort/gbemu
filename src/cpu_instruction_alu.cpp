@@ -12,6 +12,16 @@ bool is_add_halfcarry(uint8_t a, uint8_t b)
     return (((a & 0x0F) + (b & 0x0F)) & 0x10) == 0x10;
 }
 
+bool is_sub_carry(uint8_t a, uint8_t b)
+{
+    return a < b;
+}
+
+bool is_sub_halfcarry(uint8_t a, uint8_t b)
+{
+    return (a & 0x0F) < (b & 0x0F);
+}
+
 bool is_add_carry(uint16_t a, uint16_t b)
 {
     return b > 0 && a > UINT16_MAX - b;
@@ -91,16 +101,6 @@ CPU::InstructionResult CPU::ADD_r_absrr::tick()
     }
     ++*registers.PC;
     return InstructionResult::FINISHED;
-}
-
-bool is_sub_carry(uint8_t a, uint8_t b)
-{
-    return a < b;
-}
-
-bool is_sub_halfcarry(uint8_t a, uint8_t b)
-{
-    return (a & 0x0F) < (b & 0x0F);
 }
 
 CPU::InstructionResult CPU::SUB_r_r::tick()
@@ -399,17 +399,29 @@ CPU::InstructionResult CPU::DEC_absrr::tick()
 CPU::InstructionResult CPU::DAA::tick()
 {
     uint8_t adjust_val = 0;
-    if (registers.get_flag_halfcarry())
+    if (registers.get_flag_halfcarry() || (*registers.A & 0x0F) > 0x09)
     {
-        adjust_val += 6;
+        adjust_val += 0x06;
     }
-    if (registers.get_flag_carry())
+    if (registers.get_flag_carry() || (*registers.A & 0xF0) > 0x90)
     {
-        adjust_val += 60;
+        adjust_val += 0x60;
+    }
+    uint16_t adjusted_result;
+    bool carry;
+    if (registers.get_flag_sub() == false)
+    {
+        adjusted_result = (*registers.A) + adjust_val;
+        carry = registers.get_flag_carry() || is_add_carry(*registers.A, adjust_val);
+    }
+    else // registers.get_flag_sub() === true
+    {
+        adjusted_result = (*registers.A) - adjust_val;
+        carry = registers.get_flag_carry() || is_sub_carry(*registers.A, adjust_val);
     }
     registers.set_flag_halfcarry(false);
-    registers.set_flag_carry(is_add_carry(*registers.A, adjust_val));
-    *registers.A += adjust_val;
+    registers.set_flag_carry(carry);
+    *registers.A = (uint8_t) adjusted_result;
     registers.set_flag_zero(*registers.A == 0);
     ++*registers.PC;
     return InstructionResult::FINISHED;
