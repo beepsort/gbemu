@@ -1016,3 +1016,43 @@ TEST(ADD_HL_rr_test, OnePlusMax_HalfCarry) {
     EXPECT_TRUE(helper.registers.get_flag_halfcarry());
 }
 
+TEST(INC_rr_test, IncZero) {
+    CpuInitHelper helper;
+    uint16_t *dest = helper.registers.BC;
+    *dest = 0;
+    CPU::INC_rr instr({dest, helper.registers});
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*dest, 1);
+}
+
+TEST(INC_rr_test, IncOverflow) {
+    CpuInitHelper helper;
+    uint16_t *dest = helper.registers.BC;
+    *dest = 0xFFFF;
+    CPU::INC_rr instr({dest, helper.registers});
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*dest, 0);
+}
+
+TEST(DEC_rr_test, DecOne) {
+    CpuInitHelper helper;
+    uint16_t *dest = helper.registers.BC;
+    *dest = 0x0001;
+    CPU::DEC_rr instr({dest, helper.registers});
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*dest, 0x0000);
+}
+
+TEST(DEC_rr_test, DecUnderflow) {
+    CpuInitHelper helper;
+    uint16_t *dest = helper.registers.BC;
+    *dest = 0;
+    CPU::DEC_rr instr({dest, helper.registers});
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*dest, 0xFFFF);
+}
+
