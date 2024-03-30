@@ -951,3 +951,68 @@ TEST(CPL_test, Cpl_Alternating) {
     EXPECT_TRUE(helper.registers.get_flag_sub());
     EXPECT_TRUE(helper.registers.get_flag_halfcarry());
 }
+
+TEST(ADD_HL_rr_test, OnePlusOne) {
+    CpuInitHelper helper;
+    uint16_t *src = helper.registers.BC;
+    uint16_t *dest = helper.registers.HL;
+    *src = 1;
+    *dest = 1;
+    CPU::ADD_HL_rr instr({src, helper.registers});
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*src, 1);
+    EXPECT_EQ(*dest, 2);
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(ADD_HL_rr_test, ZeroPlusZero) {
+    CpuInitHelper helper;
+    uint16_t *src = helper.registers.BC;
+    uint16_t *dest = helper.registers.HL;
+    *src = 0;
+    *dest = 0;
+    CPU::ADD_HL_rr instr({src, helper.registers});
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*src, 0);
+    EXPECT_EQ(*dest, 0);
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(ADD_HL_rr_test, OnePlusMax_Overflow) {
+    CpuInitHelper helper;
+    uint16_t *src = helper.registers.BC;
+    uint16_t *dest = helper.registers.HL;
+    *src = 0xFFFF;
+    *dest = 1;
+    CPU::ADD_HL_rr instr({src, helper.registers});
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*src, 0xFFFF);
+    EXPECT_EQ(*dest, 0);
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_TRUE(helper.registers.get_flag_carry());
+    EXPECT_TRUE(helper.registers.get_flag_halfcarry());
+}
+
+TEST(ADD_HL_rr_test, OnePlusMax_HalfCarry) {
+    CpuInitHelper helper;
+    uint16_t *src = helper.registers.BC;
+    uint16_t *dest = helper.registers.HL;
+    *src = 0x0FFF;
+    *dest = 1;
+    CPU::ADD_HL_rr instr({src, helper.registers});
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*src, 0x0FFF);
+    EXPECT_EQ(*dest, 0x1000);
+    EXPECT_FALSE(helper.registers.get_flag_sub());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_TRUE(helper.registers.get_flag_halfcarry());
+}
+
