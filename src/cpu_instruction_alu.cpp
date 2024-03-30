@@ -356,6 +356,7 @@ CPU::InstructionResult CPU::INC_absrr::tick()
         case 1:
             registers.set_flag_halfcarry(is_add_halfcarry(result, 1));
             result = result != UINT8_MAX ? result+1 : 0;
+            memory.write(*dest_addr, result);
             registers.set_flag_zero(result == 0);
             registers.set_flag_sub(false);
             return InstructionResult::RUNNING;
@@ -385,6 +386,7 @@ CPU::InstructionResult CPU::DEC_absrr::tick()
         case 1:
             registers.set_flag_halfcarry(is_sub_halfcarry(result, 1));
             result = result != 0 ? result-1 : UINT8_MAX;
+            memory.write(*dest_addr, result);
             registers.set_flag_zero(result == 0);
             registers.set_flag_sub(true);
             return InstructionResult::RUNNING;
