@@ -27,10 +27,10 @@ CPU::InstructionResult CPU::LD_r_absrr::tick()
         switch (post_operation)
         {
             case AddressMutOperation::INC:
-                *src_addr++;
+                ++*src_addr;
                 break;
             case AddressMutOperation::DEC:
-                *src_addr--;
+                --*src_addr;
                 break;
             case AddressMutOperation::NONE:
                 break;
@@ -49,10 +49,10 @@ CPU::InstructionResult CPU::LD_absrr_r::tick()
         switch (post_operation)
         {
             case AddressMutOperation::INC:
-                *dest_addr++;
+                ++*dest_addr;
                 break;
             case AddressMutOperation::DEC:
-                *dest_addr--;
+                --*dest_addr;
                 break;
             case AddressMutOperation::NONE:
                 break;
