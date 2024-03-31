@@ -128,3 +128,16 @@ TEST(LD_r_relr_test, LD_A_relC) {
     instr.tick();
     EXPECT_EQ(*dest, 50);
 }
+
+TEST(LD_relr_r_test, LD_relC_A) {
+    CpuInitHelper helper;
+    uint8_t* dest_addr_lsb = helper.registers.C;
+    uint8_t* src = helper.registers.A;
+    *dest_addr_lsb = 0x80; // Becomes 0xFF80
+    *src = 50;
+    helper.addressDispatcher.write(0xFF80, 0);
+    CPU::LD_relr_r instr(helper.registers, dest_addr_lsb, src, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(0xFF80), 50);
+}
