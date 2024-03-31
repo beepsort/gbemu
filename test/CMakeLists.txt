@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.14)
-add_executable(gbemu_test cpu_init_helper.cpp cpu_init_helper.h cpu_instruction_alu_test.cpp)
+add_executable(gbemu_test
+    cpu_init_helper.cpp
+    cpu_init_helper.h
+    cpu_instruction_alu_test.cpp
+    cpu_instruction_load_test.cpp
+    )
 find_package(GTest REQUIRED)
 target_include_directories(gbemu_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../src)
 target_link_libraries(gbemu_test gameboy SDL2 GTest::gtest_main)
