@@ -43,7 +43,7 @@ namespace MEMORY
         CartMapper* cartMapper;
         std::array<uint8_t, 0x2000> videoRam;
         std::array<uint8_t, 0x2000> workRam;
-        std::array<uint8_t, 0x79> highRam;
+        std::array<uint8_t, 0x7F> highRam;
     public:
         AddressDispatcher(ROMDATA& rom);
         uint8_t read(uint16_t addr);
