@@ -100,3 +100,18 @@ TEST(LD_r_absnn_test, LD_A_absD16) {
     instr.tick();
     EXPECT_EQ(*helper.registers.A, 50);
 }
+
+TEST(LD_absnn_r_test, LD_absD16_A) {
+    CpuInitHelper helper;
+    uint8_t* src = helper.registers.A;
+    *src = 50;
+    helper.addressDispatcher.write(*helper.registers.PC + 1 ,(uint8_t) MEMORY::WRAM_LO);
+    helper.addressDispatcher.write(*helper.registers.PC + 2 ,(uint8_t) (MEMORY::WRAM_LO >> 8));
+    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0);
+    CPU::LD_absnn_r instr(helper.registers, src, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 50);
+}
