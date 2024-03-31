@@ -154,3 +154,16 @@ TEST(LD_r_reln_test, LD_A_rel_d8) {
     instr.tick();
     EXPECT_EQ(*dest, 50);
 }
+
+TEST(LD_reln_r_test, LD_rel_d8_A) {
+    CpuInitHelper helper;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x80);
+    uint8_t* src = helper.registers.A;
+    *src = 50;
+    helper.addressDispatcher.write(0xFF80, 0);
+    CPU::LD_reln_r instr(helper.registers, src, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(0xFF80), 50);
+}
