@@ -65,14 +65,18 @@ CPU::InstructionResult CPU::LD_absrr_r::tick()
 
 CPU::InstructionResult CPU::LD_absrr_n::tick()
 {
-    if (step++ == 0)
+    switch (step++)
     {
-        uint8_t data = memory.read(++*registers.PC);
-        memory.write(*dest_addr, data);
-        return InstructionResult::RUNNING;
+        case 0:
+            src_data = memory.read(++*registers.PC);
+            return InstructionResult::RUNNING;
+        case 1:
+            memory.write(*dest_addr, src_data);
+            return InstructionResult::RUNNING;
+        default:
+            ++*registers.PC;
+            return InstructionResult::FINISHED;
     }
-    ++*registers.PC;
-    return InstructionResult::FINISHED;
 }
 
 CPU::InstructionResult CPU::LD_r_absnn::tick()

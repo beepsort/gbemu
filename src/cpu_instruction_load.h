@@ -97,12 +97,13 @@ namespace CPU
     class LD_absrr_n: public CpuInstruction
     {
     /**
-     * @brief Load data from 8-bit register to memory at 16-bit absolute address in register
+     * @brief Load data from 8-bit immediate value to memory at 16-bit absolute address in register
      * All 1 byte opcodes with no operands
-     * All take 2 M-cycles to complete
+     * All take 3 M-cycles to complete
      */
     private:
         uint16_t* dest_addr;
+        uint8_t src_data;
         uint8_t step = 0;
         CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
