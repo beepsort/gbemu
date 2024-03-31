@@ -74,3 +74,15 @@ TEST(LD_absrr_r_test, LD_absHL_A) {
     EXPECT_EQ(*src, 50);
     EXPECT_EQ(helper.addressDispatcher.read(*helper.registers.HL), 50);
 }
+
+TEST(LD_absrr_n_test, LD_absHL_d8) {
+    CpuInitHelper helper;
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 50);
+    CPU::LD_absrr_n instr(helper.registers, helper.registers.HL, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 50);
+    EXPECT_EQ(helper.addressDispatcher.read(*helper.registers.HL), 50);
+}
