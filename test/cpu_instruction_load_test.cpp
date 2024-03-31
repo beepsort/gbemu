@@ -115,3 +115,16 @@ TEST(LD_absnn_r_test, LD_absD16_A) {
     instr.tick();
     EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 50);
 }
+
+TEST(LD_r_relr_test, LD_A_relC) {
+    CpuInitHelper helper;
+    uint8_t* src_addr_lsb = helper.registers.C;
+    uint8_t* dest = helper.registers.A;
+    *src_addr_lsb = 0x80; // Becomes 0xFF80
+    *dest = 0;
+    helper.addressDispatcher.write(0xFF80, 50);
+    CPU::LD_r_relr instr(helper.registers, dest, src_addr_lsb, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*dest, 50);
+}
