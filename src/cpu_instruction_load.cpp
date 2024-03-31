@@ -166,7 +166,7 @@ CPU::InstructionResult CPU::LD_reln_r::tick()
     {
         case 0:
             write_addr = 0xFF << 8;
-            write_addr = memory.read(++*registers.PC);
+            write_addr |= memory.read(++*registers.PC);
             return InstructionResult::RUNNING;
         case 1:
             memory.write(write_addr, *src);
