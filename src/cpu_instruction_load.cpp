@@ -149,7 +149,7 @@ CPU::InstructionResult CPU::LD_r_reln::tick()
     {
         case 0:
             load_addr = 0xFF << 8;
-            load_addr |= ++*registers.PC;
+            load_addr |= memory.read(++*registers.PC);
             return InstructionResult::RUNNING;
         case 1:
             *dest = memory.read(load_addr);
