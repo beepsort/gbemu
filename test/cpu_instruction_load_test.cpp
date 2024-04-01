@@ -219,7 +219,7 @@ TEST(PUSH_rr_test, PUSH_BC) {
     *sp = MEMORY::WRAM_LO + 2;
     helper.addressDispatcher.write(MEMORY::WRAM_LO, 0);
     helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0);
-    CPU::PUSH_rr instr({helper.registers, sp, src, helper.addressDispatcher});
+    CPU::PUSH_rr instr({helper.registers, src, helper.addressDispatcher});
     instr.tick();
     instr.tick();
     instr.tick();
@@ -237,7 +237,7 @@ TEST(POP_rr_test, POP_BC) {
     *sp = MEMORY::WRAM_LO;
     helper.addressDispatcher.write(MEMORY::WRAM_LO, 0x34);
     helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0x12);
-    CPU::POP_rr instr({helper.registers, dest, sp, helper.addressDispatcher});
+    CPU::POP_rr instr({helper.registers, dest, helper.addressDispatcher});
     instr.tick();
     instr.tick();
     instr.tick();
@@ -254,13 +254,13 @@ TEST(PUSH_POP_test, PUSH_POP_BC) {
     *sp = MEMORY::WRAM_LO + 2;
     helper.addressDispatcher.write(MEMORY::WRAM_LO, 0);
     helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0);
-    CPU::PUSH_rr instr({helper.registers, sp, src, helper.addressDispatcher});
+    CPU::PUSH_rr instr({helper.registers, src, helper.addressDispatcher});
     instr.tick();
     instr.tick();
     instr.tick();
     instr.tick();
     *dest = 0;
-    CPU::POP_rr instr2({helper.registers, dest, sp, helper.addressDispatcher});
+    CPU::POP_rr instr2({helper.registers, dest, helper.addressDispatcher});
     instr2.tick();
     instr2.tick();
     instr2.tick();

@@ -399,7 +399,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xC0:
             // TODO: RET NZ
         case 0xC1:
-            return new POP_rr(registers, registers.BC, registers.SP, memory);
+            return new POP_rr(registers, registers.BC, memory);
         case 0xC2:
             return new JP_NN(registers, memory, &cond_NZ);
         case 0xC3:
@@ -407,7 +407,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xC4:
             // TODO: JP a16 TODO NEXT
         case 0xC5:
-            return new PUSH_rr(registers, registers.SP, registers.BC, memory);
+            return new PUSH_rr(registers, registers.BC, memory);
         case 0xC6:
             return new ADD_r_n(registers.A, registers, memory);
         case 0xC7:
@@ -431,7 +431,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xD0:
             // TODO: RET NC
         case 0xD1:
-            return new POP_rr(registers, registers.DE, registers.SP, memory);
+            return new POP_rr(registers, registers.DE, memory);
         case 0xD2:
             return new JP_NN(registers, memory, &cond_NC);
         case 0xD3:
@@ -439,7 +439,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xD4:
             // TODO: CALL NC a16
         case 0xD5:
-            return new PUSH_rr(registers, registers.SP, registers.DE, memory);
+            return new PUSH_rr(registers, registers.DE, memory);
         case 0xD6:
             return new SUB_r_n(registers.A, registers, memory);
         case 0xD7:
@@ -463,7 +463,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xE0:
             return new LD_reln_r(registers, registers.A, memory);
         case 0xE1:
-            return new POP_rr(registers, registers.HL, registers.SP, memory);
+            return new POP_rr(registers, registers.HL, memory);
         case 0xE2:
             return new LD_relr_r(registers, registers.C, registers.A, memory);
         case 0xE3:
@@ -471,7 +471,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xE4:
             return new NOP(registers);
         case 0xE5:
-            return new PUSH_rr(registers, registers.SP, registers.HL, memory);
+            return new PUSH_rr(registers, registers.HL, memory);
         case 0xE6:
             return new AND_r_n(registers.A, registers, memory);
         case 0xE7:
@@ -495,7 +495,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xF0:
             return new LD_r_reln(registers, registers.A, memory);
         case 0xF1:
-            return new POP_rr(registers, registers.AF, registers.SP, memory);
+            return new POP_rr(registers, registers.AF, memory);
         case 0xF2:
             return new LD_r_relr(registers, registers.A, registers.C, memory);
         case 0xF3:
@@ -503,7 +503,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xF4:
             return new NOP(registers);
         case 0xF5:
-            return new PUSH_rr(registers, registers.SP, registers.AF, memory);
+            return new PUSH_rr(registers, registers.AF, memory);
         case 0xF6:
             return new OR_r_n(registers.A, registers, memory);
         case 0xF7:

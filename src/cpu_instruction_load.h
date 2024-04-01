@@ -303,8 +303,8 @@ namespace CPU
         CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        PUSH_rr(CpuRegisters& registers, uint16_t* sp, uint16_t* src, MEMORY::AddressDispatcher& memory)
-        : registers(registers), sp(sp), src(src), memory(memory) {}
+        PUSH_rr(CpuRegisters& registers, uint16_t* src, MEMORY::AddressDispatcher& memory)
+        : registers(registers), sp(registers.SP), src(src), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -323,8 +323,8 @@ namespace CPU
         CPU::CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
     public:
-        POP_rr(CpuRegisters& registers, uint16_t* dest, uint16_t* sp, MEMORY::AddressDispatcher& memory)
-        : registers(registers), dest(dest), sp(sp), memory(memory) {}
+        POP_rr(CpuRegisters& registers, uint16_t* dest, MEMORY::AddressDispatcher& memory)
+        : registers(registers), dest(dest), sp(registers.SP), memory(memory) {}
         InstructionResult tick();
     };
 };
