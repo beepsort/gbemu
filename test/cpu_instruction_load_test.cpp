@@ -167,3 +167,16 @@ TEST(LD_reln_r_test, LD_rel_d8_A) {
     instr.tick();
     EXPECT_EQ(helper.addressDispatcher.read(0xFF80), 50);
 }
+
+TEST(LD_rr_nn_test, LD_BC_d16) {
+    CpuInitHelper helper;
+    uint16_t* dest = helper.registers.BC;
+    *dest = 0;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x34);
+    helper.addressDispatcher.write(*helper.registers.PC + 2, 0x12);
+    CPU::LD_rr_nn instr({helper.registers, dest, helper.addressDispatcher});
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*dest, 0x1234);
+}
