@@ -210,3 +210,22 @@ TEST(LD_rr_rr_test, LD_SP_HL) {
     instr.tick();
     EXPECT_EQ(*dest, 0x1234);
 }
+
+TEST(PUSH_rr_test, PUSH_BC) {
+    CpuInitHelper helper;
+    uint16_t* src = helper.registers.BC;
+    uint16_t* sp = helper.registers.SP;
+    *src = 0x1234;
+    *sp = MEMORY::WRAM_LO + 2;
+    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0);
+    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0);
+    CPU::PUSH_rr instr({helper.registers, sp, src, helper.addressDispatcher});
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*sp, MEMORY::WRAM_LO);
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x34);
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO + 1), 0x12);
+}
+
