@@ -181,6 +181,24 @@ TEST(LD_rr_nn_test, LD_BC_d16) {
     EXPECT_EQ(*dest, 0x1234);
 }
 
+TEST(LD_absnn_rr_test, LD_absD16_SP) {
+    CpuInitHelper helper;
+    uint16_t* src = helper.registers.SP;
+    *src = 0x1234;
+    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0);
+    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0);
+    helper.addressDispatcher.write(*helper.registers.PC + 1, (uint8_t)MEMORY::WRAM_LO);
+    helper.addressDispatcher.write(*helper.registers.PC + 2, (uint8_t)(MEMORY::WRAM_LO >> 8));
+    CPU::LD_absnn_rr instr({helper.registers, src, helper.addressDispatcher});
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x34);
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO + 1), 0x12);
+}
+
 TEST(LD_rr_rr_test, LD_SP_HL) {
     CpuInitHelper helper;
     uint16_t* src = helper.registers.HL;
