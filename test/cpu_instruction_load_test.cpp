@@ -180,3 +180,15 @@ TEST(LD_rr_nn_test, LD_BC_d16) {
     instr.tick();
     EXPECT_EQ(*dest, 0x1234);
 }
+
+TEST(LD_rr_rr_test, LD_SP_HL) {
+    CpuInitHelper helper;
+    uint16_t* src = helper.registers.HL;
+    uint16_t* dest = helper.registers.SP;
+    *src = 0x1234;
+    *dest = 0;
+    CPU::LD_rr_rr instr({helper.registers, dest, src});
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*dest, 0x1234);
+}
