@@ -245,3 +245,26 @@ TEST(POP_rr_test, POP_BC) {
     EXPECT_EQ(*dest, 0x1234);
 }
 
+TEST(PUSH_POP_test, PUSH_POP_BC) {
+    CpuInitHelper helper;
+    uint16_t* src = helper.registers.BC;
+    uint16_t* dest = helper.registers.BC;
+    uint16_t* sp = helper.registers.SP;
+    *src = 0x1234;
+    *sp = MEMORY::WRAM_LO + 2;
+    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0);
+    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0);
+    CPU::PUSH_rr instr({helper.registers, sp, src, helper.addressDispatcher});
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    *dest = 0;
+    CPU::POP_rr instr2({helper.registers, dest, sp, helper.addressDispatcher});
+    instr2.tick();
+    instr2.tick();
+    instr2.tick();
+    EXPECT_EQ(*sp, MEMORY::WRAM_LO + 2);
+    EXPECT_EQ(*dest, 0x1234);
+}
+
