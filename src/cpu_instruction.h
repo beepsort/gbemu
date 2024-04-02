@@ -17,6 +17,7 @@ namespace CPU
         // progress instruction by 1 M-cycle
         // return boolean true when instruction is complete
         virtual InstructionResult tick() = 0;
+        virtual ~CpuInstruction() = default;
     };
 };
 

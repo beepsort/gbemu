@@ -4,6 +4,7 @@
 #include "gbmemory_static.h"
 #include "gbmemory_mbc1.h"
 #include "gbmemory_mbc3.h"
+#include "cpu_interrupt.h"
 
 MEMORY::CartMapper* MEMORY::CartMapper::create_mapper(ROMDATA& rom)
 {
@@ -65,8 +66,7 @@ uint8_t MEMORY::AddressDispatcher::read(uint16_t addr)
     }
     else if (addr >= IO_REG_LO && addr <= IO_REG_HI)
     {
-        // TODO: Implement IO registers
-        return 0x00;
+        return ioHandler.read(addr);
     }
     else if (addr >= HRAM_LO && addr <= HRAM_HI)
     {
@@ -74,8 +74,7 @@ uint8_t MEMORY::AddressDispatcher::read(uint16_t addr)
     }
     else if (addr == INTERRUPT_ENABLE)
     {
-        // TODO: Check interrupt enable register behaviour
-        return 0x00;
+        return ioHandler.read(addr);
     }
     return 0x00;
 }
@@ -106,8 +105,7 @@ void MEMORY::AddressDispatcher::write(uint16_t addr, uint8_t data)
     }
     else if (addr >= IO_REG_LO && addr <= IO_REG_HI)
     {
-        // TODO: Implement IO registers
-        // do nothing
+        ioHandler.write(addr, data);
     }
     else if (addr >= HRAM_LO && addr <= HRAM_HI)
     {
@@ -115,11 +113,9 @@ void MEMORY::AddressDispatcher::write(uint16_t addr, uint8_t data)
     }
     else if (addr == INTERRUPT_ENABLE)
     {
-        // TODO: Check interrupt enable register behaviour
-        // do nothing
+        ioHandler.write(addr, data);
     }
 }
-
 
 MEMORY::AddressDispatcher::AddressDispatcher(ROMDATA& rom)
 {

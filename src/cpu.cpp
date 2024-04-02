@@ -13,6 +13,23 @@ CPU::Cpu::Cpu(ROMDATA& rom)
  */
 const CPU::CpuRegisters& CPU::Cpu::tick()
 {
+    if (currentInstruction == nullptr &&
+        registers.IME &&
+        interruptHandler.isQueued(addressDispatcher))
+    {
+        auto interruptType = interruptHandler.pop(addressDispatcher);
+        uint8_t interruptTypeMask = (uint8_t)interruptType;
+        uint8_t enabledTypes = addressDispatcher.read(MEMORY::INTERRUPT_ENABLE);
+        if (interruptTypeMask & enabledTypes)
+        {
+            currentInstruction =
+                new CPU::InterruptHandler::ServiceRoutine(
+                    registers,
+                    addressDispatcher,
+                    interruptType
+                );
+        }
+    }
     if (currentInstruction == nullptr)
     {
         uint8_t opcode = addressDispatcher.read(*registers.PC);

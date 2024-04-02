@@ -3,6 +3,7 @@
 
 #include "cpu_registers.h"
 #include "cpu_instruction.h"
+#include "cpu_interrupt.h"
 #include "gbmemory.h"
 #include "rom.h"
 
@@ -14,6 +15,7 @@ namespace CPU
         CpuInstruction* currentInstruction = nullptr;
         CpuRegisters registers;
         MEMORY::AddressDispatcher addressDispatcher;
+        InterruptHandler interruptHandler;
     public:
         Cpu(ROMDATA& rom);
         const CpuRegisters& tick();

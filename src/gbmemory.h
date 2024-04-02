@@ -7,6 +7,7 @@
 #include <SDL2/SDL_log.h>
 
 #include "rom.h"
+#include "gbmemory_io.h"
 
 // https://gbdev.io/pandocs/Memory_Map.html
 
@@ -41,6 +42,7 @@ namespace MEMORY
     {
     private:
         CartMapper* cartMapper;
+        IOHandler ioHandler;
         std::array<uint8_t, 0x2000> videoRam;
         std::array<uint8_t, 0x2000> workRam;
         std::array<uint8_t, 0x7F> highRam;
