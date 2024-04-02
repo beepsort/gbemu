@@ -15,7 +15,7 @@ namespace CPU
         LCD = 0x2,
         TIMER = 0x4,
         SERIAL = 0x8,
-        JOYPAD = 0x16
+        JOYPAD = 0x10
     };
     class InterruptHandler
     {
