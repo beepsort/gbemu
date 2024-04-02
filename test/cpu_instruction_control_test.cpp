@@ -10,3 +10,9 @@ TEST(DI_test, DisableInterrupts) {
     EXPECT_EQ(helper.registers.IME, false);
 }
 
+TEST(EI_test, EnableInterrupts) {
+    CpuInitHelper helper;
+    helper.registers.IME = false;
+    CPU::EI({helper.registers}).tick();
+    EXPECT_EQ(helper.registers.IME, true);
+}
