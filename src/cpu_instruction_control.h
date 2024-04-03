@@ -143,6 +143,20 @@ namespace CPU
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
+
+    class RET_CC: public CpuInstruction
+    {
+    private:
+        bool (*const condition)(CpuRegisters&);
+        uint16_t jump_addr = 0;
+        uint8_t step = 0;
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        RET_CC(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
+        : registers(registers), memory(memory), condition(condition) {}
+        InstructionResult tick();
+    };
 };
 
 #endif

@@ -149,16 +149,38 @@ CPU::InstructionResult CPU::RET::tick()
     switch(step++)
     {
         case 0:
-            jump_addr = memory.read((*registers.SP)++);
             return CPU::InstructionResult::RUNNING;
         case 1:
-            jump_addr |= memory.read((*registers.SP)++) << 8;
+            jump_addr = memory.read((*registers.SP)++);
             return CPU::InstructionResult::RUNNING;
         case 2:
-            *registers.PC = jump_addr;
+            jump_addr |= memory.read((*registers.SP)++) << 8;
             return CPU::InstructionResult::RUNNING;
         case 3:
+            *registers.PC = jump_addr;
         default:
             return CPU::InstructionResult::FINISHED;
+    }
+}
+
+CPU::InstructionResult CPU::RET_CC::tick()
+{
+    switch(step++)
+    {
+        case 0:
+            return InstructionResult::RUNNING;
+        case 1:
+            if (condition(registers))
+                return InstructionResult::RUNNING; // delay instruction prefetching as we will change PC
+            else
+                return InstructionResult::FINISHED; // immediately start instruction prefetching
+        case 2:
+            jump_addr = memory.read((*registers.SP)++);
+        case 3:
+            jump_addr |= memory.read((*registers.SP)++) << 8;
+        case 4:
+        default:
+            *registers.PC = jump_addr;
+            return InstructionResult::FINISHED;
     }
 }

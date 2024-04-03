@@ -397,7 +397,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xBF:
             return new CP_r_r(registers.A, registers.A, registers);
         case 0xC0:
-            // TODO: RET NZ
+            return new RET_CC(registers, memory, &cond_NZ);
         case 0xC1:
             return new POP_rr(registers, registers.BC, memory);
         case 0xC2:
@@ -413,7 +413,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xC7:
             // TODO: RST 00H
         case 0xC8:
-            // TODO: RET Z
+            return new RET_CC(registers, memory, &cond_Z);
         case 0xC9:
             return new RET(registers, memory);
         case 0xCA:
@@ -429,7 +429,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xCF:
             // TODO: RST 08H
         case 0xD0:
-            // TODO: RET NC
+            return new RET_CC(registers, memory, &cond_NC);
         case 0xD1:
             return new POP_rr(registers, registers.DE, memory);
         case 0xD2:
@@ -445,7 +445,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xD7:
             // TODO: RST 10H
         case 0xD8:
-            // TODO: RET C
+            return new RET_CC(registers, memory, &cond_C);
         case 0xD9:
             // TODO: RETI
         case 0xDA:
