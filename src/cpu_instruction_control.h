@@ -130,6 +130,19 @@ namespace CPU
         : registers(registers) {}
         InstructionResult tick();
     };
+
+    class RET: public CpuInstruction
+    {
+    private:
+        uint16_t jump_addr = 0;
+        uint8_t step = 0;
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        RET(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : registers(registers), memory(memory) {}
+        InstructionResult tick();
+    };
 };
 
 #endif

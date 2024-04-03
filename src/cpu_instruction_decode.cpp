@@ -415,7 +415,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xC8:
             // TODO: RET Z
         case 0xC9:
-            // TODO: RET
+            return new RET(registers, memory);
         case 0xCA:
             return new JP_NN(registers, memory, &cond_Z);
         case 0xCB:

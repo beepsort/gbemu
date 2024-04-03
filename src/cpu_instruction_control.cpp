@@ -143,3 +143,22 @@ CPU::InstructionResult CPU::EI::tick()
     ++*registers.PC;
     return InstructionResult::FINISHED;
 }
+
+CPU::InstructionResult CPU::RET::tick()
+{
+    switch(step++)
+    {
+        case 0:
+            jump_addr = memory.read((*registers.SP)++);
+            return CPU::InstructionResult::RUNNING;
+        case 1:
+            jump_addr |= memory.read((*registers.SP)++) << 8;
+            return CPU::InstructionResult::RUNNING;
+        case 2:
+            *registers.PC = jump_addr;
+            return CPU::InstructionResult::RUNNING;
+        case 3:
+        default:
+            return CPU::InstructionResult::FINISHED;
+    }
+}
