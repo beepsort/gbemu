@@ -447,7 +447,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xD8:
             return new RET_CC(registers, memory, &cond_C);
         case 0xD9:
-            // TODO: RETI
+            return new RETI(registers, memory);
         case 0xDA:
             return new JP_NN(registers, memory, &cond_C);
         case 0xDB:

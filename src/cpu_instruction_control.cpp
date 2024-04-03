@@ -184,3 +184,24 @@ CPU::InstructionResult CPU::RET_CC::tick()
             return InstructionResult::FINISHED;
     }
 }
+
+CPU::InstructionResult CPU::RETI::tick()
+{
+    switch(step++)
+    {
+        case 0:
+            return CPU::InstructionResult::RUNNING;
+        case 1:
+            jump_addr = memory.read((*registers.SP)++);
+            return CPU::InstructionResult::RUNNING;
+        case 2:
+            jump_addr |= memory.read((*registers.SP)++) << 8;
+            return CPU::InstructionResult::RUNNING;
+        case 3:
+            *registers.PC = jump_addr;
+            registers.IME = true;
+        default:
+            return CPU::InstructionResult::FINISHED;
+    }
+}
+

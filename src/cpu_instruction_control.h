@@ -157,6 +157,19 @@ namespace CPU
         : registers(registers), memory(memory), condition(condition) {}
         InstructionResult tick();
     };
+
+    class RETI: public CpuInstruction
+    {
+    private:
+        uint16_t jump_addr = 0;
+        uint8_t step = 0;
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        RETI(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : registers(registers), memory(memory) {}
+        InstructionResult tick();
+    };
 };
 
 #endif
