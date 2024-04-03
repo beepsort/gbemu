@@ -173,11 +173,14 @@ CPU::InstructionResult CPU::RET_CC::tick()
             if (condition(registers))
                 return InstructionResult::RUNNING; // delay instruction prefetching as we will change PC
             else
+                step = 10;
                 return InstructionResult::FINISHED; // immediately start instruction prefetching
         case 2:
             jump_addr = memory.read((*registers.SP)++);
+            return InstructionResult::RUNNING;
         case 3:
             jump_addr |= memory.read((*registers.SP)++) << 8;
+            return InstructionResult::RUNNING;
         case 4:
         default:
             *registers.PC = jump_addr;
