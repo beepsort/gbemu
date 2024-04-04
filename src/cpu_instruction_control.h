@@ -170,6 +170,20 @@ namespace CPU
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
+
+    class CALL_NN: public CpuInstruction
+    {
+    private:
+        bool (*const condition)(CpuRegisters&);
+        uint16_t jump_addr = 0;
+        uint8_t step = 0;
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        CALL_NN(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
+        : condition(condition), registers(registers), memory(memory) {}
+        InstructionResult tick();
+    };
 };
 
 #endif

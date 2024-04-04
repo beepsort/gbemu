@@ -405,7 +405,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xC3:
             return new JP_NN(registers, memory, &cond_TRUE);
         case 0xC4:
-            // TODO: CALL NZ, a16
+            return new CALL_NN(registers, memory, &cond_NZ);
         case 0xC5:
             return new PUSH_rr(registers, registers.BC, memory);
         case 0xC6:
@@ -421,9 +421,9 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xCB:
             // TODO: PREFIX CB
         case 0xCC:
-            // TODO: CALL Z a16
+            return new CALL_NN(registers, memory, &cond_Z);
         case 0xCD:
-            // TODO: CALL a16
+            return new CALL_NN(registers, memory, &cond_TRUE);
         case 0xCE:
             return new ADD_r_n(registers.A, registers, memory, true);
         case 0xCF:
@@ -437,7 +437,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xD3:
             return new NOP(registers);
         case 0xD4:
-            // TODO: CALL NC a16
+            return new CALL_NN(registers, memory, &cond_NC);
         case 0xD5:
             return new PUSH_rr(registers, registers.DE, memory);
         case 0xD6:
@@ -453,7 +453,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xDB:
             return new NOP(registers);
         case 0xDC:
-            // TODO: CALL C a16
+            return new CALL_NN(registers, memory, &cond_C);
         case 0xDD:
             return new NOP(registers);
         case 0xDE:

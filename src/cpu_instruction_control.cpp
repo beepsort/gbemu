@@ -216,3 +216,32 @@ CPU::InstructionResult CPU::RETI::tick()
     }
 }
 
+CPU::InstructionResult CPU::CALL_NN::tick()
+{
+    switch (step++)
+    {
+    case 0:
+        return InstructionResult::RUNNING;
+    case 1:
+        jump_addr = (uint16_t) memory.read(++*registers.PC);
+        return InstructionResult::RUNNING;
+    case 2:
+        jump_addr |= ((uint16_t) memory.read(++*registers.PC)) << 8;
+        if (condition(registers))
+            return InstructionResult::RUNNING; // delay instruction prefetching as we will change PC
+        else
+            return InstructionResult::FINISHED; // immediately start instruction prefetching
+    case 3:
+        return InstructionResult::RUNNING;
+    case 4:
+        memory.write(--*registers.SP, (uint8_t)((*registers.PC) >> 8));
+        return InstructionResult::RUNNING;
+    case 5:
+        memory.write(--*registers.SP, (uint8_t)*registers.PC);
+        *registers.PC = jump_addr;
+        [[fallthrough]];
+    default:
+        return InstructionResult::FINISHED;
+    }
+}
+
