@@ -509,7 +509,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xF7:
             // TODO: RST 30H
         case 0xF8:
-            // TODO: LD HL SP+offset8 TODO next
+            return new LD_HL_SP_n(registers, memory);
         case 0xF9:
             return new LD_rr_rr(registers, registers.SP, registers.HL);
         case 0xFA:

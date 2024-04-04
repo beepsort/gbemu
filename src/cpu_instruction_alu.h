@@ -625,6 +625,11 @@ namespace CPU
 
     class ADD_SP_n: public CpuInstruction
     {
+    /**
+     * @brief Add signed immediate operand byte to stack pointer and store back in stack pointer register
+     * 1 byte opcode with 1 byte operand
+     * Takes 4 M-cycles to complete
+     */
     private:
         CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
@@ -635,6 +640,25 @@ namespace CPU
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
+
+    class LD_HL_SP_n: public CpuInstruction
+    {
+    /**
+     * @brief Add signed immediate operand byte to stack pointer and store in 16-bit register HL
+     * 1 byte opcode with 1 byte operand
+     * Takes 3 M-cycles to complete
+     */
+    private:
+        CPU::CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+        uint8_t step = 0;
+        int8_t offset = 0;
+    public:
+        LD_HL_SP_n(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : registers(registers), memory(memory) {}
+        InstructionResult tick();
+    };
+
 
     class INC_rr: public CpuInstruction
     {
