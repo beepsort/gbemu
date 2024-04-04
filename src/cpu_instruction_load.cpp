@@ -73,8 +73,9 @@ CPU::InstructionResult CPU::LD_absrr_n::tick()
         case 1:
             memory.write(*dest_addr, src_data);
             return InstructionResult::RUNNING;
-        default:
             ++*registers.PC;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }
@@ -92,8 +93,10 @@ CPU::InstructionResult CPU::LD_r_absnn::tick()
         case 2:
             *dest = memory.read(load_addr);
             return InstructionResult::RUNNING;
-        default:
+        case 3:
             ++*registers.PC;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }
@@ -111,8 +114,10 @@ CPU::InstructionResult CPU::LD_absnn_r::tick()
         case 2:
             memory.write(write_addr, *src);
             return InstructionResult::RUNNING;
-        default:
+        case 3:
             ++*registers.PC;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }
@@ -154,8 +159,10 @@ CPU::InstructionResult CPU::LD_r_reln::tick()
         case 1:
             *dest = memory.read(load_addr);
             return InstructionResult::RUNNING;
-        default:
+        case 2:
             ++*registers.PC;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }
@@ -171,8 +178,10 @@ CPU::InstructionResult CPU::LD_reln_r::tick()
         case 1:
             memory.write(write_addr, *src);
             return InstructionResult::RUNNING;
-        default:
+        case 2:
             ++*registers.PC;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }
@@ -193,8 +202,10 @@ CPU::InstructionResult CPU::LD_rr_nn::tick()
             // Store in 16-bit register
             *dest = operand;
             return InstructionResult::RUNNING;
-        default:
+        case 2:
             ++*registers.PC;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }
@@ -221,8 +232,10 @@ CPU::InstructionResult CPU::LD_absnn_rr::tick()
             memory.write(dest_addr+1, register_msb);
             return InstructionResult::RUNNING;
         }
-        default:
+        case 4:
             ++*registers.PC;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }
@@ -234,8 +247,10 @@ CPU::InstructionResult CPU::LD_rr_rr::tick()
         case 0:
             *dest = *src;
             return InstructionResult::RUNNING;
-        default:
+        case 1:
             ++*registers.PC;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }
@@ -258,8 +273,10 @@ CPU::InstructionResult CPU::PUSH_rr::tick()
             memory.write(--*sp, register_lsb);
             return InstructionResult::RUNNING;
         }
-        default:
+        case 3:
             ++*registers.PC;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }
@@ -278,8 +295,10 @@ CPU::InstructionResult CPU::POP_rr::tick()
             *dest |= memory.read((*sp)++) << 8;
             return InstructionResult::RUNNING;
         }
-        default:
+        case 2:
             ++*registers.PC;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }

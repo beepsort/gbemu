@@ -189,8 +189,9 @@ CPU::InstructionResult CPU::RET_CC::tick()
             jump_addr |= memory.read((*registers.SP)++) << 8;
             return InstructionResult::RUNNING;
         case 4:
-        default:
             *registers.PC = jump_addr;
+            [[fallthrough]];
+        default:
             return InstructionResult::FINISHED;
     }
 }
