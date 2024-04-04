@@ -60,3 +60,23 @@ TEST(RET_cond_test, ConditionalZero) {
     EXPECT_EQ(*sp, MEMORY::WRAM_LO + 2);
     EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
 }
+
+TEST(RETI_test, RetAddress) {
+    CpuInitHelper helper;
+    uint16_t* pc = helper.registers.PC;
+    uint16_t* sp = helper.registers.SP;
+    *pc = 0;
+    *sp = MEMORY::WRAM_LO;
+    helper.registers.IME = false;
+    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0x34);
+    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0x12);
+    CPU::RETI instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*pc, 0x1234);
+    EXPECT_EQ(*sp, MEMORY::WRAM_LO + 2);
+    EXPECT_EQ(helper.registers.IME, true);
+}
+
