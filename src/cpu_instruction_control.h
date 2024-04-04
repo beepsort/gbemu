@@ -73,7 +73,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         JP_NN(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
-        : registers(registers), memory(memory), condition(condition) {}
+        : condition(condition), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -87,7 +87,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         JR_N(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
-        : registers(registers), memory(memory), condition(condition) {}
+        : condition(condition), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -154,7 +154,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         RET_CC(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
-        : registers(registers), memory(memory), condition(condition) {}
+        : condition(condition), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 

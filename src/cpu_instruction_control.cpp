@@ -42,7 +42,7 @@ CPU::InstructionResult CPU::JP_HL::tick()
     return InstructionResult::FINISHED;
 }
 
-bool CPU::cond_TRUE(CPU::CpuRegisters& registers)
+bool CPU::cond_TRUE(CPU::CpuRegisters&)
 {
     return true;
 }
@@ -84,6 +84,7 @@ CPU::InstructionResult CPU::JP_NN::tick()
             return InstructionResult::FINISHED; // immediately start instruction prefetching
     case 3:
         *registers.PC = jump_addr;
+        [[fallthrough]];
     default:
         return InstructionResult::FINISHED;
     }
@@ -111,6 +112,7 @@ CPU::InstructionResult CPU::JR_N::tick()
             uint16_t abs_offset = (uint16_t) -jump_offset;
             *registers.PC += abs_offset;
         }
+        [[fallthrough]];
     default:
         return InstructionResult::FINISHED;
     }
@@ -158,6 +160,7 @@ CPU::InstructionResult CPU::RET::tick()
             return CPU::InstructionResult::RUNNING;
         case 3:
             *registers.PC = jump_addr;
+            [[fallthrough]];
         default:
             return CPU::InstructionResult::FINISHED;
     }
@@ -171,10 +174,14 @@ CPU::InstructionResult CPU::RET_CC::tick()
             return InstructionResult::RUNNING;
         case 1:
             if (condition(registers))
+            {
                 return InstructionResult::RUNNING; // delay instruction prefetching as we will change PC
+            }
             else
+            {
                 step = 10;
                 return InstructionResult::FINISHED; // immediately start instruction prefetching
+            }
         case 2:
             jump_addr = memory.read((*registers.SP)++);
             return InstructionResult::RUNNING;
@@ -203,6 +210,7 @@ CPU::InstructionResult CPU::RETI::tick()
         case 3:
             *registers.PC = jump_addr;
             registers.IME = true;
+            [[fallthrough]];
         default:
             return CPU::InstructionResult::FINISHED;
     }

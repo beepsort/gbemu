@@ -33,7 +33,7 @@ namespace CPU
         bool check_carry;
     public:
         ADD_r_r(uint8_t* dest, uint8_t* src, CpuRegisters& registers, bool check_carry=false)
-        : dest(dest), src(src), registers(registers), check_carry(check_carry) {}
+        : src(src), dest(dest), registers(registers), check_carry(check_carry) {}
         InstructionResult tick();
     };
 
@@ -86,7 +86,7 @@ namespace CPU
         uint8_t step = 0;
     public:
         ADD_r_absrr(uint8_t* dest, uint16_t* src_addr, CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool check_carry=false)
-        : dest(dest), src_addr(src_addr), registers(registers), memory(memory), check_carry(check_carry) {}
+        : src_addr(src_addr), dest(dest), registers(registers), memory(memory), check_carry(check_carry) {}
         InstructionResult tick();
     };
 
@@ -111,7 +111,7 @@ namespace CPU
         bool check_carry;
     public:
         SUB_r_r(uint8_t* dest, uint8_t* src, CpuRegisters& registers, bool check_carry=false)
-        : dest(dest), src(src), registers(registers), check_carry(check_carry) {}
+        : src(src), dest(dest), registers(registers), check_carry(check_carry) {}
         InstructionResult tick();
     };
 
@@ -164,7 +164,7 @@ namespace CPU
         uint8_t step = 0;
     public:
         SUB_r_absrr(uint8_t* dest, uint16_t* src_addr, CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool check_carry=false)
-        : dest(dest), src_addr(src_addr), registers(registers), memory(memory), check_carry(check_carry) {}
+        : src_addr(src_addr), dest(dest), registers(registers), memory(memory), check_carry(check_carry) {}
         InstructionResult tick();
     };
 
@@ -188,7 +188,7 @@ namespace CPU
         CpuRegisters& registers;
     public:
         AND_r_r(uint8_t* dest, uint8_t* src, CpuRegisters& registers)
-        : dest(dest), src(src), registers(registers) {}
+        : src(src), dest(dest), registers(registers) {}
         InstructionResult tick();
     };
 
@@ -237,7 +237,7 @@ namespace CPU
         uint8_t step = 0;
     public:
         AND_r_absrr(uint8_t* dest, uint16_t* src_addr, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
-        : dest(dest), src_addr(src_addr), registers(registers), memory(memory) {}
+        : src_addr(src_addr), dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -261,7 +261,7 @@ namespace CPU
         CpuRegisters& registers;
     public:
         XOR_r_r(uint8_t* dest, uint8_t* src, CpuRegisters& registers)
-        : dest(dest), src(src), registers(registers) {}
+        : src(src), dest(dest), registers(registers) {}
         InstructionResult tick();
     };
 
@@ -310,7 +310,7 @@ namespace CPU
         uint8_t step = 0;
     public:
         XOR_r_absrr(uint8_t* dest, uint16_t* src_addr, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
-        : dest(dest), src_addr(src_addr), registers(registers), memory(memory) {}
+        : src_addr(src_addr), dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -334,7 +334,7 @@ namespace CPU
         CpuRegisters& registers;
     public:
         OR_r_r(uint8_t* dest, uint8_t* src, CpuRegisters& registers)
-        : dest(dest), src(src), registers(registers) {}
+        : src(src), dest(dest), registers(registers) {}
         InstructionResult tick();
     };
 
@@ -383,7 +383,7 @@ namespace CPU
         uint8_t step = 0;
     public:
         OR_r_absrr(uint8_t* dest, uint16_t* src_addr, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
-        : dest(dest), src_addr(src_addr), registers(registers), memory(memory) {}
+        : src_addr(src_addr), dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -406,7 +406,7 @@ namespace CPU
         CpuRegisters& registers;
     public:
         CP_r_r(uint8_t* dest, uint8_t* src, CpuRegisters& registers)
-        : dest(dest), src(src), registers(registers) {}
+        : src(src), dest(dest), registers(registers) {}
         InstructionResult tick();
     };
 
@@ -455,7 +455,7 @@ namespace CPU
         uint8_t step = 0;
     public:
         CP_r_absrr(uint8_t* dest, uint16_t* src_addr, CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
-        : dest(dest), src_addr(src_addr), registers(registers), memory(memory) {}
+        : src_addr(src_addr), dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -619,7 +619,7 @@ namespace CPU
         uint8_t step = 0;
     public:
         ADD_HL_rr(uint16_t* src, CpuRegisters& registers)
-        : dest(registers.HL), src(src), registers(registers) {}
+        : src(src), dest(registers.HL), registers(registers) {}
         InstructionResult tick();
     };
 

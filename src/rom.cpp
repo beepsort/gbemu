@@ -19,7 +19,7 @@ std::optional<ROMDATA> open_rom(char* rom_path) {
         return {}; // File size over 10MB is likely invalid
     }
     ROMDATA rom(rom_size);
-    for (int i=0; i<rom_size; i++)
+    for (size_t i=0; i<rom_size; i++)
     {
         rom[i] = SDL_ReadU8(file);
     }

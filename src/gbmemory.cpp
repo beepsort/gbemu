@@ -18,19 +18,24 @@ MEMORY::CartMapper* MEMORY::CartMapper::create_mapper(ROMDATA& rom)
         return new MEMORY::MapperStatic(rom);
     case 0x03:
         cartBattery = true;
+        [[fallthrough]];
     case 0x02:
         cartRam = true;
+        [[fallthrough]];
     case 0x01:
         return new MEMORY::MapperMbc1(rom, cartRam, cartBattery);
     case 0x10:
         cartRam = true;
+        [[fallthrough]];
     case 0x7F:
         cartTimer = true;
         cartBattery = true;
+        [[fallthrough]];
     case 0x11:
         return new MEMORY::MapperMbc3(rom, cartRam, cartBattery, cartTimer);
     case 0x13:
         cartBattery = true;
+        [[fallthrough]];
     case 0x12:
         cartRam = true;
         return new MEMORY::MapperMbc3(rom, cartRam, cartBattery, cartTimer);

@@ -52,21 +52,27 @@ CPU::InstructionResult CPU::InterruptHandler::ServiceRoutine::tick()
         }
         case 4:
         {
-            uint8_t handlerAddress;
+            uint8_t handlerAddress = 0;
             switch (interruptType)
             {
                 case InterruptType::VBLANK:
                     handlerAddress = 0x40;
+                    break;
                 case InterruptType::LCD:
                     handlerAddress = 0x48;
+                    break;
                 case InterruptType::TIMER:
                     handlerAddress = 0x50;
+                    break;
                 case InterruptType::SERIAL:
                     handlerAddress = 0x58;
+                    break;
                 case InterruptType::JOYPAD:
                     handlerAddress = 0x60;
+                    break;
             }
-            *registers.PC = (uint8_t) interruptType;
+            *registers.PC = (uint8_t) handlerAddress;
+            [[fallthrough]];
         }
         default:
             return InstructionResult::FINISHED;

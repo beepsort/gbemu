@@ -30,7 +30,7 @@ namespace CPU
         CPU::CpuRegisters& registers;
     public:
         LD_r_r(CpuRegisters& registers, uint8_t* dest, uint8_t* src)
-        : registers(registers), dest(dest), src(src) {}
+        : dest(dest), src(src), registers(registers) {}
         InstructionResult tick();
     };
 
@@ -48,7 +48,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         LD_r_n(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
-        : registers(registers), dest(dest), memory(memory) {}
+        : dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -69,7 +69,7 @@ namespace CPU
         AddressMutOperation post_operation;
     public:
         LD_r_absrr(CpuRegisters& registers, uint8_t* dest, uint16_t* src_addr, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
-        : registers(registers), dest(dest), src_addr(src_addr), memory(memory), post_operation(post_operation) {}
+        : dest(dest), src_addr(src_addr), registers(registers), memory(memory), post_operation(post_operation) {}
         InstructionResult tick();
     };
 
@@ -90,7 +90,7 @@ namespace CPU
         AddressMutOperation post_operation;
     public:
         LD_absrr_r(CpuRegisters& registers, uint16_t* dest_addr, uint8_t* src, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
-        : registers(registers), dest_addr(dest_addr), src(src), memory(memory), post_operation(post_operation) {}
+        : dest_addr(dest_addr), src(src), registers(registers), memory(memory), post_operation(post_operation) {}
         InstructionResult tick();
     };
 
@@ -109,7 +109,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         LD_absrr_n(CpuRegisters& registers, uint16_t* dest_addr, MEMORY::AddressDispatcher& memory)
-        : registers(registers), dest_addr(dest_addr), memory(memory) {}
+        : dest_addr(dest_addr), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -128,7 +128,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         LD_r_absnn(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
-        : registers(registers), dest(dest), memory(memory) {}
+        : dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -147,7 +147,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         LD_absnn_r(CpuRegisters& registers, uint8_t* src, MEMORY::AddressDispatcher& memory)
-        : registers(registers), src(src), memory(memory) {}
+        : src(src), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -167,7 +167,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         LD_r_relr(CpuRegisters& registers, uint8_t* dest, uint8_t* src_addr_lsb, MEMORY::AddressDispatcher& memory)
-        : registers(registers), dest(dest), src_addr_lsb(src_addr_lsb), memory(memory) {}
+        : dest(dest), src_addr_lsb(src_addr_lsb), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -187,7 +187,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         LD_relr_r(CpuRegisters& registers, uint8_t* dest_addr_lsb, uint8_t* src, MEMORY::AddressDispatcher& memory)
-        : registers(registers), dest_addr_lsb(dest_addr_lsb), src(src), memory(memory) {}
+        : dest_addr_lsb(dest_addr_lsb), src(src), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -207,7 +207,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         LD_r_reln(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
-        : registers(registers), dest(dest), memory(memory) {} // src_addr_lsb(src_addr_lsb)
+        : dest(dest), registers(registers), memory(memory) {} // src_addr_lsb(src_addr_lsb)
         InstructionResult tick();
     };
 
@@ -227,7 +227,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         LD_reln_r(CpuRegisters& registers, uint8_t* src, MEMORY::AddressDispatcher& memory)
-        : registers(registers), src(src), memory(memory) {}
+        : src(src), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -248,7 +248,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         LD_rr_nn(CpuRegisters& registers, uint16_t* dest, MEMORY::AddressDispatcher& memory)
-        : registers(registers), dest(dest), memory(memory) {}
+        : dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -267,7 +267,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         LD_absnn_rr(CpuRegisters& registers, uint16_t* src, MEMORY::AddressDispatcher& memory)
-        : registers(registers), src(src), memory(memory) {}
+        : src(src), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -285,7 +285,7 @@ namespace CPU
         CPU::CpuRegisters& registers;
     public:
         LD_rr_rr(CpuRegisters& registers, uint16_t* dest, uint16_t* src)
-        : registers(registers), dest(dest), src(src) {}
+        : src(src), dest(dest), registers(registers) {}
         InstructionResult tick();
     };
 
@@ -304,7 +304,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         PUSH_rr(CpuRegisters& registers, uint16_t* src, MEMORY::AddressDispatcher& memory)
-        : registers(registers), sp(registers.SP), src(src), memory(memory) {}
+        : src(src), sp(registers.SP), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 
@@ -324,7 +324,7 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         POP_rr(CpuRegisters& registers, uint16_t* dest, MEMORY::AddressDispatcher& memory)
-        : registers(registers), dest(dest), sp(registers.SP), memory(memory) {}
+        : sp(registers.SP), dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 };
