@@ -1096,6 +1096,80 @@ TEST(ADD_SP_n_test, SubUnderflow) {
     EXPECT_EQ(*sp, 0xFF80);
 }
 
+TEST(LD_HL_SP_n_test, AddOne) {
+    CpuInitHelper helper;
+    uint16_t pc_start = *helper.registers.PC;
+    uint16_t *sp = helper.registers.SP;
+    *sp = 0xFF80;
+    helper.addressDispatcher.write(pc_start + 1, 1);
+    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*helper.registers.HL, 0xFF81);
+    EXPECT_EQ(*helper.registers.PC, pc_start + 2);
+}
+
+TEST(LD_HL_SP_n_test, SubOne) {
+    CpuInitHelper helper;
+    uint16_t *sp = helper.registers.SP;
+    *sp = 0xFF80;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0xFF);
+    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*helper.registers.HL, 0xFF7F);
+}
+
+TEST(LD_HL_SP_n_test, AddMax) {
+    CpuInitHelper helper;
+    uint16_t *sp = helper.registers.SP;
+    *sp = 0xFF80;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x7F);
+    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*helper.registers.HL, 0xFFFF);
+}
+
+TEST(LD_HL_SP_n_test, SubMax) {
+    CpuInitHelper helper;
+    uint16_t *sp = helper.registers.SP;
+    *sp = 0xFF80;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x80);
+    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*helper.registers.HL, 0xFF00);
+}
+
+TEST(LD_HL_SP_n_test, AddOverflow) {
+    CpuInitHelper helper;
+    uint16_t *sp = helper.registers.SP;
+    *sp = 0xFF81;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x7F);
+    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*helper.registers.HL, 0x0000);
+}
+
+TEST(LD_HL_SP_n_test, SubUnderflow) {
+    CpuInitHelper helper;
+    uint16_t *sp = helper.registers.SP;
+    *sp = 0x0000;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x80);
+    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*helper.registers.HL, 0xFF80);
+}
+
 TEST(INC_rr_test, IncZero) {
     CpuInitHelper helper;
     uint16_t *dest = helper.registers.BC;
