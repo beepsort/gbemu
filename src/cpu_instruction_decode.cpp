@@ -405,7 +405,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xC3:
             return new JP_NN(registers, memory, &cond_TRUE);
         case 0xC4:
-            // TODO: JP a16 TODO NEXT
+            // TODO: CALL NZ, a16
         case 0xC5:
             return new PUSH_rr(registers, registers.BC, memory);
         case 0xC6:
@@ -477,7 +477,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xE7:
             // TODO: RST 20H
         case 0xE8:
-            // TODO: ADD SP r8
+            return new ADD_SP_n(registers, memory);
         case 0xE9:
             return new JP_HL(registers.PC, registers.HL);
         case 0xEA:

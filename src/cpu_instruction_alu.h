@@ -623,6 +623,19 @@ namespace CPU
         InstructionResult tick();
     };
 
+    class ADD_SP_n: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+        uint8_t step = 0;
+        int8_t offset = 0;
+    public:
+        ADD_SP_n(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : registers(registers), memory(memory) {}
+        InstructionResult tick();
+    };
+
     class INC_rr: public CpuInstruction
     {
     /**
