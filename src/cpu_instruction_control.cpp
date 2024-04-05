@@ -124,13 +124,17 @@ CPU::InstructionResult CPU::JR_N::tick()
 CPU::InstructionResult CPU::SCF::tick()
 {
     registers.set_flag_carry(true);
+    registers.set_flag_halfcarry(false);
+    registers.set_flag_sub(false);
     ++*registers.PC;
     return InstructionResult::FINISHED;
 }
 
 CPU::InstructionResult CPU::CCF::tick()
 {
-    registers.set_flag_carry(false);
+    registers.set_flag_carry(!registers.get_flag_carry());
+    registers.set_flag_halfcarry(false);
+    registers.set_flag_sub(false);
     ++*registers.PC;
     return InstructionResult::FINISHED;
 }
