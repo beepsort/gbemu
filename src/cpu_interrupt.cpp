@@ -12,20 +12,13 @@ CPU::InterruptType CPU::InterruptHandler::pop(MEMORY::AddressDispatcher& memory)
     uint8_t current_flags = memory.read(MEMORY::INTERRUPT_FLAG);
     uint8_t enabled = memory.read(MEMORY::INTERRUPT_ENABLE);
     uint8_t enabled_active_flags = current_flags & enabled;
-    InterruptType interruptTypes[] = {
-        InterruptType::VBLANK,
-        InterruptType::LCD,
-        InterruptType::TIMER,
-        InterruptType::SERIAL,
-        InterruptType::JOYPAD
-    };
-    for (auto type : interruptTypes)
+    for (uint8_t type = 1; type<=0x10; type<<=1)
     {
-        if (enabled_active_flags & (uint8_t)type)
+        if (enabled_active_flags & type)
         {
-            uint8_t updated_flags = current_flags & ~(uint8_t)type;
+            uint8_t updated_flags = current_flags & ~type;
             memory.write(MEMORY::INTERRUPT_FLAG, updated_flags);
-            return type;
+            return static_cast<InterruptType>(type);
         }
     }
     return {};
