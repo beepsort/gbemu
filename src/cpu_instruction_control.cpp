@@ -7,6 +7,7 @@ CPU::InstructionResult CPU::HALT::tick()
     bool interrupt_pending = IE & IF;
     if (registers.IME)
     {
+        ++*registers.PC;
         return InstructionResult::HALT;
     }
     else if (interrupt_pending)
