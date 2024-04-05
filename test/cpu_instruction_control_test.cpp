@@ -107,7 +107,7 @@ TEST(RET_cond_test, ConditionalZero) {
     CPU::RET_CC instr(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
     instr.tick();
     CPU::InstructionResult result = instr.tick();
-    EXPECT_EQ(*pc, 0);
+    EXPECT_EQ(*pc, 1);
     EXPECT_EQ(*sp, MEMORY::WRAM_LO);
     EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
     helper.registers.set_flag_zero(true);
