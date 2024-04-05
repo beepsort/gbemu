@@ -101,7 +101,7 @@ CPU::InstructionResult CPU::JR_N::tick()
     switch (step++)
     {
     case 0:
-        jump_offset = memory.read(++*registers.PC);
+        jump_offset = (int8_t)memory.read(++*registers.PC);
         return InstructionResult::RUNNING;
     case 1:
         if (condition(registers))
@@ -114,15 +114,7 @@ CPU::InstructionResult CPU::JR_N::tick()
             return InstructionResult::FINISHED; // immediately start instruction prefetching
         }
     case 2:
-        if (jump_offset >= 0)
-        {
-            *registers.PC += jump_offset;
-        }
-        else
-        {
-            uint16_t abs_offset = (uint16_t) -jump_offset;
-            *registers.PC += abs_offset;
-        }
+        *registers.PC += jump_offset - 1;
         [[fallthrough]];
     default:
         return InstructionResult::FINISHED;
