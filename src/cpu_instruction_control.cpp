@@ -81,6 +81,7 @@ CPU::InstructionResult CPU::JP_NN::tick()
         if (condition(registers))
             return InstructionResult::RUNNING; // delay instruction prefetching as we will change PC
         else
+            ++*registers.PC;
             return InstructionResult::FINISHED; // immediately start instruction prefetching
     case 3:
         *registers.PC = jump_addr;
