@@ -122,6 +122,28 @@ TEST(SCF_test, FlagsTest) {
     EXPECT_EQ(helper.registers.get_flag_sub(), false);
 }
 
+TEST(CCF_test, FlagsTest) {
+    CpuInitHelper helper;
+    uint16_t* pc = helper.registers.PC;
+    helper.registers.set_flag_carry(false);
+    helper.registers.set_flag_halfcarry(true);
+    helper.registers.set_flag_sub(true);
+    CPU::CCF({helper.registers}).tick();
+    EXPECT_EQ(*pc, 0xC001);
+    EXPECT_EQ(helper.registers.get_flag_carry(), true);
+    EXPECT_EQ(helper.registers.get_flag_halfcarry(), false);
+    EXPECT_EQ(helper.registers.get_flag_sub(), false);
+    *pc = 0xC000;
+    helper.registers.set_flag_carry(true);
+    helper.registers.set_flag_halfcarry(true);
+    helper.registers.set_flag_sub(true);
+    CPU::CCF({helper.registers}).tick();
+    EXPECT_EQ(*pc, 0xC001);
+    EXPECT_EQ(helper.registers.get_flag_carry(), false);
+    EXPECT_EQ(helper.registers.get_flag_halfcarry(), false);
+    EXPECT_EQ(helper.registers.get_flag_sub(), false);
+}
+
 TEST(DI_test, DisableInterrupts) {
     CpuInitHelper helper;
     helper.registers.IME = true;
