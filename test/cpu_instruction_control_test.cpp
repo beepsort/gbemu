@@ -17,6 +17,53 @@ TEST(STOP_test, DoesStop) {
     EXPECT_EQ(result, CPU::InstructionResult::STOP);
 }
 
+TEST(JP_HL_test, IsCorrectPc) {
+    CpuInitHelper helper;
+    uint16_t* hl = helper.registers.HL;
+    uint16_t* pc = helper.registers.PC;
+    *pc = 0;
+    *hl = 0x1234;
+    CPU::JP_HL({pc, hl}).tick();
+    EXPECT_EQ(*pc, 0x1234);
+}
+
+TEST(JP_NN_test, IsCorrectPc) {
+    CpuInitHelper helper;
+    uint16_t* pc = helper.registers.PC;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x34);
+    helper.addressDispatcher.write(*helper.registers.PC + 2, 0x12);
+    CPU::JP_NN instr(helper.registers, helper.addressDispatcher, &CPU::cond_TRUE);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*pc, 0x1234);
+}
+
+TEST(JP_NN_cond_test, ConditionalZero) {
+    CpuInitHelper helper;
+    uint16_t* pc = helper.registers.PC;
+    *pc = 0xC000;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x34);
+    helper.addressDispatcher.write(*helper.registers.PC + 2, 0x12);
+    helper.registers.set_flag_zero(false);
+    CPU::JP_NN instr(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    instr.tick();
+    instr.tick();
+    CPU::InstructionResult result = instr.tick();
+    EXPECT_EQ(*pc, 0xC003);
+    EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
+    helper.registers.set_flag_zero(true);
+    *pc = 0xC000;
+    CPU::JP_NN instr2(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    instr2.tick();
+    instr2.tick();
+    instr2.tick();
+    CPU::InstructionResult result2 = instr2.tick();
+    EXPECT_EQ(*pc, 0x1234);
+    EXPECT_EQ(result2, CPU::InstructionResult::FINISHED);
+}
+
 TEST(DI_test, DisableInterrupts) {
     CpuInitHelper helper;
     helper.registers.IME = true;
