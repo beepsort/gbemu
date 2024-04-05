@@ -3,6 +3,20 @@
 #include "cpu_registers.h"
 #include "cpu_init_helper.h"
 
+TEST(HALT_test, DoesHalt) {
+    CpuInitHelper helper;
+    CPU::HALT instr(helper.registers, helper.addressDispatcher);
+    CPU::InstructionResult result = instr.tick();
+    EXPECT_EQ(result, CPU::InstructionResult::HALT);
+}
+
+TEST(STOP_test, DoesStop) {
+    CpuInitHelper helper;
+    CPU::STOP instr(helper.registers);
+    CPU::InstructionResult result = instr.tick();
+    EXPECT_EQ(result, CPU::InstructionResult::STOP);
+}
+
 TEST(DI_test, DisableInterrupts) {
     CpuInitHelper helper;
     helper.registers.IME = true;
