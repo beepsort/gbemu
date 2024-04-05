@@ -66,6 +66,49 @@ TEST(JP_NN_cond_test, ConditionalZero) {
     EXPECT_EQ(result2, CPU::InstructionResult::FINISHED);
 }
 
+TEST(JR_N_test, PositiveJump) {
+    CpuInitHelper helper;
+    uint16_t* pc = helper.registers.PC;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x10);
+    CPU::JR_N instr(helper.registers, helper.addressDispatcher, &CPU::cond_TRUE);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*pc, 0xC010);
+}
+
+TEST(JR_N_test, NegativeJump) {
+    CpuInitHelper helper;
+    uint16_t* pc = helper.registers.PC;
+    *pc = 0xC010;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, (int8_t)(-16));
+    CPU::JR_N instr(helper.registers, helper.addressDispatcher, &CPU::cond_TRUE);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*pc, 0xC000);
+}
+
+TEST(JR_N_test, ConditionTF) {
+    CpuInitHelper helper;
+    uint16_t* pc = helper.registers.PC;
+    helper.addressDispatcher.write(*helper.registers.PC + 1, 0x10);
+    helper.registers.set_flag_zero(false);
+    CPU::JR_N instr(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    instr.tick();
+    CPU::InstructionResult result = instr.tick();
+    EXPECT_EQ(*pc, 0xC002);
+    EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
+    *pc = 0xC000;
+    helper.registers.set_flag_zero(true);
+    CPU::JR_N instr2(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    instr2.tick();
+    instr2.tick();
+    CPU::InstructionResult result2 = instr2.tick();
+    EXPECT_EQ(*pc, 0xC010);
+    EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
+}
+
 TEST(DI_test, DisableInterrupts) {
     CpuInitHelper helper;
     helper.registers.IME = true;
