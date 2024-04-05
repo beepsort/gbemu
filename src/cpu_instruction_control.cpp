@@ -79,10 +79,14 @@ CPU::InstructionResult CPU::JP_NN::tick()
         return InstructionResult::RUNNING;
     case 2:
         if (condition(registers))
+        {
             return InstructionResult::RUNNING; // delay instruction prefetching as we will change PC
+        }
         else
+        {
             ++*registers.PC;
             return InstructionResult::FINISHED; // immediately start instruction prefetching
+        }
     case 3:
         *registers.PC = jump_addr;
         [[fallthrough]];
@@ -100,9 +104,14 @@ CPU::InstructionResult CPU::JR_N::tick()
         return InstructionResult::RUNNING;
     case 1:
         if (condition(registers))
+        {
             return InstructionResult::RUNNING; // delay instruction prefetching as we will change PC
+        }
         else
+        {
+            ++*registers.PC;
             return InstructionResult::FINISHED; // immediately start instruction prefetching
+        }
     case 2:
         if (jump_offset >= 0)
         {
@@ -181,6 +190,7 @@ CPU::InstructionResult CPU::RET_CC::tick()
             else
             {
                 step = 10;
+                ++*registers.PC;
                 return InstructionResult::FINISHED; // immediately start instruction prefetching
             }
         case 2:
@@ -230,9 +240,14 @@ CPU::InstructionResult CPU::CALL_NN::tick()
     case 2:
         jump_addr |= ((uint16_t) memory.read(++*registers.PC)) << 8;
         if (condition(registers))
+        {
             return InstructionResult::RUNNING; // delay instruction prefetching as we will change PC
+        }
         else
+        {
+            ++*registers.PC;
             return InstructionResult::FINISHED; // immediately start instruction prefetching
+        }
     case 3:
         return InstructionResult::RUNNING;
     case 4:
