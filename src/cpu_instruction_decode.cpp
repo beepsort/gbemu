@@ -411,7 +411,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xC6:
             return new ADD_r_n(registers.A, registers, memory);
         case 0xC7:
-            // TODO: RST 00H
+            return new RST(registers, memory, 0x00);
         case 0xC8:
             return new RET_CC(registers, memory, &cond_Z);
         case 0xC9:
@@ -427,7 +427,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xCE:
             return new ADD_r_n(registers.A, registers, memory, true);
         case 0xCF:
-            // TODO: RST 08H
+            return new RST(registers, memory, 0x08);
         case 0xD0:
             return new RET_CC(registers, memory, &cond_NC);
         case 0xD1:
@@ -443,7 +443,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xD6:
             return new SUB_r_n(registers.A, registers, memory);
         case 0xD7:
-            // TODO: RST 10H
+            return new RST(registers, memory, 0x10);
         case 0xD8:
             return new RET_CC(registers, memory, &cond_C);
         case 0xD9:
@@ -459,7 +459,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xDE:
             return new SUB_r_n(registers.A, registers, memory, true);
         case 0xDF:
-            // TODO: RST 18H
+            return new RST(registers, memory, 0x18);
         case 0xE0:
             return new LD_reln_r(registers, registers.A, memory);
         case 0xE1:
@@ -475,7 +475,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xE6:
             return new AND_r_n(registers.A, registers, memory);
         case 0xE7:
-            // TODO: RST 20H
+            return new RST(registers, memory, 0x20);
         case 0xE8:
             return new ADD_SP_n(registers, memory);
         case 0xE9:
@@ -491,7 +491,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xEE:
             return new XOR_r_n(registers.A, registers, memory);
         case 0xEF:
-            // TODO: RST 28H
+            return new RST(registers, memory, 0x28);
         case 0xF0:
             return new LD_r_reln(registers, registers.A, memory);
         case 0xF1:
@@ -507,7 +507,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xF6:
             return new OR_r_n(registers.A, registers, memory);
         case 0xF7:
-            // TODO: RST 30H
+            return new RST(registers, memory, 0x30);
         case 0xF8:
             return new LD_HL_SP_n(registers, memory);
         case 0xF9:
@@ -523,7 +523,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xFE:
             return new CP_r_n(registers.A, registers, memory);
         case 0xFF:
-            // TODO: RST 38H
+            return new RST(registers, memory, 0x38);
         default:
             return new NOP(registers);
     }

@@ -259,3 +259,23 @@ CPU::InstructionResult CPU::CALL_NN::tick()
     }
 }
 
+CPU::InstructionResult CPU::RST::tick()
+{
+    switch (step++)
+    {
+    case 0:
+        return InstructionResult::RUNNING;
+    case 1:
+        memory.write(--*registers.SP, (uint8_t)((++*registers.PC) >> 8));
+        return InstructionResult::RUNNING;
+    case 2:
+        memory.write(--*registers.SP, (uint8_t)*registers.PC);
+        *registers.PC = (uint16_t)jump_lsb;
+        return InstructionResult::RUNNING;
+    case 3:
+        [[fallthrough]];
+    default:
+        return InstructionResult::FINISHED;
+    }
+}
+

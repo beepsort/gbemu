@@ -184,6 +184,19 @@ namespace CPU
         : condition(condition), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
+
+    class RST: public CpuInstruction
+    {
+    private:
+        uint8_t jump_lsb;
+        uint8_t step = 0;
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        RST(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, uint8_t jump_lsb)
+        : jump_lsb(jump_lsb), registers(registers), memory(memory) {}
+        InstructionResult tick();
+    };
 };
 
 #endif
