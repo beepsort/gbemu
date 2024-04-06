@@ -223,3 +223,53 @@ TEST(RETI_test, RetAddress) {
     EXPECT_EQ(helper.registers.IME, true);
 }
 
+TEST(CALL_NN_test, IsCorrectPcStack) {
+    CpuInitHelper helper;
+    uint16_t* pc = helper.registers.PC;
+    uint16_t* sp = helper.registers.SP;
+    *sp = MEMORY::WRAM_LO + 2;
+    helper.addressDispatcher.write(*pc + 1, 0x34);
+    helper.addressDispatcher.write(*pc + 2, 0x12);
+    CPU::CALL_NN instr(helper.registers, helper.addressDispatcher, &CPU::cond_TRUE);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*pc, 0x1234);
+    EXPECT_EQ(*sp, MEMORY::WRAM_LO);
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x03);
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO+1), 0xC0);
+}
+
+TEST(CALL_NN_test, ConditionalZero) {
+    CpuInitHelper helper;
+    uint16_t* pc = helper.registers.PC;
+    uint16_t* sp = helper.registers.SP;
+    *sp = MEMORY::WRAM_LO + 2;
+    helper.addressDispatcher.write(*pc + 1, 0x34);
+    helper.addressDispatcher.write(*pc + 2, 0x12);
+    helper.registers.set_flag_zero(false);
+    CPU::CALL_NN instr(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    instr.tick();
+    instr.tick();
+    CPU::InstructionResult result = instr.tick();
+    EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
+    EXPECT_EQ(*pc, 0xC003);
+    EXPECT_EQ(*sp, MEMORY::WRAM_LO+2);
+    helper.registers.set_flag_zero(true);
+    *pc = 0xC000;
+    CPU::CALL_NN instr2(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    instr2.tick();
+    instr2.tick();
+    instr2.tick();
+    instr2.tick();
+    instr2.tick();
+    CPU::InstructionResult result2 = instr2.tick();
+    EXPECT_EQ(result2, CPU::InstructionResult::FINISHED);
+    EXPECT_EQ(*pc, 0x1234);
+    EXPECT_EQ(*sp, MEMORY::WRAM_LO);
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x03);
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO+1), 0xC0);
+}
