@@ -273,3 +273,20 @@ TEST(CALL_NN_test, ConditionalZero) {
     EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x03);
     EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO+1), 0xC0);
 }
+
+TEST(RST_test, IsCorrectPcStack) {
+    CpuInitHelper helper;
+    uint16_t* pc = helper.registers.PC;
+    uint16_t* sp = helper.registers.SP;
+    *sp = MEMORY::WRAM_LO + 2;
+    CPU::RST instr(helper.registers, helper.addressDispatcher, 0x10);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(*pc, 0x0010);
+    EXPECT_EQ(*sp, MEMORY::WRAM_LO);
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x01);
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO+1), 0xC0);
+}
+
