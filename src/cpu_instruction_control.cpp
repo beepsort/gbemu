@@ -236,13 +236,13 @@ CPU::InstructionResult CPU::CALL_NN::tick()
         return InstructionResult::RUNNING;
     case 2:
         jump_addr |= ((uint16_t) memory.read(++*registers.PC)) << 8;
+        ++*registers.PC;
         if (condition(registers))
         {
             return InstructionResult::RUNNING; // delay instruction prefetching as we will change PC
         }
         else
         {
-            ++*registers.PC;
             return InstructionResult::FINISHED; // immediately start instruction prefetching
         }
     case 3:
