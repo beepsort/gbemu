@@ -40,6 +40,29 @@ CPU::InstructionResult CPU::RLC::tick()
     return InstructionResult::FINISHED;
 }
 
+CPU::InstructionResult CPU::RLC_absHL::tick()
+{
+    switch (step++)
+    {
+        case 0:
+            return InstructionResult::RUNNING;
+        case 1:
+            shift_register = (uint16_t)memory.read(*registers.HL);
+            return InstructionResult::RUNNING;
+        case 2:
+        {
+            shift_register <<= 1;
+            uint8_t result = (uint8_t)shift_register | (uint8_t)(shift_register>>8);
+            registers.set_flag_carry(result&0x01);
+            memory.write(*registers.HL, result);
+            ++*registers.PC;
+        }
+        [[fallthrough]];
+        default:
+            return InstructionResult::FINISHED;
+    }
+}
+
 CPU::InstructionResult CPU::RRC::tick()
 {
     uint8_t shift_register = *target>>1;
@@ -47,6 +70,29 @@ CPU::InstructionResult CPU::RRC::tick()
     registers.set_flag_carry(*target&0x80);
     ++*registers.PC;
     return InstructionResult::FINISHED;
+}
+
+CPU::InstructionResult CPU::RRC_absHL::tick()
+{
+    switch (step++)
+    {
+        case 0:
+            return InstructionResult::RUNNING;
+        case 1:
+            shift_register = memory.read(*registers.HL);
+            return InstructionResult::RUNNING;
+        case 2:
+        {
+            uint8_t result = shift_register>>1;
+            result |= shift_register<<7;
+            registers.set_flag_carry(result&0x80);
+            memory.write(*registers.HL, result);
+            ++*registers.PC;
+        }
+        [[fallthrough]];
+        default:
+            return InstructionResult::FINISHED;
+    }
 }
 
 CPU::InstructionResult CPU::RL::tick()

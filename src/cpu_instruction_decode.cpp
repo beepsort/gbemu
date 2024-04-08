@@ -546,7 +546,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x05:
             return new RLC(registers, registers.L);
         case 0x06:
-            // RLC (HL)
+            return new RLC_absHL(registers, memory);
         case 0x07:
             return new RLC(registers, registers.A);
         case 0x08:
@@ -562,7 +562,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x0D:
             return new RRC(registers, registers.L);
         case 0x0E:
-            // RRC (HL)
+            return new RRC_absHL(registers, memory);
         case 0x0F:
             return new RRC(registers, registers.A);
         case 0x10:
