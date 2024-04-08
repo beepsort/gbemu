@@ -29,6 +29,28 @@ namespace CPU
             ~CB_PREFIX();
             InstructionResult tick();
     };
+
+    class RLC: public CpuInstruction
+    {
+        private:
+            CpuRegisters& registers;
+            uint8_t* target;
+        public:
+            RLC(CpuRegisters& registers, uint8_t* target)
+            : registers(registers), target(target) {}
+            InstructionResult tick();
+    };
+
+    class RRC: public CpuInstruction
+    {
+        private:
+            CpuRegisters& registers;
+            uint8_t* target;
+        public:
+            RRC(CpuRegisters& registers, uint8_t* target)
+            : registers(registers), target(target) {}
+            InstructionResult tick();
+    };
 };
 
 #endif

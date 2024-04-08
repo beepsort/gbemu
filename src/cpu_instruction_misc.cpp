@@ -29,3 +29,22 @@ CPU::CB_PREFIX::~CB_PREFIX()
         delete instruction;
     }
 }
+
+CPU::InstructionResult CPU::RLC::tick()
+{
+    uint16_t shift_register = (uint16_t)*target;
+    shift_register <<= 1;
+    *target = (uint8_t)shift_register | (uint8_t)(shift_register>>8);
+    registers.set_flag_carry(*target&0x01);
+    ++*registers.PC;
+    return InstructionResult::FINISHED;
+}
+
+CPU::InstructionResult CPU::RRC::tick()
+{
+    uint8_t shift_register = *target>>1;
+    *target = shift_register | *target<<7;
+    registers.set_flag_carry(*target&0x80);
+    ++*registers.PC;
+    return InstructionResult::FINISHED;
+}

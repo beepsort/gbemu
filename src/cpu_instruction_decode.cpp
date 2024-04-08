@@ -534,37 +534,37 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
     switch (opcode)
     {
         case 0x00:
-            // RLC B
+            return new RLC(registers, registers.B);
         case 0x01:
-            // RLC C
+            return new RLC(registers, registers.C);
         case 0x02:
-            // RLC D
+            return new RLC(registers, registers.D);
         case 0x03:
-            // RLC E
+            return new RLC(registers, registers.E);
         case 0x04:
-            // RLC H
+            return new RLC(registers, registers.H);
         case 0x05:
-            // RLC L
+            return new RLC(registers, registers.L);
         case 0x06:
             // RLC (HL)
         case 0x07:
-            // RLC A
+            return new RLC(registers, registers.A);
         case 0x08:
-            // RRC B
+            return new RRC(registers, registers.B);
         case 0x09:
-            // RRC C
+            return new RRC(registers, registers.C);
         case 0x0A:
-            // RRC D
+            return new RRC(registers, registers.D);
         case 0x0B:
-            // RRC E
+            return new RRC(registers, registers.E);
         case 0x0C:
-            // RRC H
+            return new RRC(registers, registers.H);
         case 0x0D:
-            // RRC L
+            return new RRC(registers, registers.L);
         case 0x0E:
             // RRC (HL)
         case 0x0F:
-            // RRC A
+            return new RRC(registers, registers.A);
         case 0x10:
             // RL B
         case 0x11:
