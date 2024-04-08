@@ -5,6 +5,7 @@ add_executable(gbemu_test
     cpu_instruction_alu_test.cpp
     cpu_instruction_load_test.cpp
     cpu_instruction_control_test.cpp
+    cpu_instruction_misc_test.cpp
     cpu_interrupt_test.cpp
     )
 find_package(GTest REQUIRED)
