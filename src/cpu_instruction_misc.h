@@ -3,6 +3,7 @@
 
 #include "cpu_instruction.h"
 #include "cpu_registers.h"
+#include "gbmemory.h"
 
 namespace CPU
 {
@@ -14,6 +15,19 @@ namespace CPU
         NOP(CpuRegisters& registers)
         : registers(registers) {}
         InstructionResult tick();
+    };
+
+    class CB_PREFIX: public CpuInstruction
+    {
+        private:
+            CpuRegisters& registers;
+            MEMORY::AddressDispatcher& memory;
+            CpuInstruction* instruction = nullptr;
+        public:
+            CB_PREFIX(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+            : registers(registers), memory(memory) {}
+            ~CB_PREFIX();
+            InstructionResult tick();
     };
 };
 

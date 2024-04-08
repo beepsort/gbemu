@@ -10,6 +10,7 @@
 namespace CPU
 {
     CpuInstruction* decode_opcode(uint8_t opcode, CPU::CpuRegisters& registers, MEMORY::AddressDispatcher& memory);
+    CpuInstruction* decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters& registers, MEMORY::AddressDispatcher& memory);
 };
 
 #endif
