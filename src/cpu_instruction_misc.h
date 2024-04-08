@@ -89,6 +89,19 @@ namespace CPU
             InstructionResult tick();
     };
 
+    class RL_absHL: public CpuInstruction
+    {
+        private:
+            CpuRegisters& registers;
+            MEMORY::AddressDispatcher& memory;
+            uint8_t result;
+            uint8_t step = 0;
+        public:
+            RL_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+            : registers(registers), memory(memory) {}
+            InstructionResult tick();
+    };
+
     class RR: public CpuInstruction
     {
         private:
@@ -99,6 +112,20 @@ namespace CPU
             : registers(registers), target(target) {}
             InstructionResult tick();
     };
+
+    class RR_absHL: public CpuInstruction
+    {
+        private:
+            CpuRegisters& registers;
+            MEMORY::AddressDispatcher& memory;
+            uint8_t result;
+            uint8_t step = 0;
+        public:
+            RR_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+            : registers(registers), memory(memory) {}
+            InstructionResult tick();
+    };
+
 };
 
 #endif

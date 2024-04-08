@@ -578,7 +578,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x15:
             return new RL(registers, registers.L);
         case 0x16:
-            // RL (HL)
+            return new RL_absHL(registers, memory);
         case 0x17:
             return new RL(registers, registers.A);
         case 0x18:
@@ -594,7 +594,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x1D:
             return new RR(registers, registers.L);
         case 0x1E:
-            // RL (HL)
+            return new RR_absHL(registers, memory);
         case 0x1F:
             return new RR(registers, registers.A);
         case 0x20:

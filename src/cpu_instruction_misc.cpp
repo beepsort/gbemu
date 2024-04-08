@@ -103,6 +103,28 @@ CPU::InstructionResult CPU::RL::tick()
     return InstructionResult::FINISHED;
 }
 
+CPU::InstructionResult CPU::RL_absHL::tick()
+{
+    switch (step++)
+    {
+        case 0:
+            return InstructionResult::RUNNING;
+        case 1:
+            result = memory.read(*registers.HL);
+            return InstructionResult::RUNNING;
+        case 2:
+        {
+            result <<= 1;
+            result |= registers.get_flag_carry() ? 0x01 : 0x00;
+            memory.write(*registers.HL, result);
+            ++*registers.PC;
+        }
+        [[fallthrough]];
+        default:
+            return InstructionResult::FINISHED;
+    }
+}
+
 CPU::InstructionResult CPU::RR::tick()
 {
     *target >>= 1;
@@ -110,3 +132,26 @@ CPU::InstructionResult CPU::RR::tick()
     ++*registers.PC;
     return InstructionResult::FINISHED;
 }
+
+CPU::InstructionResult CPU::RR_absHL::tick()
+{
+    switch (step++)
+    {
+        case 0:
+            return InstructionResult::RUNNING;
+        case 1:
+            result = memory.read(*registers.HL);
+            return InstructionResult::RUNNING;
+        case 2:
+        {
+            result >>= 1;
+            result |= registers.get_flag_carry() ? 0x80 : 0x00;
+            memory.write(*registers.HL, result);
+            ++*registers.PC;
+        }
+        [[fallthrough]];
+        default:
+            return InstructionResult::FINISHED;
+    }
+}
+
