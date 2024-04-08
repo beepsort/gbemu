@@ -39,6 +39,19 @@ TEST(RLC_test, OneBitWrapAround) {
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
 }
 
+TEST(RLC_absHL_test, OneBitWrapAround) {
+    CpuInitHelper helper;
+    helper.registers.set_flag_carry(false);
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 0x80);
+    CPU::RLC_absHL instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x01);
+    EXPECT_TRUE(helper.registers.get_flag_carry());
+}
+
 TEST(RRC_test, Alternating) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(true);
@@ -68,6 +81,20 @@ TEST(RRC_test, OneBitWrapAround) {
     EXPECT_EQ(*target, 0x80);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
 }
+
+TEST(RRC_absHL_test, OneBitWrapAround) {
+    CpuInitHelper helper;
+    helper.registers.set_flag_carry(false);
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 0x01);
+    CPU::RRC_absHL instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x80);
+    EXPECT_TRUE(helper.registers.get_flag_carry());
+}
+
 
 TEST(RL_test, AlternatingNoCarry) {
     CpuInitHelper helper;
