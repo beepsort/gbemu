@@ -3,6 +3,12 @@
 #include "cpu_registers.h"
 #include "cpu_init_helper.h"
 
+TEST(NOP_test, Pc) {
+    CpuInitHelper helper;
+    CPU::NOP(helper.registers).tick();
+    EXPECT_EQ(*helper.registers.PC, 0xC001);
+}
+
 TEST(RLC_test, Alternating) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(true);
