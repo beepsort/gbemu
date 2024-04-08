@@ -566,37 +566,37 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x0F:
             return new RRC(registers, registers.A);
         case 0x10:
-            // RL B
+            return new RL(registers, registers.B);
         case 0x11:
-            // RL C
+            return new RL(registers, registers.C);
         case 0x12:
-            // RL D
+            return new RL(registers, registers.D);
         case 0x13:
-            // RL E
+            return new RL(registers, registers.E);
         case 0x14:
-            // RL H
+            return new RL(registers, registers.H);
         case 0x15:
-            // RL L
+            return new RL(registers, registers.L);
         case 0x16:
             // RL (HL)
         case 0x17:
-            // RL A
+            return new RL(registers, registers.A);
         case 0x18:
-            // RR B
+            return new RR(registers, registers.B);
         case 0x19:
-            // RR C
+            return new RR(registers, registers.C);
         case 0x1A:
-            // RR D
+            return new RR(registers, registers.D);
         case 0x1B:
-            // RR E
+            return new RR(registers, registers.E);
         case 0x1C:
-            // RR H
+            return new RR(registers, registers.H);
         case 0x1D:
-            // RR L
+            return new RR(registers, registers.L);
         case 0x1E:
             // RL (HL)
         case 0x1F:
-            // RR A
+            return new RR(registers, registers.A);
         case 0x20:
             // SLA B
         case 0x21:

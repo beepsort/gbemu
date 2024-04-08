@@ -51,6 +51,28 @@ namespace CPU
             : registers(registers), target(target) {}
             InstructionResult tick();
     };
+
+    class RL: public CpuInstruction
+    {
+        private:
+            CpuRegisters& registers;
+            uint8_t* target;
+        public:
+            RL(CpuRegisters& registers, uint8_t* target)
+            : registers(registers), target(target) {}
+            InstructionResult tick();
+    };
+
+    class RR: public CpuInstruction
+    {
+        private:
+            CpuRegisters& registers;
+            uint8_t* target;
+        public:
+            RR(CpuRegisters& registers, uint8_t* target)
+            : registers(registers), target(target) {}
+            InstructionResult tick();
+    };
 };
 
 #endif

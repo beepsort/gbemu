@@ -48,3 +48,19 @@ CPU::InstructionResult CPU::RRC::tick()
     ++*registers.PC;
     return InstructionResult::FINISHED;
 }
+
+CPU::InstructionResult CPU::RL::tick()
+{
+    *target <<= 1;
+    *target |= registers.get_flag_carry() ? 0x01 : 0x00;
+    ++*registers.PC;
+    return InstructionResult::FINISHED;
+}
+
+CPU::InstructionResult CPU::RR::tick()
+{
+    *target >>= 1;
+    *target |= registers.get_flag_carry() ? 0x80 : 0x00;
+    ++*registers.PC;
+    return InstructionResult::FINISHED;
+}
