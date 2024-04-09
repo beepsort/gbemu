@@ -610,7 +610,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x25:
             return new SLA_r(registers, registers.L);
         case 0x26:
-            // SLA (HL)
+            return new SLA_absHL(registers, memory);
         case 0x27:
             return new SLA_r(registers, registers.A);
         case 0x28:      
@@ -626,7 +626,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x2D:      
             return new SRA_r(registers, registers.L);
         case 0x2E:      
-            // SRA (HL) R
+            return new SRA_absHL(registers, memory);
         case 0x2F:      
             return new SRA_r(registers, registers.A);
         case 0x30:

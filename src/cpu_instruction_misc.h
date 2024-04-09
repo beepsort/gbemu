@@ -137,6 +137,19 @@ namespace CPU
         InstructionResult tick();
     };
 
+    class SLA_absHL: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+        uint8_t result;
+        uint8_t step = 0;
+    public:
+        SLA_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : registers(registers), memory(memory) {}
+        InstructionResult tick();
+    };
+
     class SRA_r: public CpuInstruction
     {
     private:
@@ -145,6 +158,19 @@ namespace CPU
     public:
         SRA_r(CpuRegisters& registers, uint8_t* target)
         : registers(registers), target(target) {}
+        InstructionResult tick();
+    };
+
+    class SRA_absHL: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+        uint8_t result;
+        uint8_t step = 0;
+    public:
+        SRA_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 };
