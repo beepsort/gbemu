@@ -534,69 +534,69 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
     switch (opcode)
     {
         case 0x00:
-            return new RLC(registers, registers.B);
+            return new RLC_r(registers, registers.B);
         case 0x01:
-            return new RLC(registers, registers.C);
+            return new RLC_r(registers, registers.C);
         case 0x02:
-            return new RLC(registers, registers.D);
+            return new RLC_r(registers, registers.D);
         case 0x03:
-            return new RLC(registers, registers.E);
+            return new RLC_r(registers, registers.E);
         case 0x04:
-            return new RLC(registers, registers.H);
+            return new RLC_r(registers, registers.H);
         case 0x05:
-            return new RLC(registers, registers.L);
+            return new RLC_r(registers, registers.L);
         case 0x06:
             return new RLC_absHL(registers, memory);
         case 0x07:
-            return new RLC(registers, registers.A);
+            return new RLC_r(registers, registers.A);
         case 0x08:
-            return new RRC(registers, registers.B);
+            return new RRC_r(registers, registers.B);
         case 0x09:
-            return new RRC(registers, registers.C);
+            return new RRC_r(registers, registers.C);
         case 0x0A:
-            return new RRC(registers, registers.D);
+            return new RRC_r(registers, registers.D);
         case 0x0B:
-            return new RRC(registers, registers.E);
+            return new RRC_r(registers, registers.E);
         case 0x0C:
-            return new RRC(registers, registers.H);
+            return new RRC_r(registers, registers.H);
         case 0x0D:
-            return new RRC(registers, registers.L);
+            return new RRC_r(registers, registers.L);
         case 0x0E:
             return new RRC_absHL(registers, memory);
         case 0x0F:
-            return new RRC(registers, registers.A);
+            return new RRC_r(registers, registers.A);
         case 0x10:
-            return new RL(registers, registers.B);
+            return new RL_r(registers, registers.B);
         case 0x11:
-            return new RL(registers, registers.C);
+            return new RL_r(registers, registers.C);
         case 0x12:
-            return new RL(registers, registers.D);
+            return new RL_r(registers, registers.D);
         case 0x13:
-            return new RL(registers, registers.E);
+            return new RL_r(registers, registers.E);
         case 0x14:
-            return new RL(registers, registers.H);
+            return new RL_r(registers, registers.H);
         case 0x15:
-            return new RL(registers, registers.L);
+            return new RL_r(registers, registers.L);
         case 0x16:
             return new RL_absHL(registers, memory);
         case 0x17:
-            return new RL(registers, registers.A);
+            return new RL_r(registers, registers.A);
         case 0x18:
-            return new RR(registers, registers.B);
+            return new RR_r(registers, registers.B);
         case 0x19:
-            return new RR(registers, registers.C);
+            return new RR_r(registers, registers.C);
         case 0x1A:
-            return new RR(registers, registers.D);
+            return new RR_r(registers, registers.D);
         case 0x1B:
-            return new RR(registers, registers.E);
+            return new RR_r(registers, registers.E);
         case 0x1C:
-            return new RR(registers, registers.H);
+            return new RR_r(registers, registers.H);
         case 0x1D:
-            return new RR(registers, registers.L);
+            return new RR_r(registers, registers.L);
         case 0x1E:
             return new RR_absHL(registers, memory);
         case 0x1F:
-            return new RR(registers, registers.A);
+            return new RR_r(registers, registers.A);
         case 0x20:
             return new SLA_r(registers, registers.B);
         case 0x21:

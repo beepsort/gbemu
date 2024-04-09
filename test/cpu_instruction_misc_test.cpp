@@ -9,32 +9,32 @@ TEST(NOP_test, Pc) {
     EXPECT_EQ(*helper.registers.PC, 0xC001);
 }
 
-TEST(RLC_test, Alternating) {
+TEST(RLC_r_test, Alternating) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(true);
     uint8_t* target = helper.registers.B;
     *target = 0x55;
-    CPU::RLC({helper.registers, target}).tick();
+    CPU::RLC_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0xAA);
     EXPECT_EQ(helper.registers.get_flag_carry(), false);
 }
 
-TEST(RLC_test, AlternatingWrapAround) {
+TEST(RLC_r_test, AlternatingWrapAround) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(false);
     uint8_t* target = helper.registers.B;
     *target = 0xAA;
-    CPU::RLC({helper.registers, target}).tick();
+    CPU::RLC_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x55);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
 }
 
-TEST(RLC_test, OneBitWrapAround) {
+TEST(RLC_r_test, OneBitWrapAround) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(false);
     uint8_t* target = helper.registers.B;
     *target = 0x80;
-    CPU::RLC({helper.registers, target}).tick();
+    CPU::RLC_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x01);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
 }
@@ -52,32 +52,32 @@ TEST(RLC_absHL_test, OneBitWrapAround) {
     EXPECT_TRUE(helper.registers.get_flag_carry());
 }
 
-TEST(RRC_test, Alternating) {
+TEST(RRC_r_test, Alternating) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(true);
     uint8_t* target = helper.registers.B;
     *target = 0xAA;
-    CPU::RRC({helper.registers, target}).tick();
+    CPU::RRC_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x55);
     EXPECT_EQ(helper.registers.get_flag_carry(), false);
 }
 
-TEST(RRC_test, AlternatingWrapAround) {
+TEST(RRC_r_test, AlternatingWrapAround) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(false);
     uint8_t* target = helper.registers.B;
     *target = 0x55;
-    CPU::RRC({helper.registers, target}).tick();
+    CPU::RRC_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0xAA);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
 }
 
-TEST(RRC_test, OneBitWrapAround) {
+TEST(RRC_r_test, OneBitWrapAround) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(false);
     uint8_t* target = helper.registers.B;
     *target = 0x01;
-    CPU::RRC({helper.registers, target}).tick();
+    CPU::RRC_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x80);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
 }
@@ -95,32 +95,32 @@ TEST(RRC_absHL_test, OneBitWrapAround) {
     EXPECT_TRUE(helper.registers.get_flag_carry());
 }
 
-TEST(RL_test, AlternatingNoCarry) {
+TEST(RL_r_test, AlternatingNoCarry) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(false);
     uint8_t* target = helper.registers.B;
     *target = 0x55;
-    CPU::RL({helper.registers, target}).tick();
+    CPU::RL_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0xAA);
     EXPECT_EQ(helper.registers.get_flag_carry(), false);
 }
 
-TEST(RL_test, AlternatingWithCarry) {
+TEST(RL_r_test, AlternatingWithCarry) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(true);
     uint8_t* target = helper.registers.B;
     *target = 0xAA;
-    CPU::RL({helper.registers, target}).tick();
+    CPU::RL_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x55);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
 }
 
-TEST(RL_test, ZeroWithCarry) {
+TEST(RL_r_test, ZeroWithCarry) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(true);
     uint8_t* target = helper.registers.B;
     *target = 0x00;
-    CPU::RL({helper.registers, target}).tick();
+    CPU::RL_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x01);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
 }
@@ -161,32 +161,32 @@ TEST(RL_absHL_test, ZeroWithCarry) {
     EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x01);
 }
 
-TEST(RR_test, AlternatingNoCarry) {
+TEST(RR_r_test, AlternatingNoCarry) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(false);
     uint8_t* target = helper.registers.B;
     *target = 0xAA;
-    CPU::RR({helper.registers, target}).tick();
+    CPU::RR_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x55);
     EXPECT_EQ(helper.registers.get_flag_carry(), false);
 }
 
-TEST(RR_test, AlternatingWithCarry) {
+TEST(RR_r_test, AlternatingWithCarry) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(true);
     uint8_t* target = helper.registers.B;
     *target = 0x55;
-    CPU::RR({helper.registers, target}).tick();
+    CPU::RR_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0xAA);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
 }
 
-TEST(RR_test, ZeroWithCarry) {
+TEST(RR_r_test, ZeroWithCarry) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(true);
     uint8_t* target = helper.registers.B;
     *target = 0x00;
-    CPU::RR({helper.registers, target}).tick();
+    CPU::RR_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x80);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
 }

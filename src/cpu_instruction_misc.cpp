@@ -30,7 +30,7 @@ CPU::CB_PREFIX::~CB_PREFIX()
     }
 }
 
-CPU::InstructionResult CPU::RLC::tick()
+CPU::InstructionResult CPU::RLC_r::tick()
 {
     uint16_t shift_register = (uint16_t)*target;
     shift_register <<= 1;
@@ -63,7 +63,7 @@ CPU::InstructionResult CPU::RLC_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::RRC::tick()
+CPU::InstructionResult CPU::RRC_r::tick()
 {
     uint8_t shift_register = *target>>1;
     *target = shift_register | *target<<7;
@@ -95,7 +95,7 @@ CPU::InstructionResult CPU::RRC_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::RL::tick()
+CPU::InstructionResult CPU::RL_r::tick()
 {
     *target <<= 1;
     *target |= registers.get_flag_carry() ? 0x01 : 0x00;
@@ -125,7 +125,7 @@ CPU::InstructionResult CPU::RL_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::RR::tick()
+CPU::InstructionResult CPU::RR_r::tick()
 {
     *target >>= 1;
     *target |= registers.get_flag_carry() ? 0x80 : 0x00;

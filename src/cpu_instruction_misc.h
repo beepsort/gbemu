@@ -30,13 +30,13 @@ namespace CPU
         InstructionResult tick();
     };
 
-    class RLC: public CpuInstruction
+    class RLC_r: public CpuInstruction
     {
     private:
         CpuRegisters& registers;
         uint8_t* target;
     public:
-        RLC(CpuRegisters& registers, uint8_t* target)
+        RLC_r(CpuRegisters& registers, uint8_t* target)
         : registers(registers), target(target) {}
         InstructionResult tick();
     };
@@ -54,13 +54,13 @@ namespace CPU
         InstructionResult tick();
     };
 
-    class RRC: public CpuInstruction
+    class RRC_r: public CpuInstruction
     {
     private:
         CpuRegisters& registers;
         uint8_t* target;
     public:
-        RRC(CpuRegisters& registers, uint8_t* target)
+        RRC_r(CpuRegisters& registers, uint8_t* target)
         : registers(registers), target(target) {}
         InstructionResult tick();
     };
@@ -78,13 +78,13 @@ namespace CPU
         InstructionResult tick();
     };
 
-    class RL: public CpuInstruction
+    class RL_r: public CpuInstruction
     {
     private:
         CpuRegisters& registers;
         uint8_t* target;
     public:
-        RL(CpuRegisters& registers, uint8_t* target)
+        RL_r(CpuRegisters& registers, uint8_t* target)
         : registers(registers), target(target) {}
         InstructionResult tick();
     };
@@ -102,13 +102,13 @@ namespace CPU
         InstructionResult tick();
     };
 
-    class RR: public CpuInstruction
+    class RR_r: public CpuInstruction
     {
     private:
         CpuRegisters& registers;
         uint8_t* target;
     public:
-        RR(CpuRegisters& registers, uint8_t* target)
+        RR_r(CpuRegisters& registers, uint8_t* target)
         : registers(registers), target(target) {}
         InstructionResult tick();
     };
