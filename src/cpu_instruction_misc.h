@@ -126,6 +126,27 @@ namespace CPU
             InstructionResult tick();
     };
 
+    class SLA_r: public CpuInstruction
+    {
+        private:
+            CpuRegisters& registers;
+            uint8_t* target;
+        public:
+            SLA_r(CpuRegisters& registers, uint8_t* target)
+            : registers(registers), target(target) {}
+            InstructionResult tick();
+    };
+
+    class SRA_r: public CpuInstruction
+    {
+        private:
+            CpuRegisters& registers;
+            uint8_t* target;
+        public:
+            SRA_r(CpuRegisters& registers, uint8_t* target)
+            : registers(registers), target(target) {}
+            InstructionResult tick();
+    };
 };
 
 #endif

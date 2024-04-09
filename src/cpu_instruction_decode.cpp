@@ -598,37 +598,37 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x1F:
             return new RR(registers, registers.A);
         case 0x20:
-            // SLA B
+            return new SLA_r(registers, registers.B);
         case 0x21:
-            // SLA C
+            return new SLA_r(registers, registers.C);
         case 0x22:
-            // SLA D
+            return new SLA_r(registers, registers.D);
         case 0x23:
-            // SLA E
+            return new SLA_r(registers, registers.E);
         case 0x24:
-            // SLA H
+            return new SLA_r(registers, registers.H);
         case 0x25:
-            // SLA L
+            return new SLA_r(registers, registers.L);
         case 0x26:
             // SLA (HL)
         case 0x27:
-            // SLA A
-        case 0x28:
-            // SRA B
-        case 0x29:
-            // SRA C
-        case 0x2A:
-            // SRA D
-        case 0x2B:
-            // SRA E
-        case 0x2C:
-            // SRA H
-        case 0x2D:
-            // SRA L
-        case 0x2E:
-            // SRA (HL)
-        case 0x2F:
-            // SRA A
+            return new SLA_r(registers, registers.A);
+        case 0x28:      
+            return new SRA_r(registers, registers.B);
+        case 0x29:      
+            return new SRA_r(registers, registers.C);
+        case 0x2A:      
+            return new SRA_r(registers, registers.D);
+        case 0x2B:      
+            return new SRA_r(registers, registers.E);
+        case 0x2C:      
+            return new SRA_r(registers, registers.H);
+        case 0x2D:      
+            return new SRA_r(registers, registers.L);
+        case 0x2E:      
+            // SRA (HL) R
+        case 0x2F:      
+            return new SRA_r(registers, registers.A);
         case 0x30:
             // SWAP B
         case 0x31:

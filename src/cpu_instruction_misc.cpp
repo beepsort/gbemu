@@ -155,3 +155,19 @@ CPU::InstructionResult CPU::RR_absHL::tick()
     }
 }
 
+CPU::InstructionResult CPU::SLA_r::tick()
+{
+    registers.set_flag_carry(*target&0x80);
+    *target <<= 1;
+    ++*registers.PC;
+    return InstructionResult::FINISHED;
+}
+
+CPU::InstructionResult CPU::SRA_r::tick()
+{
+    registers.set_flag_carry(*target&0x01);
+    *target >>= 1;
+    ++*registers.PC;
+    return InstructionResult::FINISHED;
+}
+
