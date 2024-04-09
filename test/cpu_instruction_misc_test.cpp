@@ -245,6 +245,19 @@ TEST(SLA_r_test, CarryFalse) {
     EXPECT_FALSE(helper.registers.get_flag_carry());
 }
 
+TEST(SLA_absHL_test, CarryTrue) {
+    CpuInitHelper helper;
+    helper.registers.set_flag_carry(false);
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 0x81);
+    CPU::SLA_absHL instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x02);
+    EXPECT_TRUE(helper.registers.get_flag_carry());
+}
+
 TEST(SRA_r_test, CarryTrue) {
     CpuInitHelper helper;
     helper.registers.set_flag_carry(false);
@@ -261,5 +274,18 @@ TEST(SRA_r_test, CarryFalse) {
     CPU::SRA_r({helper.registers, helper.registers.B}).tick();
     EXPECT_EQ(*helper.registers.B, 0x40);
     EXPECT_FALSE(helper.registers.get_flag_carry());
+}
+
+TEST(SRA_absHL_test, CarryTrue) {
+    CpuInitHelper helper;
+    helper.registers.set_flag_carry(false);
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 0x81);
+    CPU::SRA_absHL instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x40);
+    EXPECT_TRUE(helper.registers.get_flag_carry());
 }
 
