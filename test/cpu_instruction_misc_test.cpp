@@ -362,3 +362,14 @@ TEST(BIT_r_test, FirstBitOne) {
     EXPECT_FALSE(helper.registers.get_flag_zero());
 }
 
+TEST(BIT_absHL_test, SingleBitZero) {
+    CpuInitHelper helper;
+    helper.registers.set_flag_carry(false);
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 0x7F);
+    CPU::BIT_absHL instr(helper.registers, helper.addressDispatcher, 7);
+    instr.tick();
+    instr.tick();
+    EXPECT_TRUE(helper.registers.get_flag_zero());
+}
+
