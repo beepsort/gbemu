@@ -224,3 +224,25 @@ CPU::InstructionResult CPU::SWAP_r::tick()
     return InstructionResult::FINISHED;
 }
 
+CPU::InstructionResult CPU::SWAP_absHL::tick()
+{
+    switch (step++)
+    {
+        case 0:
+            return InstructionResult::RUNNING;
+        case 1:
+            loaded = memory.read(*registers.HL);
+            return InstructionResult::RUNNING;
+        case 2:
+        {
+            uint8_t result = loaded << 4;
+            result |= loaded >> 4;
+            memory.write(*registers.HL, result);
+            ++*registers.PC;
+        }
+        [[fallthrough]];
+        default:
+            return InstructionResult::FINISHED;
+    }
+}
+

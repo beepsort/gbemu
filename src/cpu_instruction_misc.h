@@ -184,6 +184,19 @@ namespace CPU
         : registers(registers), target(target) {}
         InstructionResult tick();
     };
+
+    class SWAP_absHL: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+        uint8_t loaded;
+        uint8_t step = 0;
+    public:
+        SWAP_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : registers(registers), memory(memory) {}
+        InstructionResult tick();
+    };
 };
 
 #endif

@@ -642,7 +642,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x35:
             return new SWAP_r(registers, registers.L);
         case 0x36:
-            // SWAP (HL)
+            return new SWAP_absHL(registers, memory);
         case 0x37:
             return new SWAP_r(registers, registers.A);
         case 0x38:
