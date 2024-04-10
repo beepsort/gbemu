@@ -166,7 +166,7 @@ namespace CPU
     private:
         CpuRegisters& registers;
         MEMORY::AddressDispatcher& memory;
-        uint8_t result;
+        uint8_t loaded;
         uint8_t step = 0;
     public:
         SRA_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)

@@ -188,7 +188,8 @@ CPU::InstructionResult CPU::SLA_absHL::tick()
 CPU::InstructionResult CPU::SRA_r::tick()
 {
     registers.set_flag_carry(*target&0x01);
-    *target >>= 1;
+    uint8_t result = *target >> 1;
+    *target = result | (*target & 0xF0);
     ++*registers.PC;
     return InstructionResult::FINISHED;
 }
@@ -200,12 +201,13 @@ CPU::InstructionResult CPU::SRA_absHL::tick()
         case 0:
             return InstructionResult::RUNNING;
         case 1:
-            result = memory.read(*registers.HL);
+            loaded = memory.read(*registers.HL);
             return InstructionResult::RUNNING;
         case 2:
         {
-            registers.set_flag_carry(result&0x01);
-            result >>= 1;
+            registers.set_flag_carry(loaded&0x01);
+            uint8_t result = loaded >> 1;
+            result |= loaded & 0xF0;
             memory.write(*registers.HL, result);
             ++*registers.PC;
         }
