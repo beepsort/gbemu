@@ -674,7 +674,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x45:
             return new BIT_r(registers, registers.L, 0);
         case 0x46:
-            // BIT 0, (HL)
+            return new BIT_absHL(registers, memory, 0);
         case 0x47:
             return new BIT_r(registers, registers.A, 0);
         case 0x48:
@@ -690,7 +690,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x4D:
             return new BIT_r(registers, registers.L, 1);
         case 0x4E:
-            // BIT 1, (HL)
+            return new BIT_absHL(registers, memory, 1);
         case 0x4F:
             return new BIT_r(registers, registers.A, 1);
         case 0x50:
@@ -706,7 +706,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x55:
             return new BIT_r(registers, registers.L, 2);
         case 0x56:
-            // BIT 2, (HL)
+            return new BIT_absHL(registers, memory, 2);
         case 0x57:
             return new BIT_r(registers, registers.A, 2);
         case 0x58:
@@ -722,7 +722,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x5D:
             return new BIT_r(registers, registers.L, 3);
         case 0x5E:
-            // BIT 3, (HL)
+            return new BIT_absHL(registers, memory, 3);
         case 0x5F:
             return new BIT_r(registers, registers.A, 3);
         case 0x60:
@@ -738,7 +738,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x65:
             return new BIT_r(registers, registers.L, 4);
         case 0x66:
-            // BIT 4, (HL)
+            return new BIT_absHL(registers, memory, 4);
         case 0x67:
             return new BIT_r(registers, registers.A, 4);
         case 0x68:
@@ -754,7 +754,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x6D:
             return new BIT_r(registers, registers.L, 5);
         case 0x6E:
-            // BIT 5, (HL)
+            return new BIT_absHL(registers, memory, 5);
         case 0x6F:
             return new BIT_r(registers, registers.A, 5);
         case 0x70:
@@ -770,7 +770,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x75:
             return new BIT_r(registers, registers.L, 6);
         case 0x76:
-            // BIT 6, (HL)
+            return new BIT_absHL(registers, memory, 6);
         case 0x77:
             return new BIT_r(registers, registers.A, 6);
         case 0x78:
@@ -786,7 +786,7 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x7D:
             return new BIT_r(registers, registers.L, 7);
         case 0x7E:
-            // BIT 7, (HL)
+            return new BIT_absHL(registers, memory, 7);
         case 0x7F:
             return new BIT_r(registers, registers.A, 7);
         case 0x80:

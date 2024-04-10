@@ -233,6 +233,20 @@ namespace CPU
         : registers(registers), target(target), bitnum(bitnum) {}
         InstructionResult tick();
     };
+
+    class BIT_absHL: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+        uint8_t loaded;
+        uint8_t bitnum;
+        uint8_t step = 0;
+    public:
+        BIT_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, uint8_t bitnum)
+        : registers(registers), memory(memory), bitnum(bitnum) {}
+        InstructionResult tick();
+    };
 };
 
 #endif

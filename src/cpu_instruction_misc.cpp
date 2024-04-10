@@ -286,3 +286,22 @@ CPU::InstructionResult CPU::BIT_r::tick()
     return InstructionResult::FINISHED;
 }
 
+CPU::InstructionResult CPU::BIT_absHL::tick()
+{
+    switch (step++)
+    {
+        case 0:
+            return InstructionResult::RUNNING;
+        case 1:
+        {
+            loaded = memory.read(*registers.HL);
+            uint8_t mask = 0x01 << bitnum;
+            registers.set_flag_zero((loaded&mask)==0);
+            ++*registers.PC;
+        }
+        [[fallthrough]];
+        default:
+            return InstructionResult::FINISHED;
+    }
+}
+
