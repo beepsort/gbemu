@@ -173,6 +173,17 @@ namespace CPU
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
+
+    class SWAP_r: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        uint8_t* target;
+    public:
+        SWAP_r(CpuRegisters& registers, uint8_t* target)
+        : registers(registers), target(target) {}
+        InstructionResult tick();
+    };
 };
 
 #endif

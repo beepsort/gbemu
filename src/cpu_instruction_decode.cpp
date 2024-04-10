@@ -630,21 +630,21 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x2F:      
             return new SRA_r(registers, registers.A);
         case 0x30:
-            // SWAP B
+            return new SWAP_r(registers, registers.B);
         case 0x31:
-            // SWAP C
+            return new SWAP_r(registers, registers.C);
         case 0x32:
-            // SWAP D
+            return new SWAP_r(registers, registers.D);
         case 0x33:
-            // SWAP E
+            return new SWAP_r(registers, registers.E);
         case 0x34:
-            // SWAP H
+            return new SWAP_r(registers, registers.H);
         case 0x35:
-            // SWAP L
+            return new SWAP_r(registers, registers.L);
         case 0x36:
             // SWAP (HL)
         case 0x37:
-            // SWAP A
+            return new SWAP_r(registers, registers.A);
         case 0x38:
             // SRL B
         case 0x39:

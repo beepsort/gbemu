@@ -215,3 +215,12 @@ CPU::InstructionResult CPU::SRA_absHL::tick()
     }
 }
 
+CPU::InstructionResult CPU::SWAP_r::tick()
+{
+    uint8_t result = *target << 4; // move LSB to MSB
+    result |= *target >> 4; // move MSB to LSB
+    *target = result;
+    ++*registers.PC;
+    return InstructionResult::FINISHED;
+}
+
