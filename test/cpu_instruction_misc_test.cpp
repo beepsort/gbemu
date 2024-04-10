@@ -272,7 +272,7 @@ TEST(SRA_r_test, CarryFalse) {
     helper.registers.set_flag_carry(true);
     *helper.registers.B = 0x80;
     CPU::SRA_r({helper.registers, helper.registers.B}).tick();
-    EXPECT_EQ(*helper.registers.B, 0x40);
+    EXPECT_EQ(*helper.registers.B, 0xC0);
     EXPECT_FALSE(helper.registers.get_flag_carry());
 }
 
@@ -285,7 +285,7 @@ TEST(SRA_absHL_test, CarryTrue) {
     instr.tick();
     instr.tick();
     instr.tick();
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x40);
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0xC0);
     EXPECT_TRUE(helper.registers.get_flag_carry());
 }
 
