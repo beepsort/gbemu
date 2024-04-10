@@ -338,3 +338,27 @@ TEST(SRL_absHL_test, CarryTrue) {
     EXPECT_TRUE(helper.registers.get_flag_carry());
 }
 
+TEST(BIT_r_test, SingleBitOne) {
+    CpuInitHelper helper;
+    helper.registers.set_flag_zero(true);
+    *helper.registers.B = 0x80;
+    CPU::BIT_r({helper.registers, helper.registers.B, 7}).tick();
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+}
+
+TEST(BIT_r_test, SingleBitZero) {
+    CpuInitHelper helper;
+    helper.registers.set_flag_zero(false);
+    *helper.registers.B = 0x7F;
+    CPU::BIT_r({helper.registers, helper.registers.B, 7}).tick();
+    EXPECT_TRUE(helper.registers.get_flag_zero());
+}
+
+TEST(BIT_r_test, FirstBitOne) {
+    CpuInitHelper helper;
+    helper.registers.set_flag_zero(true);
+    *helper.registers.B = 0x01;
+    CPU::BIT_r({helper.registers, helper.registers.B, 0}).tick();
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+}
+
