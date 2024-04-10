@@ -221,6 +221,18 @@ namespace CPU
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
+
+    class BIT_r: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        uint8_t* target;
+        uint8_t bitnum;
+    public:
+        BIT_r(CpuRegisters& registers, uint8_t* target, uint8_t bitnum)
+        : registers(registers), target(target), bitnum(bitnum) {}
+        InstructionResult tick();
+    };
 };
 
 #endif

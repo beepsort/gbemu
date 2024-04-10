@@ -662,133 +662,133 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x3F:
             return new SRL_r(registers, registers.A);
         case 0x40:
-            // BIT 0, B
+            return new BIT_r(registers, registers.B, 0);
         case 0x41:
-            // BIT 0, C
+            return new BIT_r(registers, registers.C, 0);
         case 0x42:
-            // BIT 0, D
+            return new BIT_r(registers, registers.D, 0);
         case 0x43:
-            // BIT 0, E
+            return new BIT_r(registers, registers.E, 0);
         case 0x44:
-            // BIT 0, H
+            return new BIT_r(registers, registers.H, 0);
         case 0x45:
-            // BIT 0, L
+            return new BIT_r(registers, registers.L, 0);
         case 0x46:
             // BIT 0, (HL)
         case 0x47:
-            // BIT 0, A
+            return new BIT_r(registers, registers.A, 0);
         case 0x48:
-            // BIT 1, B
+            return new BIT_r(registers, registers.B, 1);
         case 0x49:
-            // BIT 1, C
+            return new BIT_r(registers, registers.C, 1);
         case 0x4A:
-            // BIT 1, D
+            return new BIT_r(registers, registers.D, 1);
         case 0x4B:
-            // BIT 1, E
+            return new BIT_r(registers, registers.E, 1);
         case 0x4C:
-            // BIT 1, H
+            return new BIT_r(registers, registers.H, 1);
         case 0x4D:
-            // BIT 1, L
+            return new BIT_r(registers, registers.L, 1);
         case 0x4E:
             // BIT 1, (HL)
         case 0x4F:
-            // BIT 1, A
+            return new BIT_r(registers, registers.A, 1);
         case 0x50:
-            // BIT 2, B
+            return new BIT_r(registers, registers.B, 2);
         case 0x51:
-            // BIT 2, C
+            return new BIT_r(registers, registers.C, 2);
         case 0x52:
-            // BIT 2, D
+            return new BIT_r(registers, registers.D, 2);
         case 0x53:
-            // BIT 2, E
+            return new BIT_r(registers, registers.E, 2);
         case 0x54:
-            // BIT 2, H
+            return new BIT_r(registers, registers.H, 2);
         case 0x55:
-            // BIT 2, L
+            return new BIT_r(registers, registers.L, 2);
         case 0x56:
             // BIT 2, (HL)
         case 0x57:
-            // BIT 2, A
+            return new BIT_r(registers, registers.A, 2);
         case 0x58:
-            // BIT 3, B
+            return new BIT_r(registers, registers.B, 3);
         case 0x59:
-            // BIT 3, C
+            return new BIT_r(registers, registers.C, 3);
         case 0x5A:
-            // BIT 3, D
+            return new BIT_r(registers, registers.D, 3);
         case 0x5B:
-            // BIT 3, E
+            return new BIT_r(registers, registers.E, 3);
         case 0x5C:
-            // BIT 3, H
+            return new BIT_r(registers, registers.H, 3);
         case 0x5D:
-            // BIT 3, L
+            return new BIT_r(registers, registers.L, 3);
         case 0x5E:
             // BIT 3, (HL)
         case 0x5F:
-            // BIT 3, A
+            return new BIT_r(registers, registers.A, 3);
         case 0x60:
-            // BIT 4, B
+            return new BIT_r(registers, registers.B, 4);
         case 0x61:
-            // BIT 4, C
+            return new BIT_r(registers, registers.C, 4);
         case 0x62:
-            // BIT 4, D
+            return new BIT_r(registers, registers.D, 4);
         case 0x63:
-            // BIT 4, E
+            return new BIT_r(registers, registers.E, 4);
         case 0x64:
-            // BIT 4, H
+            return new BIT_r(registers, registers.H, 4);
         case 0x65:
-            // BIT 4, L
+            return new BIT_r(registers, registers.L, 4);
         case 0x66:
             // BIT 4, (HL)
         case 0x67:
-            // BIT 4, A
+            return new BIT_r(registers, registers.A, 4);
         case 0x68:
-            // BIT 5, B
+            return new BIT_r(registers, registers.B, 5);
         case 0x69:
-            // BIT 5, C
+            return new BIT_r(registers, registers.C, 5);
         case 0x6A:
-            // BIT 5, D
+            return new BIT_r(registers, registers.D, 5);
         case 0x6B:
-            // BIT 5, E
+            return new BIT_r(registers, registers.E, 5);
         case 0x6C:
-            // BIT 5, H
+            return new BIT_r(registers, registers.H, 5);
         case 0x6D:
-            // BIT 5, L
+            return new BIT_r(registers, registers.L, 5);
         case 0x6E:
             // BIT 5, (HL)
         case 0x6F:
-            // BIT 5, A
+            return new BIT_r(registers, registers.A, 5);
         case 0x70:
-            // BIT 6, B
+            return new BIT_r(registers, registers.B, 6);
         case 0x71:
-            // BIT 6, C
+            return new BIT_r(registers, registers.C, 6);
         case 0x72:
-            // BIT 6, D
+            return new BIT_r(registers, registers.D, 6);
         case 0x73:
-            // BIT 6, E
+            return new BIT_r(registers, registers.E, 6);
         case 0x74:
-            // BIT 6, H
+            return new BIT_r(registers, registers.H, 6);
         case 0x75:
-            // BIT 6, L
+            return new BIT_r(registers, registers.L, 6);
         case 0x76:
             // BIT 6, (HL)
         case 0x77:
-            // BIT 6, A
+            return new BIT_r(registers, registers.A, 6);
         case 0x78:
-            // BIT 7, B
+            return new BIT_r(registers, registers.B, 7);
         case 0x79:
-            // BIT 7, C
+            return new BIT_r(registers, registers.C, 7);
         case 0x7A:
-            // BIT 7, D
+            return new BIT_r(registers, registers.D, 7);
         case 0x7B:
-            // BIT 7, E
+            return new BIT_r(registers, registers.E, 7);
         case 0x7C:
-            // BIT 7, H
+            return new BIT_r(registers, registers.H, 7);
         case 0x7D:
-            // BIT 7, L
+            return new BIT_r(registers, registers.L, 7);
         case 0x7E:
             // BIT 7, (HL)
         case 0x7F:
-            // BIT 7, A
+            return new BIT_r(registers, registers.A, 7);
         case 0x80:
             // RES 0, B
         case 0x81:

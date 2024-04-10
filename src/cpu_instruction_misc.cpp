@@ -278,3 +278,11 @@ CPU::InstructionResult CPU::SRL_absHL::tick()
     }
 }
 
+CPU::InstructionResult CPU::BIT_r::tick()
+{
+    uint8_t mask = 0x01 << bitnum;
+    registers.set_flag_zero((*target&mask)==0);
+    ++*registers.PC;
+    return InstructionResult::FINISHED;
+}
+
