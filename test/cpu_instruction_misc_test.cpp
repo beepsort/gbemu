@@ -296,3 +296,13 @@ TEST(SWAP_r_test, Alternating) {
     EXPECT_EQ(*helper.registers.B, 0x5A);
 }
 
+TEST(SWAP_absHL_test, CarryTrue) {
+    CpuInitHelper helper;
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 0xA5);
+    CPU::SWAP_absHL instr(helper.registers, helper.addressDispatcher);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x5A);
+}
