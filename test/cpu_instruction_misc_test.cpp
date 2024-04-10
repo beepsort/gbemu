@@ -289,3 +289,10 @@ TEST(SRA_absHL_test, CarryTrue) {
     EXPECT_TRUE(helper.registers.get_flag_carry());
 }
 
+TEST(SWAP_r_test, Alternating) {
+    CpuInitHelper helper;
+    *helper.registers.B = 0xA5;
+    CPU::SWAP_r({helper.registers, helper.registers.B}).tick();
+    EXPECT_EQ(*helper.registers.B, 0x5A);
+}
+
