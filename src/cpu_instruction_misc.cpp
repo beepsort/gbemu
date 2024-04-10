@@ -246,3 +246,33 @@ CPU::InstructionResult CPU::SWAP_absHL::tick()
     }
 }
 
+CPU::InstructionResult CPU::SRL_r::tick()
+{
+    registers.set_flag_carry(*target&0x01);
+    *target >>= 1;
+    ++*registers.PC;
+    return InstructionResult::FINISHED;
+}
+
+CPU::InstructionResult CPU::SRL_absHL::tick()
+{
+    switch (step++)
+    {
+        case 0:
+            return InstructionResult::RUNNING;
+        case 1:
+            result = memory.read(*registers.HL);
+            return InstructionResult::RUNNING;
+        case 2:
+        {
+            registers.set_flag_carry(result&0x01);
+            result >>= 1;
+            memory.write(*registers.HL, result);
+            ++*registers.PC;
+        }
+        [[fallthrough]];
+        default:
+            return InstructionResult::FINISHED;
+    }
+}
+

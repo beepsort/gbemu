@@ -646,21 +646,21 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x37:
             return new SWAP_r(registers, registers.A);
         case 0x38:
-            // SRL B
+            return new SRL_r(registers, registers.B);
         case 0x39:
-            // SRL C
+            return new SRL_r(registers, registers.C);
         case 0x3A:
-            // SRL D
+            return new SRL_r(registers, registers.D);
         case 0x3B:
-            // SRL E
+            return new SRL_r(registers, registers.E);
         case 0x3C:
-            // SRL H
+            return new SRL_r(registers, registers.H);
         case 0x3D:
-            // SRL L
+            return new SRL_r(registers, registers.L);
         case 0x3E:
-            // SRL (HL)
+            return new SRL_absHL(registers, memory);
         case 0x3F:
-            // SRL A
+            return new SRL_r(registers, registers.A);
         case 0x40:
             // BIT 0, B
         case 0x41:

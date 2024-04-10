@@ -197,6 +197,30 @@ namespace CPU
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
+
+    class SRL_r: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        uint8_t* target;
+    public:
+        SRL_r(CpuRegisters& registers, uint8_t* target)
+        : registers(registers), target(target) {}
+        InstructionResult tick();
+    };
+
+    class SRL_absHL: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+        uint8_t result;
+        uint8_t step = 0;
+    public:
+        SRL_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        : registers(registers), memory(memory) {}
+        InstructionResult tick();
+    };
 };
 
 #endif
