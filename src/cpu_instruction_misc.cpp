@@ -335,3 +335,33 @@ CPU::InstructionResult CPU::RES_absHL::tick()
     }
 }
 
+CPU::InstructionResult CPU::SET_r::tick()
+{
+    uint8_t mask = 0x01 << bitnum;
+    *target |= mask;
+    ++*registers.PC;
+    return InstructionResult::FINISHED;
+}
+
+CPU::InstructionResult CPU::SET_absHL::tick()
+{
+    switch (step++)
+    {
+        case 0:
+            return InstructionResult::RUNNING;
+        case 1:
+            result = memory.read(*registers.HL);
+            return InstructionResult::RUNNING;
+        case 2:
+        {
+            uint8_t mask = 0x01 << bitnum;
+            result |= mask;
+            memory.write(*registers.HL, result);
+            ++*registers.PC;
+        }
+        [[fallthrough]];
+        default:
+            return InstructionResult::FINISHED;
+    }
+}
+
