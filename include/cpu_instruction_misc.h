@@ -247,6 +247,32 @@ namespace CPU
         : registers(registers), memory(memory), bitnum(bitnum) {}
         InstructionResult tick();
     };
+
+    class RES_r: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        uint8_t* target;
+        uint8_t bitnum;
+    public:
+        RES_r(CpuRegisters& registers, uint8_t* target, uint8_t bitnum)
+        : registers(registers), target(target), bitnum(bitnum) {}
+        InstructionResult tick();
+    };
+
+    class RES_absHL: public CpuInstruction
+    {
+    private:
+        CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+        uint8_t bitnum;
+        uint8_t result;
+        uint8_t step = 0;
+    public:
+        RES_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, uint8_t bitnum)
+        : registers(registers), memory(memory), bitnum(bitnum) {}
+        InstructionResult tick();
+    };
 };
 
 #endif

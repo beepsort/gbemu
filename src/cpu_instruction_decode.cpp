@@ -790,133 +790,133 @@ CPU::CpuInstruction* CPU::decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters
         case 0x7F:
             return new BIT_r(registers, registers.A, 7);
         case 0x80:
-            // RES 0, B
+            return new RES_r(registers, registers.B, 0);
         case 0x81:
-            // RES 0, C
+            return new RES_r(registers, registers.C, 0);
         case 0x82:
-            // RES 0, D
+            return new RES_r(registers, registers.D, 0);
         case 0x83:
-            // RES 0, E
+            return new RES_r(registers, registers.E, 0);
         case 0x84:
-            // RES 0, H
+            return new RES_r(registers, registers.H, 0);
         case 0x85:
-            // RES 0, L
+            return new RES_r(registers, registers.L, 0);
         case 0x86:
-            // RES 0, (HL)
+            return new RES_absHL(registers, memory, 0);
         case 0x87:
-            // RES 0, A
+            return new RES_r(registers, registers.A, 0);
         case 0x88:
-            // RES 1, B
+            return new RES_r(registers, registers.B, 1);
         case 0x89:
-            // RES 1, C
+            return new RES_r(registers, registers.C, 1);
         case 0x8A:
-            // RES 1, D
+            return new RES_r(registers, registers.D, 1);
         case 0x8B:
-            // RES 1, E
+            return new RES_r(registers, registers.E, 1);
         case 0x8C:
-            // RES 1, H
+            return new RES_r(registers, registers.H, 1);
         case 0x8D:
-            // RES 1, L
+            return new RES_r(registers, registers.L, 1);
         case 0x8E:
-            // RES 1, (HL)
+            return new RES_absHL(registers, memory, 1);
         case 0x8F:
-            // RES 1, A
+            return new RES_r(registers, registers.A, 1);
         case 0x90:
-            // RES 2, B
+            return new RES_r(registers, registers.B, 2);
         case 0x91:
-            // RES 2, C
+            return new RES_r(registers, registers.C, 2);
         case 0x92:
-            // RES 2, D
+            return new RES_r(registers, registers.D, 2);
         case 0x93:
-            // RES 2, E
+            return new RES_r(registers, registers.E, 2);
         case 0x94:
-            // RES 2, H
+            return new RES_r(registers, registers.H, 2);
         case 0x95:
-            // RES 2, L
+            return new RES_r(registers, registers.L, 2);
         case 0x96:
-            // RES 2, (HL)
+            return new RES_absHL(registers, memory, 2);
         case 0x97:
-            // RES 2, A
+            return new RES_r(registers, registers.A, 2);
         case 0x98:
-            // RES 3, B
+            return new RES_r(registers, registers.B, 3);
         case 0x99:
-            // RES 3, C
+            return new RES_r(registers, registers.C, 3);
         case 0x9A:
-            // RES 3, D
+            return new RES_r(registers, registers.D, 3);
         case 0x9B:
-            // RES 3, E
+            return new RES_r(registers, registers.E, 3);
         case 0x9C:
-            // RES 3, H
+            return new RES_r(registers, registers.H, 3);
         case 0x9D:
-            // RES 3, L
+            return new RES_r(registers, registers.L, 3);
         case 0x9E:
-            // RES 3, (HL)
+            return new RES_absHL(registers, memory, 3);
         case 0x9F:
-            // RES 3, A
+            return new RES_r(registers, registers.A, 3);
         case 0xA0:
-            // RES 4, B
+            return new RES_r(registers, registers.B, 4);
         case 0xA1:
-            // RES 4, C
+            return new RES_r(registers, registers.C, 4);
         case 0xA2:
-            // RES 4, D
+            return new RES_r(registers, registers.D, 4);
         case 0xA3:
-            // RES 4, E
+            return new RES_r(registers, registers.E, 4);
         case 0xA4:
-            // RES 4, H
+            return new RES_r(registers, registers.H, 4);
         case 0xA5:
-            // RES 4, L
+            return new RES_r(registers, registers.L, 4);
         case 0xA6:
-            // RES 4, (HL)
+            return new RES_absHL(registers, memory, 4);
         case 0xA7:
-            // RES 4, A
+            return new RES_r(registers, registers.A, 4);
         case 0xA8:
-            // RES 5, B
+            return new RES_r(registers, registers.B, 5);
         case 0xA9:
-            // RES 5, C
+            return new RES_r(registers, registers.C, 5);
         case 0xAA:
-            // RES 5, D
+            return new RES_r(registers, registers.D, 5);
         case 0xAB:
-            // RES 5, E
+            return new RES_r(registers, registers.E, 5);
         case 0xAC:
-            // RES 5, H
+            return new RES_r(registers, registers.H, 5);
         case 0xAD:
-            // RES 5, L
+            return new RES_r(registers, registers.L, 5);
         case 0xAE:
-            // RES 5, (HL)
+            return new RES_absHL(registers, memory, 5);
         case 0xAF:
-            // RES 5, A
+            return new RES_r(registers, registers.A, 5);
         case 0xB0:
-            // RES 6, B
+            return new RES_r(registers, registers.B, 6);
         case 0xB1:
-            // RES 6, C
+            return new RES_r(registers, registers.C, 6);
         case 0xB2:
-            // RES 6, D
+            return new RES_r(registers, registers.D, 6);
         case 0xB3:
-            // RES 6, E
+            return new RES_r(registers, registers.E, 6);
         case 0xB4:
-            // RES 6, H
+            return new RES_r(registers, registers.H, 6);
         case 0xB5:
-            // RES 6, L
+            return new RES_r(registers, registers.L, 6);
         case 0xB6:
-            // RES 6, (HL)
+            return new RES_absHL(registers, memory, 6);
         case 0xB7:
-            // RES 6, A
+            return new RES_r(registers, registers.A, 6);
         case 0xB8:
-            // RES 7, B
+            return new RES_r(registers, registers.B, 7);
         case 0xB9:
-            // RES 7, C
+            return new RES_r(registers, registers.C, 7);
         case 0xBA:
-            // RES 7, D
+            return new RES_r(registers, registers.D, 7);
         case 0xBB:
-            // RES 7, E
+            return new RES_r(registers, registers.E, 7);
         case 0xBC:
-            // RES 7, H
+            return new RES_r(registers, registers.H, 7);
         case 0xBD:
-            // RES 7, L
+            return new RES_r(registers, registers.L, 7);
         case 0xBE:
-            // RES 7, (HL)
+            return new RES_absHL(registers, memory, 7);
         case 0xBF:
-            // RES 7, A
+            return new RES_r(registers, registers.A, 7);
         case 0xC0:
             // SET 0, B
         case 0xC1:
