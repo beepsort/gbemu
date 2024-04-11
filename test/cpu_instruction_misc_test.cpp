@@ -373,3 +373,35 @@ TEST(BIT_absHL_test, SingleBitZero) {
     EXPECT_TRUE(helper.registers.get_flag_zero());
 }
 
+TEST(RES_r_test, FirstBit) {
+    CpuInitHelper helper;
+    *helper.registers.B = 0xFF;
+    CPU::RES_r({helper.registers, helper.registers.B, 0}).tick();
+    EXPECT_EQ(*helper.registers.B, 0xFE);
+}
+
+TEST(RES_r_test, MiddleBit) {
+    CpuInitHelper helper;
+    *helper.registers.B = 0xFF;
+    CPU::RES_r({helper.registers, helper.registers.B, 4}).tick();
+    EXPECT_EQ(*helper.registers.B, 0xEF);
+}
+
+TEST(RES_r_test, LastBit) {
+    CpuInitHelper helper;
+    *helper.registers.B = 0xFF;
+    CPU::RES_r({helper.registers, helper.registers.B, 7}).tick();
+    EXPECT_EQ(*helper.registers.B, 0x7F);
+}
+
+TEST(RES_absHL_test, FirstBit) {
+    CpuInitHelper helper;
+    *helper.registers.HL = MEMORY::WRAM_LO;
+    helper.addressDispatcher.write(*helper.registers.HL, 0xFF);
+    CPU::RES_absHL instr(helper.registers, helper.addressDispatcher, 0);
+    instr.tick();
+    instr.tick();
+    instr.tick();
+    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0xFE);
+}
+
