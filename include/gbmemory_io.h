@@ -8,6 +8,18 @@ namespace MEMORY
     class IOHandler
     {
     private:
+        uint8_t ioRam[0x80];
+        /*
+         * 0xFF01 Serial Transfer Data
+         * Data either received or to be sent over the serial port
+         */
+        static const uint16_t SERIAL_DATA = 0x01;
+        /*
+         * 0xFF02 Serial Transfer Control
+         * Bit 0: 0 = External Clock (Slave), 1 = Internal Clock (Master)
+         * Bit 7: 1 when a transfer is requested, or in progress
+         */
+        static const uint16_t SERIAL_CONTROL = 0x02;
         /*
          * 0xFF0F Interrupt Flag
          * Upon triggering an interrupt, the interrupt flag is set
@@ -21,7 +33,7 @@ namespace MEMORY
          * 1 LCD
          * 0 VBlank
          */
-        uint8_t IF = 0;
+        static const uint16_t IF = 0x0F;
         /*
          * 0xFFFF Interrupt Enable
          * Allows each interrupt category to be enabled or disabled separately
