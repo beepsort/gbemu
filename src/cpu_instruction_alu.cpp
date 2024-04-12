@@ -44,10 +44,11 @@ bool is_sub_halfcarry(uint16_t a, uint16_t b)
 
 CPU::InstructionResult CPU::ADD_r_r::tick()
 {
+    bool was_carry = registers.get_flag_carry();
     registers.set_flag_carry(is_add_carry(*dest, *src));
     registers.set_flag_halfcarry(is_add_halfcarry(*dest, *src));
     *dest += *src;
-    if (check_carry && registers.get_flag_carry())
+    if (check_carry && was_carry)
     {
         if (is_add_carry(*dest, 1)) registers.set_flag_carry(true);
         if (is_add_halfcarry(*dest, 1)) registers.set_flag_halfcarry(true);
@@ -63,11 +64,12 @@ CPU::InstructionResult CPU::ADD_r_n::tick()
 {
     if (step++ == 0)
     {
+        bool was_carry = registers.get_flag_carry();
         uint8_t src = memory.read(++*registers.PC);
         registers.set_flag_carry(is_add_carry(*dest, src));
         registers.set_flag_halfcarry(is_add_halfcarry(*dest, src));
         *dest += src;
-        if (check_carry && registers.get_flag_carry())
+        if (check_carry && was_carry)
         {
             if (is_add_carry(*dest, 1)) registers.set_flag_carry(true);
             if (is_add_halfcarry(*dest, 1)) registers.set_flag_halfcarry(true);
@@ -85,11 +87,12 @@ CPU::InstructionResult CPU::ADD_r_absrr::tick()
 {
     if (step++ == 0)
     {
+        bool was_carry = registers.get_flag_carry();
         uint8_t src = memory.read(*src_addr);
         registers.set_flag_carry(is_add_carry(*dest, src));
         registers.set_flag_halfcarry(is_add_halfcarry(*dest, src));
         *dest += src;
-        if (check_carry && registers.get_flag_carry())
+        if (check_carry && was_carry)
         {
             if (is_add_carry(*dest, 1)) registers.set_flag_carry(true);
             if (is_add_halfcarry(*dest, 1)) registers.set_flag_halfcarry(true);
@@ -105,10 +108,11 @@ CPU::InstructionResult CPU::ADD_r_absrr::tick()
 
 CPU::InstructionResult CPU::SUB_r_r::tick()
 {
+    bool was_carry = registers.get_flag_carry();
     registers.set_flag_carry(is_sub_carry(*dest, *src));
     registers.set_flag_halfcarry(is_sub_halfcarry(*dest, *src));
     *dest -= *src;
-    if (check_carry && registers.get_flag_carry())
+    if (check_carry && was_carry)
     {
         if (is_sub_carry(*dest, 1)) registers.set_flag_carry(true);
         if (is_sub_halfcarry(*dest, 1)) registers.set_flag_halfcarry(true);
@@ -124,11 +128,12 @@ CPU::InstructionResult CPU::SUB_r_n::tick()
 {
     if (step++ == 0)
     {
+        bool was_carry = registers.get_flag_carry();
         uint8_t src = memory.read(++*registers.PC);
         registers.set_flag_carry(is_sub_carry(*dest, src));
         registers.set_flag_halfcarry(is_sub_halfcarry(*dest, src));
         *dest -= src;
-        if (check_carry && registers.get_flag_carry())
+        if (check_carry && was_carry)
         {
             if (is_sub_carry(*dest, 1)) registers.set_flag_carry(true);
             if (is_sub_halfcarry(*dest, 1)) registers.set_flag_halfcarry(true);
@@ -146,11 +151,12 @@ CPU::InstructionResult CPU::SUB_r_absrr::tick()
 {
     if (step++ == 0)
     {
+        bool was_carry = registers.get_flag_carry();
         uint8_t src = memory.read(*src_addr);
         registers.set_flag_carry(is_sub_carry(*dest, src));
         registers.set_flag_halfcarry(is_sub_halfcarry(*dest, src));
         *dest -= src;
-        if (check_carry && registers.get_flag_carry())
+        if (check_carry && was_carry)
         {
             if (is_sub_carry(*dest, 1)) registers.set_flag_carry(true);
             if (is_sub_halfcarry(*dest, 1)) registers.set_flag_halfcarry(true);
