@@ -536,7 +536,6 @@ CPU::InstructionResult CPU::DEC_rr::tick()
     if (step++ == 0)
     {
         *dest = *dest != 0 ? *dest-1 : UINT16_MAX;
-        ++*registers.PC;
         return InstructionResult::RUNNING;
     }
     ++*registers.PC;
