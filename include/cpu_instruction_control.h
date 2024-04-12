@@ -40,6 +40,7 @@ namespace CPU
      **/
     private:
         CpuRegisters& registers;
+        uint8_t step = 0;
     public:
         STOP(CpuRegisters& registers)
         : registers(registers) {}

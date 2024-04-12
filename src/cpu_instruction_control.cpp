@@ -33,7 +33,11 @@ CPU::InstructionResult CPU::HALT::tick()
 
 CPU::InstructionResult CPU::STOP::tick()
 {
-    ++*registers.PC;
+    if (step == 0)
+    {
+        ++*registers.PC;
+        step++;
+    }
     return InstructionResult::STOP;
 }
 
