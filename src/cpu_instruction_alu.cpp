@@ -483,7 +483,7 @@ CPU::InstructionResult CPU::ADD_SP_n::tick()
             registers.set_flag_zero(false);
             registers.set_flag_sub(false);
             registers.set_flag_carry(is_add_carry((uint8_t)*registers.SP, (uint8_t)offset));
-            registers.set_flag_carry(is_add_halfcarry((uint8_t)*registers.SP, (uint8_t)offset));
+            registers.set_flag_halfcarry(is_add_halfcarry((uint8_t)*registers.SP, (uint8_t)offset));
             *registers.SP = (uint16_t)target;
             return InstructionResult::RUNNING;
         }
@@ -510,7 +510,7 @@ CPU::InstructionResult CPU::LD_HL_SP_n::tick()
             registers.set_flag_zero(false);
             registers.set_flag_sub(false);
             registers.set_flag_carry(is_add_carry((uint8_t)*registers.SP, (uint8_t)offset));
-            registers.set_flag_carry(is_add_halfcarry((uint8_t)*registers.SP, (uint8_t)offset));
+            registers.set_flag_halfcarry(is_add_halfcarry((uint8_t)*registers.SP, (uint8_t)offset));
             *registers.HL = (uint16_t)target;
             ++*registers.PC;
         }
