@@ -518,10 +518,10 @@ CPU::InstructionResult CPU::INC_rr::tick()
         *dest = *dest != UINT16_MAX ? *dest+1 : 0;
         registers.set_flag_zero(*dest == 0);
         registers.set_flag_sub(false);
-        return InstructionResult::FINISHED;
+        return InstructionResult::RUNNING;
     }
     ++*registers.PC;
-    return InstructionResult::RUNNING;
+    return InstructionResult::FINISHED;
 }
 
 CPU::InstructionResult CPU::DEC_rr::tick()
@@ -533,10 +533,10 @@ CPU::InstructionResult CPU::DEC_rr::tick()
         registers.set_flag_zero(*dest == 0);
         registers.set_flag_sub(true);
         ++*registers.PC;
-        return InstructionResult::FINISHED;
+        return InstructionResult::RUNNING;
     }
     ++*registers.PC;
-    return InstructionResult::RUNNING;
+    return InstructionResult::FINISHED;
 }
 
 CPU::InstructionResult CPU::RLA_r::tick()
