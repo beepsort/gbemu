@@ -5,6 +5,7 @@
 CPU::InstructionResult CPU::LD_r_r::tick()
 {
     *dest = *src;
+    ++*registers.PC;
     return InstructionResult::FINISHED;
 }
 
