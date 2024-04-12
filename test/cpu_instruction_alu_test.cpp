@@ -922,6 +922,22 @@ TEST(DAA_test, Daa_SubBothFix) {
     EXPECT_FALSE(helper.registers.get_flag_halfcarry());
 }
 
+TEST(DAA_test, Daa_SubZeroHalf) {
+    CpuInitHelper helper;
+    uint8_t* dest = helper.registers.A;
+    *dest = 0x00;
+    helper.registers.set_flag_carry(false);
+    helper.registers.set_flag_halfcarry(true);
+    helper.registers.set_flag_sub(true);
+    helper.registers.set_flag_zero(true);
+    CPU::DAA({helper.registers}).tick();
+    EXPECT_EQ(*dest, 0xFA);
+    EXPECT_FALSE(helper.registers.get_flag_zero());
+    EXPECT_FALSE(helper.registers.get_flag_carry());
+    EXPECT_FALSE(helper.registers.get_flag_halfcarry());
+    EXPECT_TRUE(helper.registers.get_flag_sub());
+}
+
 TEST(CPL_test, Cpl_Zeros) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
