@@ -74,7 +74,7 @@ TEST(JR_N_test, PositiveJump) {
     instr.tick();
     instr.tick();
     instr.tick();
-    EXPECT_EQ(*pc, 0xC010);
+    EXPECT_EQ(*pc, 0xC012);
 }
 
 TEST(JR_N_test, NegativeJump) {
@@ -86,7 +86,7 @@ TEST(JR_N_test, NegativeJump) {
     instr.tick();
     instr.tick();
     instr.tick();
-    EXPECT_EQ(*pc, 0xC000);
+    EXPECT_EQ(*pc, 0xC002);
 }
 
 TEST(JR_N_test, ConditionTF) {
@@ -105,7 +105,7 @@ TEST(JR_N_test, ConditionTF) {
     instr2.tick();
     instr2.tick();
     CPU::InstructionResult result2 = instr2.tick();
-    EXPECT_EQ(*pc, 0xC010);
+    EXPECT_EQ(*pc, 0xC012);
     EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
 }
 
