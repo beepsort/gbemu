@@ -104,17 +104,17 @@ CPU::InstructionResult CPU::JR_N::tick()
         jump_offset = (int8_t)memory.read(++*registers.PC);
         return InstructionResult::RUNNING;
     case 1:
+        ++*registers.PC;
         if (condition(registers))
         {
             return InstructionResult::RUNNING; // delay instruction prefetching as we will change PC
         }
         else
         {
-            ++*registers.PC;
             return InstructionResult::FINISHED; // immediately start instruction prefetching
         }
     case 2:
-        *registers.PC += jump_offset - 1;
+        *registers.PC += jump_offset;
         [[fallthrough]];
     default:
         return InstructionResult::FINISHED;
