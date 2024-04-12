@@ -408,29 +408,33 @@ CPU::InstructionResult CPU::DEC_absrr::tick()
 
 CPU::InstructionResult CPU::DAA::tick()
 {
+    if (!registers.get_flag_sub() && *registers.A >= 0x9A)
+    {
+        registers.set_flag_carry(true);
+    }
+    if (!registers.get_flag_sub() && (*registers.A & 0x0F) >= 0x0A)
+    {
+        registers.set_flag_halfcarry(true);
+    }
     uint8_t adjust_val = 0;
-    if (registers.get_flag_halfcarry() || (*registers.A & 0x0F) > 0x09)
+    if (registers.get_flag_halfcarry())
     {
         adjust_val += 0x06;
     }
-    if (registers.get_flag_carry() || (*registers.A & 0xF0) > 0x90)
+    if (registers.get_flag_carry())
     {
         adjust_val += 0x60;
     }
     uint16_t adjusted_result;
-    bool carry;
     if (registers.get_flag_sub() == false)
     {
         adjusted_result = (*registers.A) + adjust_val;
-        carry = registers.get_flag_carry() || is_add_carry(*registers.A, adjust_val);
     }
     else // registers.get_flag_sub() === true
     {
         adjusted_result = (*registers.A) - adjust_val;
-        carry = registers.get_flag_carry() || is_sub_carry(*registers.A, adjust_val);
     }
     registers.set_flag_halfcarry(false);
-    registers.set_flag_carry(carry);
     *registers.A = (uint8_t) adjusted_result;
     registers.set_flag_zero(*registers.A == 0);
     ++*registers.PC;
