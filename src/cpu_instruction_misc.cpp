@@ -227,7 +227,7 @@ CPU::InstructionResult CPU::SRA_r::tick()
 {
     registers.set_flag_carry(*target&0x01);
     uint8_t result = *target >> 1;
-    *target = result | (*target & 0xF0);
+    *target = result | (*target & 0x80);
     registers.set_flag_zero(*target==0);
     registers.set_flag_sub(false);
     registers.set_flag_halfcarry(false);
@@ -248,7 +248,7 @@ CPU::InstructionResult CPU::SRA_absHL::tick()
         {
             registers.set_flag_carry(loaded&0x01);
             uint8_t result = loaded >> 1;
-            result |= loaded & 0xF0;
+            result |= loaded & 0x80;
             memory.write(*registers.HL, result);
             registers.set_flag_zero(result==0);
             registers.set_flag_sub(false);
