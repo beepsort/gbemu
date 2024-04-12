@@ -39,8 +39,18 @@ int main(int argc, char** argv)
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Loaded: %s\n", title.c_str());
     CPU::Cpu gameboy(rom);
     gameboy.report();
-    for (int i=0; i<10; i++)
+    SDL_Event event;
+    bool quit = false;
+    while (!quit)
     {
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_QUIT)
+            {
+                quit = true;
+            }
+        }
+
         gameboy.tick();
         gameboy.report();
     }
