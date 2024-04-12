@@ -74,6 +74,7 @@ CPU::InstructionResult CPU::LD_absrr_n::tick()
         case 1:
             memory.write(*dest_addr, src_data);
             return InstructionResult::RUNNING;
+        case 2:
             ++*registers.PC;
             [[fallthrough]];
         default:
