@@ -495,7 +495,7 @@ CPU::CpuInstruction* CPU::decode_opcode(uint8_t opcode, CPU::CpuRegisters& regis
         case 0xF0:
             return new LD_r_reln(registers, registers.A, memory);
         case 0xF1:
-            return new POP_rr(registers, registers.AF, memory);
+            return new POP_AF(registers, registers.AF, memory);
         case 0xF2:
             return new LD_r_relr(registers, registers.A, registers.C, memory);
         case 0xF3:

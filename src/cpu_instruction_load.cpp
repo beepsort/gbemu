@@ -303,3 +303,27 @@ CPU::InstructionResult CPU::POP_rr::tick()
             return InstructionResult::FINISHED;
     }
 }
+
+CPU::InstructionResult CPU::POP_AF::tick()
+{
+    switch (step++)
+    {
+        case 0:
+        {
+            uint8_t F = memory.read((*sp)++);
+            F &= 0xF0;
+            *dest = F;
+            return InstructionResult::RUNNING;
+        }
+        case 1:
+        {
+            *dest |= memory.read((*sp)++) << 8;
+            return InstructionResult::RUNNING;
+        }
+        case 2:
+            ++*registers.PC;
+            [[fallthrough]];
+        default:
+            return InstructionResult::FINISHED;
+    }
+}

@@ -314,7 +314,6 @@ namespace CPU
      * @brief Pop to 16-bit register from stack memory
      * 1 byte opcodes with no operands
      * 3 M-cycles to complete
-     * Note: in the case of PUSH AF, the FLAGS register is overwritten, changing their values
      */
     private:
         uint16_t* sp;
@@ -324,6 +323,26 @@ namespace CPU
         MEMORY::AddressDispatcher& memory;
     public:
         POP_rr(CpuRegisters& registers, uint16_t* dest, MEMORY::AddressDispatcher& memory)
+        : sp(registers.SP), dest(dest), registers(registers), memory(memory) {}
+        InstructionResult tick();
+    };
+
+    class POP_AF: public CpuInstruction
+    {
+    /**
+     * @brief Pop to AF register from stack memory
+     * 1 byte opcodes with no operands
+     * 3 M-cycles to complete
+     * note: F register is a special case, where the LSB is pulled to 0
+     */
+    private:
+        uint16_t* sp;
+        uint16_t* dest;
+        uint8_t step = 0;
+        CPU::CpuRegisters& registers;
+        MEMORY::AddressDispatcher& memory;
+    public:
+        POP_AF(CpuRegisters& registers, uint16_t* dest, MEMORY::AddressDispatcher& memory)
         : sp(registers.SP), dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
