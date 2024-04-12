@@ -8,10 +8,10 @@ namespace CPU
     class CpuRegisters
     {
     private:
-        static const uint8_t FLAG_ZERO = 0b0001;
-        static const uint8_t FLAG_SUB = 0b0010;
-        static const uint8_t FLAG_HALFCARRY = 0b0100;
-        static const uint8_t FLAG_CARRY = 0b1000;
+        static const uint8_t FLAG_ZERO = 0x80;
+        static const uint8_t FLAG_SUB = 0x40;
+        static const uint8_t FLAG_HALFCARRY = 0x20;
+        static const uint8_t FLAG_CARRY = 0x10;
     public:
         uint16_t* AF = new uint16_t(0x0101);
         uint8_t* A = (uint8_t*) AF + 1;
