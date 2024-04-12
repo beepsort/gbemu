@@ -514,10 +514,7 @@ CPU::InstructionResult CPU::INC_rr::tick()
 {
     if (step++ == 0)
     {
-        registers.set_flag_halfcarry(is_add_halfcarry(*dest, 1));
         *dest = *dest != UINT16_MAX ? *dest+1 : 0;
-        registers.set_flag_zero(*dest == 0);
-        registers.set_flag_sub(false);
         return InstructionResult::RUNNING;
     }
     ++*registers.PC;
@@ -528,10 +525,7 @@ CPU::InstructionResult CPU::DEC_rr::tick()
 {
     if (step++ == 0)
     {
-        registers.set_flag_halfcarry(is_sub_halfcarry(*dest, 1));
         *dest = *dest != 0 ? *dest-1 : UINT16_MAX;
-        registers.set_flag_zero(*dest == 0);
-        registers.set_flag_sub(true);
         ++*registers.PC;
         return InstructionResult::RUNNING;
     }
