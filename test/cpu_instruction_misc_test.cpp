@@ -102,7 +102,7 @@ TEST(RL_r_test, AlternatingNoCarry) {
     *target = 0x55;
     CPU::RL_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0xAA);
-    EXPECT_EQ(helper.registers.get_flag_carry(), false);
+    EXPECT_FALSE(helper.registers.get_flag_carry());
 }
 
 TEST(RL_r_test, AlternatingWithCarry) {
@@ -112,7 +112,7 @@ TEST(RL_r_test, AlternatingWithCarry) {
     *target = 0xAA;
     CPU::RL_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x55);
-    EXPECT_EQ(helper.registers.get_flag_carry(), true);
+    EXPECT_TRUE(helper.registers.get_flag_carry());
 }
 
 TEST(RL_r_test, ZeroWithCarry) {
@@ -122,7 +122,7 @@ TEST(RL_r_test, ZeroWithCarry) {
     *target = 0x00;
     CPU::RL_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x01);
-    EXPECT_EQ(helper.registers.get_flag_carry(), true);
+    EXPECT_FALSE(helper.registers.get_flag_carry());
 }
 
 TEST(RL_absHL_test, AlternatingNoCarry) {
@@ -168,7 +168,7 @@ TEST(RR_r_test, AlternatingNoCarry) {
     *target = 0xAA;
     CPU::RR_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x55);
-    EXPECT_EQ(helper.registers.get_flag_carry(), false);
+    EXPECT_FALSE(helper.registers.get_flag_carry());
 }
 
 TEST(RR_r_test, AlternatingWithCarry) {
@@ -178,7 +178,7 @@ TEST(RR_r_test, AlternatingWithCarry) {
     *target = 0x55;
     CPU::RR_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0xAA);
-    EXPECT_EQ(helper.registers.get_flag_carry(), true);
+    EXPECT_TRUE(helper.registers.get_flag_carry());
 }
 
 TEST(RR_r_test, ZeroWithCarry) {
@@ -188,7 +188,7 @@ TEST(RR_r_test, ZeroWithCarry) {
     *target = 0x00;
     CPU::RR_r({helper.registers, target}).tick();
     EXPECT_EQ(*target, 0x80);
-    EXPECT_EQ(helper.registers.get_flag_carry(), true);
+    EXPECT_FALSE(helper.registers.get_flag_carry());
 }
 
 TEST(RR_absHL_test, AlternatingNoCarry) {
