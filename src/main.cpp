@@ -5,6 +5,16 @@
 
 #include "rom.h"
 #include "cpu.h"
+#include "serial.h"
+
+class SerialPrinter: public GAMEBOY::SerialEventSubscriber
+{
+    void receive(uint8_t data)
+    {
+        printf("%c", (char)data);
+        fflush(stdout);
+    }
+};
 
 void display_help(char* exec_name)
 {
@@ -37,6 +47,8 @@ int main(int argc, char** argv)
     auto str_end = rom.cbegin() + ROM::TITLE_END;
     std::string title(str_begin, str_end);
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Loaded: %s\n", title.c_str());
+    auto& serialSupervisor = GAMEBOY::SerialEventSupervisor::getInstance();
+    serialSupervisor.subscribe(GAMEBOY::SerialEventType::SERIAL_OUT, new SerialPrinter());
     CPU::Cpu gameboy(rom);
     gameboy.report();
     SDL_Event event;
