@@ -1,7 +1,7 @@
 #ifndef __CPU_INSTRUCTION_H__
 #define __CPU_INSTRUCTION_H__
 
-namespace CPU
+namespace GAMEBOY
 {
     enum class InstructionResult
     {

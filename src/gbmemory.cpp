@@ -6,16 +6,16 @@
 #include "gbmemory_mbc3.h"
 #include "cpu_interrupt.h"
 
-MEMORY::CartMapper* MEMORY::CartMapper::create_mapper(ROMDATA& rom)
+GAMEBOY::CartMapper* GAMEBOY::CartMapper::create_mapper(ROMDATA& rom)
 {
-    uint8_t mapper_type = rom[ROM::CART_TYPE];
+    uint8_t mapper_type = rom[CART_TYPE];
     bool cartRam = false;
     bool cartBattery = false;
     bool cartTimer = false;
     switch (mapper_type)
     {
     case 0x00:
-        return new MEMORY::MapperStatic(rom);
+        return new MapperStatic(rom);
     case 0x03:
         cartBattery = true;
         [[fallthrough]];
@@ -23,7 +23,7 @@ MEMORY::CartMapper* MEMORY::CartMapper::create_mapper(ROMDATA& rom)
         cartRam = true;
         [[fallthrough]];
     case 0x01:
-        return new MEMORY::MapperMbc1(rom, cartRam, cartBattery);
+        return new MapperMbc1(rom, cartRam, cartBattery);
     case 0x10:
         cartRam = true;
         [[fallthrough]];
@@ -32,20 +32,20 @@ MEMORY::CartMapper* MEMORY::CartMapper::create_mapper(ROMDATA& rom)
         cartBattery = true;
         [[fallthrough]];
     case 0x11:
-        return new MEMORY::MapperMbc3(rom, cartRam, cartBattery, cartTimer);
+        return new GAMEBOY::MapperMbc3(rom, cartRam, cartBattery, cartTimer);
     case 0x13:
         cartBattery = true;
         [[fallthrough]];
     case 0x12:
         cartRam = true;
-        return new MEMORY::MapperMbc3(rom, cartRam, cartBattery, cartTimer);
+        return new GAMEBOY::MapperMbc3(rom, cartRam, cartBattery, cartTimer);
     default:
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Unsupported mapper type: %d\n", mapper_type);
         throw std::logic_error("Unsupported mapped type");
     }
 }
 
-uint8_t MEMORY::AddressDispatcher::read(uint16_t addr)
+uint8_t GAMEBOY::AddressDispatcher::read(uint16_t addr)
 {
     if (addr >= CART_ROM_LO && addr <= CART_ROM_HI)
     {
@@ -84,7 +84,7 @@ uint8_t MEMORY::AddressDispatcher::read(uint16_t addr)
     return 0x00;
 }
 
-void MEMORY::AddressDispatcher::write(uint16_t addr, uint8_t data)
+void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data)
 {
     if (addr >= CART_ROM_LO && addr <= CART_ROM_HI)
     {
@@ -122,7 +122,7 @@ void MEMORY::AddressDispatcher::write(uint16_t addr, uint8_t data)
     }
 }
 
-MEMORY::AddressDispatcher::AddressDispatcher(ROMDATA& rom)
+GAMEBOY::AddressDispatcher::AddressDispatcher(ROMDATA& rom)
 {
     cartMapper = CartMapper::create_mapper(rom);
 }

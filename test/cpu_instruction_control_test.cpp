@@ -5,18 +5,18 @@
 
 TEST(HALT_test, DoesHalt) {
     CpuInitHelper helper;
-    CPU::HALT instr(helper.registers, helper.addressDispatcher);
-    CPU::InstructionResult result = instr.tick();
+    GAMEBOY::HALT instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::InstructionResult result = instr.tick();
     EXPECT_EQ(*helper.registers.PC, 0xC001);
-    EXPECT_EQ(result, CPU::InstructionResult::HALT);
+    EXPECT_EQ(result, GAMEBOY::InstructionResult::HALT);
 }
 
 TEST(STOP_test, DoesStop) {
     CpuInitHelper helper;
-    CPU::STOP instr(helper.registers);
-    CPU::InstructionResult result = instr.tick();
+    GAMEBOY::STOP instr(helper.registers);
+    GAMEBOY::InstructionResult result = instr.tick();
     EXPECT_EQ(*helper.registers.PC, 0xC001);
-    EXPECT_EQ(result, CPU::InstructionResult::STOP);
+    EXPECT_EQ(result, GAMEBOY::InstructionResult::STOP);
 }
 
 TEST(JP_HL_test, IsCorrectPc) {
@@ -25,7 +25,7 @@ TEST(JP_HL_test, IsCorrectPc) {
     uint16_t* pc = helper.registers.PC;
     *pc = 0;
     *hl = 0x1234;
-    CPU::JP_HL({pc, hl}).tick();
+    GAMEBOY::JP_HL({pc, hl}).tick();
     EXPECT_EQ(*pc, 0x1234);
 }
 
@@ -34,7 +34,7 @@ TEST(JP_NN_test, IsCorrectPc) {
     uint16_t* pc = helper.registers.PC;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x34);
     helper.addressDispatcher.write(*helper.registers.PC + 2, 0x12);
-    CPU::JP_NN instr(helper.registers, helper.addressDispatcher, &CPU::cond_TRUE);
+    GAMEBOY::JP_NN instr(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_TRUE);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -49,28 +49,28 @@ TEST(JP_NN_cond_test, ConditionalZero) {
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x34);
     helper.addressDispatcher.write(*helper.registers.PC + 2, 0x12);
     helper.registers.set_flag_zero(false);
-    CPU::JP_NN instr(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    GAMEBOY::JP_NN instr(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_Z);
     instr.tick();
     instr.tick();
-    CPU::InstructionResult result = instr.tick();
+    GAMEBOY::InstructionResult result = instr.tick();
     EXPECT_EQ(*pc, 0xC003);
-    EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
+    EXPECT_EQ(result, GAMEBOY::InstructionResult::FINISHED);
     helper.registers.set_flag_zero(true);
     *pc = 0xC000;
-    CPU::JP_NN instr2(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    GAMEBOY::JP_NN instr2(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_Z);
     instr2.tick();
     instr2.tick();
     instr2.tick();
-    CPU::InstructionResult result2 = instr2.tick();
+    GAMEBOY::InstructionResult result2 = instr2.tick();
     EXPECT_EQ(*pc, 0x1234);
-    EXPECT_EQ(result2, CPU::InstructionResult::FINISHED);
+    EXPECT_EQ(result2, GAMEBOY::InstructionResult::FINISHED);
 }
 
 TEST(JR_N_test, PositiveJump) {
     CpuInitHelper helper;
     uint16_t* pc = helper.registers.PC;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x10);
-    CPU::JR_N instr(helper.registers, helper.addressDispatcher, &CPU::cond_TRUE);
+    GAMEBOY::JR_N instr(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_TRUE);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -82,7 +82,7 @@ TEST(JR_N_test, NegativeJump) {
     uint16_t* pc = helper.registers.PC;
     *pc = 0xC010;
     helper.addressDispatcher.write(*helper.registers.PC + 1, (int8_t)(-16));
-    CPU::JR_N instr(helper.registers, helper.addressDispatcher, &CPU::cond_TRUE);
+    GAMEBOY::JR_N instr(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_TRUE);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -94,19 +94,19 @@ TEST(JR_N_test, ConditionTF) {
     uint16_t* pc = helper.registers.PC;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x10);
     helper.registers.set_flag_zero(false);
-    CPU::JR_N instr(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    GAMEBOY::JR_N instr(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_Z);
     instr.tick();
-    CPU::InstructionResult result = instr.tick();
+    GAMEBOY::InstructionResult result = instr.tick();
     EXPECT_EQ(*pc, 0xC002);
-    EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
+    EXPECT_EQ(result, GAMEBOY::InstructionResult::FINISHED);
     *pc = 0xC000;
     helper.registers.set_flag_zero(true);
-    CPU::JR_N instr2(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    GAMEBOY::JR_N instr2(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_Z);
     instr2.tick();
     instr2.tick();
-    CPU::InstructionResult result2 = instr2.tick();
+    GAMEBOY::InstructionResult result2 = instr2.tick();
     EXPECT_EQ(*pc, 0xC012);
-    EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
+    EXPECT_EQ(result, GAMEBOY::InstructionResult::FINISHED);
 }
 
 TEST(SCF_test, FlagsTest) {
@@ -115,7 +115,7 @@ TEST(SCF_test, FlagsTest) {
     helper.registers.set_flag_carry(false);
     helper.registers.set_flag_halfcarry(true);
     helper.registers.set_flag_sub(true);
-    CPU::SCF({helper.registers}).tick();
+    GAMEBOY::SCF({helper.registers}).tick();
     EXPECT_EQ(*pc, 0xC001);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
     EXPECT_EQ(helper.registers.get_flag_halfcarry(), false);
@@ -128,7 +128,7 @@ TEST(CCF_test, FlagsTest) {
     helper.registers.set_flag_carry(false);
     helper.registers.set_flag_halfcarry(true);
     helper.registers.set_flag_sub(true);
-    CPU::CCF({helper.registers}).tick();
+    GAMEBOY::CCF({helper.registers}).tick();
     EXPECT_EQ(*pc, 0xC001);
     EXPECT_EQ(helper.registers.get_flag_carry(), true);
     EXPECT_EQ(helper.registers.get_flag_halfcarry(), false);
@@ -137,7 +137,7 @@ TEST(CCF_test, FlagsTest) {
     helper.registers.set_flag_carry(true);
     helper.registers.set_flag_halfcarry(true);
     helper.registers.set_flag_sub(true);
-    CPU::CCF({helper.registers}).tick();
+    GAMEBOY::CCF({helper.registers}).tick();
     EXPECT_EQ(*pc, 0xC001);
     EXPECT_EQ(helper.registers.get_flag_carry(), false);
     EXPECT_EQ(helper.registers.get_flag_halfcarry(), false);
@@ -147,7 +147,7 @@ TEST(CCF_test, FlagsTest) {
 TEST(DI_test, DisableInterrupts) {
     CpuInitHelper helper;
     helper.registers.IME = true;
-    CPU::DI({helper.registers}).tick();
+    GAMEBOY::DI({helper.registers}).tick();
     EXPECT_EQ(*helper.registers.PC, 0xC001);
     EXPECT_EQ(helper.registers.IME, false);
 }
@@ -155,7 +155,7 @@ TEST(DI_test, DisableInterrupts) {
 TEST(EI_test, EnableInterrupts) {
     CpuInitHelper helper;
     helper.registers.IME = false;
-    CPU::EI({helper.registers}).tick();
+    GAMEBOY::EI({helper.registers}).tick();
     EXPECT_EQ(*helper.registers.PC, 0xC001);
     EXPECT_EQ(helper.registers.IME, true);
 }
@@ -165,16 +165,16 @@ TEST(RET_test, RetAddress) {
     uint16_t* pc = helper.registers.PC;
     uint16_t* sp = helper.registers.SP;
     *pc = 0;
-    *sp = MEMORY::WRAM_LO;
-    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0x34);
-    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0x12);
-    CPU::RET instr(helper.registers, helper.addressDispatcher);
+    *sp = GAMEBOY::WRAM_LO;
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO, 0x34);
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO + 1, 0x12);
+    GAMEBOY::RET instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
     instr.tick();
     EXPECT_EQ(*pc, 0x1234);
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO + 2);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO + 2);
 }
 
 TEST(RET_cond_test, ConditionalZero) {
@@ -182,26 +182,26 @@ TEST(RET_cond_test, ConditionalZero) {
     uint16_t* pc = helper.registers.PC;
     uint16_t* sp = helper.registers.SP;
     *pc = 0;
-    *sp = MEMORY::WRAM_LO;
-    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0x34);
-    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0x12);
+    *sp = GAMEBOY::WRAM_LO;
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO, 0x34);
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO + 1, 0x12);
     helper.registers.set_flag_zero(false);
-    CPU::RET_CC instr(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    GAMEBOY::RET_CC instr(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_Z);
     instr.tick();
-    CPU::InstructionResult result = instr.tick();
+    GAMEBOY::InstructionResult result = instr.tick();
     EXPECT_EQ(*pc, 1);
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO);
-    EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO);
+    EXPECT_EQ(result, GAMEBOY::InstructionResult::FINISHED);
     helper.registers.set_flag_zero(true);
-    CPU::RET_CC instr2(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    GAMEBOY::RET_CC instr2(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_Z);
     instr2.tick();
     instr2.tick();
     instr2.tick();
     instr2.tick();
-    CPU::InstructionResult result2 = instr2.tick();
+    GAMEBOY::InstructionResult result2 = instr2.tick();
     EXPECT_EQ(*pc, 0x1234);
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO + 2);
-    EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO + 2);
+    EXPECT_EQ(result, GAMEBOY::InstructionResult::FINISHED);
 }
 
 TEST(RETI_test, RetAddress) {
@@ -209,17 +209,17 @@ TEST(RETI_test, RetAddress) {
     uint16_t* pc = helper.registers.PC;
     uint16_t* sp = helper.registers.SP;
     *pc = 0;
-    *sp = MEMORY::WRAM_LO;
+    *sp = GAMEBOY::WRAM_LO;
     helper.registers.IME = false;
-    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0x34);
-    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0x12);
-    CPU::RETI instr(helper.registers, helper.addressDispatcher);
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO, 0x34);
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO + 1, 0x12);
+    GAMEBOY::RETI instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
     instr.tick();
     EXPECT_EQ(*pc, 0x1234);
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO + 2);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO + 2);
     EXPECT_EQ(helper.registers.IME, true);
 }
 
@@ -227,10 +227,10 @@ TEST(CALL_NN_test, IsCorrectPcStack) {
     CpuInitHelper helper;
     uint16_t* pc = helper.registers.PC;
     uint16_t* sp = helper.registers.SP;
-    *sp = MEMORY::WRAM_LO + 2;
+    *sp = GAMEBOY::WRAM_LO + 2;
     helper.addressDispatcher.write(*pc + 1, 0x34);
     helper.addressDispatcher.write(*pc + 2, 0x12);
-    CPU::CALL_NN instr(helper.registers, helper.addressDispatcher, &CPU::cond_TRUE);
+    GAMEBOY::CALL_NN instr(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_TRUE);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -238,55 +238,55 @@ TEST(CALL_NN_test, IsCorrectPcStack) {
     instr.tick();
     instr.tick();
     EXPECT_EQ(*pc, 0x1234);
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO);
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x03);
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO+1), 0xC0);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO), 0x03);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO+1), 0xC0);
 }
 
 TEST(CALL_NN_test, ConditionalZero) {
     CpuInitHelper helper;
     uint16_t* pc = helper.registers.PC;
     uint16_t* sp = helper.registers.SP;
-    *sp = MEMORY::WRAM_LO + 2;
+    *sp = GAMEBOY::WRAM_LO + 2;
     helper.addressDispatcher.write(*pc + 1, 0x34);
     helper.addressDispatcher.write(*pc + 2, 0x12);
     helper.registers.set_flag_zero(false);
-    CPU::CALL_NN instr(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    GAMEBOY::CALL_NN instr(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_Z);
     instr.tick();
     instr.tick();
-    CPU::InstructionResult result = instr.tick();
-    EXPECT_EQ(result, CPU::InstructionResult::FINISHED);
+    GAMEBOY::InstructionResult result = instr.tick();
+    EXPECT_EQ(result, GAMEBOY::InstructionResult::FINISHED);
     EXPECT_EQ(*pc, 0xC003);
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO+2);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO+2);
     helper.registers.set_flag_zero(true);
     *pc = 0xC000;
-    CPU::CALL_NN instr2(helper.registers, helper.addressDispatcher, &CPU::cond_Z);
+    GAMEBOY::CALL_NN instr2(helper.registers, helper.addressDispatcher, &GAMEBOY::cond_Z);
     instr2.tick();
     instr2.tick();
     instr2.tick();
     instr2.tick();
     instr2.tick();
-    CPU::InstructionResult result2 = instr2.tick();
-    EXPECT_EQ(result2, CPU::InstructionResult::FINISHED);
+    GAMEBOY::InstructionResult result2 = instr2.tick();
+    EXPECT_EQ(result2, GAMEBOY::InstructionResult::FINISHED);
     EXPECT_EQ(*pc, 0x1234);
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO);
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x03);
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO+1), 0xC0);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO), 0x03);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO+1), 0xC0);
 }
 
 TEST(RST_test, IsCorrectPcStack) {
     CpuInitHelper helper;
     uint16_t* pc = helper.registers.PC;
     uint16_t* sp = helper.registers.SP;
-    *sp = MEMORY::WRAM_LO + 2;
-    CPU::RST instr(helper.registers, helper.addressDispatcher, 0x10);
+    *sp = GAMEBOY::WRAM_LO + 2;
+    GAMEBOY::RST instr(helper.registers, helper.addressDispatcher, 0x10);
     instr.tick();
     instr.tick();
     instr.tick();
     instr.tick();
     EXPECT_EQ(*pc, 0x0010);
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO);
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x01);
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO+1), 0xC0);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO), 0x01);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO+1), 0xC0);
 }
 

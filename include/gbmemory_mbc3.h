@@ -8,7 +8,7 @@
 
 #include "gbmemory.h"
 
-namespace MEMORY
+namespace GAMEBOY
 {
     class MapperMbc3 : public CartMapper
     {

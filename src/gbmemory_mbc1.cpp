@@ -2,7 +2,7 @@
 
 #include "gbmemory_mbc1.h"
 
-MEMORY::MapperMbc1::MapperMbc1(ROMDATA& rom, bool cartRam, bool cartBattery)
+GAMEBOY::MapperMbc1::MapperMbc1(ROMDATA& rom, bool cartRam, bool cartBattery)
     : banked_rom(num_rom_banks(rom))
     , banked_ram(num_ram_banks(rom))
 {
@@ -18,7 +18,7 @@ MEMORY::MapperMbc1::MapperMbc1(ROMDATA& rom, bool cartRam, bool cartBattery)
         dest_it++;
     }
     // Fill each banked rom
-    int banks = num_rom_banks(rom);
+    int banks = banked_rom.size();
     for (int i=1; i<banks; i++)
     {
         dest_it = banked_rom[i-1].begin();
@@ -32,7 +32,7 @@ MEMORY::MapperMbc1::MapperMbc1(ROMDATA& rom, bool cartRam, bool cartBattery)
     }
 }
 
-uint8_t MEMORY::MapperMbc1::read(uint16_t addr)
+uint8_t GAMEBOY::MapperMbc1::read(uint16_t addr)
 {
     if (addr < BANK_LO) // lower fixed bank
     {
@@ -57,7 +57,7 @@ uint8_t MEMORY::MapperMbc1::read(uint16_t addr)
     return 0x00;
 }
 
-void MEMORY::MapperMbc1::write(uint16_t addr, uint8_t data)
+void GAMEBOY::MapperMbc1::write(uint16_t addr, uint8_t data)
 {
     if (addr <= REG_RAM_ENABLE_HI)
     {
@@ -65,7 +65,9 @@ void MEMORY::MapperMbc1::write(uint16_t addr, uint8_t data)
     }
     else if (addr >= REG_ROM_BANK_LO && addr <= REG_ROM_BANK_HI)
     {
-        rom_bank_select = data & 0x1F;
+        uint8_t selection = data & 0x1F;
+        if (selection == 0) {selection = 1;}
+        rom_bank_select = selection;
         // TODO: Limit selection to required number of banks
     }
     else if (addr >= REG_RAM_BANK_LO && addr <= REG_RAM_BANK_HI)

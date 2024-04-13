@@ -7,10 +7,10 @@
 #include "cpu_registers.h"
 #include "gbmemory.h"
 
-namespace CPU
+namespace GAMEBOY
 {
-    CpuInstruction* decode_opcode(uint8_t opcode, CPU::CpuRegisters& registers, MEMORY::AddressDispatcher& memory);
-    CpuInstruction* decode_opcode_prefix(uint8_t opcode, CPU::CpuRegisters& registers, MEMORY::AddressDispatcher& memory);
+    CpuInstruction* decode_opcode(uint8_t opcode, CpuRegisters& registers, AddressDispatcher& memory);
+    CpuInstruction* decode_opcode_prefix(uint8_t opcode, CpuRegisters& registers, AddressDispatcher& memory);
 };
 
 #endif

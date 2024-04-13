@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-namespace CPU
+namespace GAMEBOY
 {
     class CpuRegisters
     {
@@ -13,7 +13,7 @@ namespace CPU
         static const uint8_t FLAG_HALFCARRY = 0x20;
         static const uint8_t FLAG_CARRY = 0x10;
     public:
-        uint16_t* AF = new uint16_t(0x0101);
+        uint16_t* AF = new uint16_t(0x01B0);
         uint8_t* A = (uint8_t*) AF + 1;
         uint8_t* FLAGS = (uint8_t*) AF;
         uint16_t* BC = new uint16_t(0x0013);

@@ -3,7 +3,7 @@
 
 #include "gbmemory_static.h"
 
-MEMORY::MapperStatic::MapperStatic(ROMDATA& rom)
+GAMEBOY::MapperStatic::MapperStatic(ROMDATA& rom)
 {
     auto src_it = rom.cbegin();
     auto src_end = rom.cend();
@@ -17,14 +17,14 @@ MEMORY::MapperStatic::MapperStatic(ROMDATA& rom)
     }
 }
 
-bool MEMORY::MapperStatic::is_mapped(uint16_t addr)
+bool GAMEBOY::MapperStatic::is_mapped(uint16_t addr)
 {
     bool in_rom = addr >= CART_ROM_LO && addr <= CART_ROM_HI;
     bool in_ram = addr >= CART_RAM_LO && addr <= CART_RAM_HI;
     return in_rom || in_ram;
 }
 
-uint8_t MEMORY::MapperStatic::read(uint16_t addr)
+uint8_t GAMEBOY::MapperStatic::read(uint16_t addr)
 {
     if (addr >= CART_ROM_LO && addr <= CART_ROM_HI)
     {
@@ -37,7 +37,7 @@ uint8_t MEMORY::MapperStatic::read(uint16_t addr)
     throw std::out_of_range("Attempted to access memory address not mapped by cart");
 }
 
-void MEMORY::MapperStatic::write(uint16_t addr, uint8_t data)
+void GAMEBOY::MapperStatic::write(uint16_t addr, uint8_t data)
 {
      if (addr >= CART_RAM_LO && addr <= CART_RAM_HI)
      {

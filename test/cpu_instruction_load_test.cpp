@@ -9,7 +9,7 @@ TEST(LD_r_r_test, LD_B_A) {
     uint8_t* dest = helper.registers.B;
     *src = 50;
     *dest = 0;
-    CPU::LD_r_r({helper.registers, dest, src}).tick();
+    GAMEBOY::LD_r_r({helper.registers, dest, src}).tick();
     EXPECT_EQ(*src, 50);
     EXPECT_EQ(*dest, 50);
 }
@@ -19,7 +19,7 @@ TEST(LD_r_n_test, LD_A_d8) {
     uint8_t* dest = helper.registers.A;
     *dest = 0;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 50);
-    CPU::LD_r_n instr({helper.registers, dest, helper.addressDispatcher});
+    GAMEBOY::LD_r_n instr({helper.registers, dest, helper.addressDispatcher});
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 50);
@@ -27,11 +27,11 @@ TEST(LD_r_n_test, LD_A_d8) {
 
 TEST(LD_r_absrr_test, LD_A_absHL) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 50);
     uint8_t* dest = helper.registers.A;
     *dest = 0;
-    CPU::LD_r_absrr instr(helper.registers, dest, helper.registers.HL, helper.addressDispatcher);
+    GAMEBOY::LD_r_absrr instr(helper.registers, dest, helper.registers.HL, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 50);
@@ -39,36 +39,36 @@ TEST(LD_r_absrr_test, LD_A_absHL) {
 
 TEST(LD_r_absrr_test, LD_A_absHL_inc) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 50);
     uint8_t* dest = helper.registers.A;
     *dest = 0;
-    CPU::LD_r_absrr instr(helper.registers, dest, helper.registers.HL, helper.addressDispatcher, CPU::AddressMutOperation::INC);
+    GAMEBOY::LD_r_absrr instr(helper.registers, dest, helper.registers.HL, helper.addressDispatcher, GAMEBOY::AddressMutOperation::INC);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 50);
-    EXPECT_EQ(*helper.registers.HL, MEMORY::WRAM_LO + 1);
+    EXPECT_EQ(*helper.registers.HL, GAMEBOY::WRAM_LO + 1);
 }
 
 TEST(LD_r_absrr_test, LD_A_absHL_dec) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 50);
     uint8_t* dest = helper.registers.A;
     *dest = 0;
-    CPU::LD_r_absrr instr(helper.registers, dest, helper.registers.HL, helper.addressDispatcher, CPU::AddressMutOperation::DEC);
+    GAMEBOY::LD_r_absrr instr(helper.registers, dest, helper.registers.HL, helper.addressDispatcher, GAMEBOY::AddressMutOperation::DEC);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 50);
-    EXPECT_EQ(*helper.registers.HL, MEMORY::WRAM_LO - 1);
+    EXPECT_EQ(*helper.registers.HL, GAMEBOY::WRAM_LO - 1);
 }
 
 TEST(LD_absrr_r_test, LD_absHL_A) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     uint8_t* src = helper.registers.A;
     *src = 50;
-    CPU::LD_absrr_r instr(helper.registers, helper.registers.HL, src, helper.addressDispatcher);
+    GAMEBOY::LD_absrr_r instr(helper.registers, helper.registers.HL, src, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*src, 50);
@@ -77,13 +77,13 @@ TEST(LD_absrr_r_test, LD_absHL_A) {
 
 TEST(LD_absrr_n_test, LD_absHL_d8) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 50);
-    CPU::LD_absrr_n instr(helper.registers, helper.registers.HL, helper.addressDispatcher);
+    GAMEBOY::LD_absrr_n instr(helper.registers, helper.registers.HL, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 50);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO), 50);
     EXPECT_EQ(helper.addressDispatcher.read(*helper.registers.HL), 50);
 }
 
@@ -91,10 +91,10 @@ TEST(LD_r_absnn_test, LD_A_absD16) {
     CpuInitHelper helper;
     uint8_t* dest = helper.registers.A;
     *dest = 0;
-    helper.addressDispatcher.write(*helper.registers.PC + 1 ,(uint8_t) MEMORY::WRAM_LO);
-    helper.addressDispatcher.write(*helper.registers.PC + 2 ,(uint8_t) (MEMORY::WRAM_LO >> 8));
-    helper.addressDispatcher.write(MEMORY::WRAM_LO, 50);
-    CPU::LD_r_absnn instr(helper.registers, dest, helper.addressDispatcher);
+    helper.addressDispatcher.write(*helper.registers.PC + 1 ,(uint8_t) GAMEBOY::WRAM_LO);
+    helper.addressDispatcher.write(*helper.registers.PC + 2 ,(uint8_t) (GAMEBOY::WRAM_LO >> 8));
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO, 50);
+    GAMEBOY::LD_r_absnn instr(helper.registers, dest, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -105,15 +105,15 @@ TEST(LD_absnn_r_test, LD_absD16_A) {
     CpuInitHelper helper;
     uint8_t* src = helper.registers.A;
     *src = 50;
-    helper.addressDispatcher.write(*helper.registers.PC + 1 ,(uint8_t) MEMORY::WRAM_LO);
-    helper.addressDispatcher.write(*helper.registers.PC + 2 ,(uint8_t) (MEMORY::WRAM_LO >> 8));
-    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0);
-    CPU::LD_absnn_r instr(helper.registers, src, helper.addressDispatcher);
+    helper.addressDispatcher.write(*helper.registers.PC + 1 ,(uint8_t) GAMEBOY::WRAM_LO);
+    helper.addressDispatcher.write(*helper.registers.PC + 2 ,(uint8_t) (GAMEBOY::WRAM_LO >> 8));
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO, 0);
+    GAMEBOY::LD_absnn_r instr(helper.registers, src, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
     instr.tick();
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 50);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO), 50);
 }
 
 TEST(LD_r_relr_test, LD_A_relC) {
@@ -123,7 +123,7 @@ TEST(LD_r_relr_test, LD_A_relC) {
     *src_addr_lsb = 0x80; // Becomes 0xFF80
     *dest = 0;
     helper.addressDispatcher.write(0xFF80, 50);
-    CPU::LD_r_relr instr(helper.registers, dest, src_addr_lsb, helper.addressDispatcher);
+    GAMEBOY::LD_r_relr instr(helper.registers, dest, src_addr_lsb, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 50);
@@ -136,7 +136,7 @@ TEST(LD_relr_r_test, LD_relC_A) {
     *dest_addr_lsb = 0x80; // Becomes 0xFF80
     *src = 50;
     helper.addressDispatcher.write(0xFF80, 0);
-    CPU::LD_relr_r instr(helper.registers, dest_addr_lsb, src, helper.addressDispatcher);
+    GAMEBOY::LD_relr_r instr(helper.registers, dest_addr_lsb, src, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(helper.addressDispatcher.read(0xFF80), 50);
@@ -148,7 +148,7 @@ TEST(LD_r_reln_test, LD_A_rel_d8) {
     uint8_t* dest = helper.registers.A;
     *dest = 0;
     helper.addressDispatcher.write(0xFF80, 50);
-    CPU::LD_r_reln instr(helper.registers, dest, helper.addressDispatcher);
+    GAMEBOY::LD_r_reln instr(helper.registers, dest, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -161,7 +161,7 @@ TEST(LD_reln_r_test, LD_rel_d8_A) {
     uint8_t* src = helper.registers.A;
     *src = 50;
     helper.addressDispatcher.write(0xFF80, 0);
-    CPU::LD_reln_r instr(helper.registers, src, helper.addressDispatcher);
+    GAMEBOY::LD_reln_r instr(helper.registers, src, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -174,7 +174,7 @@ TEST(LD_rr_nn_test, LD_BC_d16) {
     *dest = 0;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x34);
     helper.addressDispatcher.write(*helper.registers.PC + 2, 0x12);
-    CPU::LD_rr_nn instr({helper.registers, dest, helper.addressDispatcher});
+    GAMEBOY::LD_rr_nn instr({helper.registers, dest, helper.addressDispatcher});
     instr.tick();
     instr.tick();
     instr.tick();
@@ -185,18 +185,18 @@ TEST(LD_absnn_rr_test, LD_absD16_SP) {
     CpuInitHelper helper;
     uint16_t* src = helper.registers.SP;
     *src = 0x1234;
-    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0);
-    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0);
-    helper.addressDispatcher.write(*helper.registers.PC + 1, (uint8_t)MEMORY::WRAM_LO);
-    helper.addressDispatcher.write(*helper.registers.PC + 2, (uint8_t)(MEMORY::WRAM_LO >> 8));
-    CPU::LD_absnn_rr instr({helper.registers, src, helper.addressDispatcher});
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO, 0);
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO + 1, 0);
+    helper.addressDispatcher.write(*helper.registers.PC + 1, (uint8_t)GAMEBOY::WRAM_LO);
+    helper.addressDispatcher.write(*helper.registers.PC + 2, (uint8_t)(GAMEBOY::WRAM_LO >> 8));
+    GAMEBOY::LD_absnn_rr instr({helper.registers, src, helper.addressDispatcher});
     instr.tick();
     instr.tick();
     instr.tick();
     instr.tick();
     instr.tick();
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x34);
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO + 1), 0x12);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO), 0x34);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO + 1), 0x12);
 }
 
 TEST(LD_rr_rr_test, LD_SP_HL) {
@@ -205,7 +205,7 @@ TEST(LD_rr_rr_test, LD_SP_HL) {
     uint16_t* dest = helper.registers.SP;
     *src = 0x1234;
     *dest = 0;
-    CPU::LD_rr_rr instr({helper.registers, dest, src});
+    GAMEBOY::LD_rr_rr instr({helper.registers, dest, src});
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0x1234);
@@ -216,17 +216,17 @@ TEST(PUSH_rr_test, PUSH_BC) {
     uint16_t* src = helper.registers.BC;
     uint16_t* sp = helper.registers.SP;
     *src = 0x1234;
-    *sp = MEMORY::WRAM_LO + 2;
-    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0);
-    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0);
-    CPU::PUSH_rr instr({helper.registers, src, helper.addressDispatcher});
+    *sp = GAMEBOY::WRAM_LO + 2;
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO, 0);
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO + 1, 0);
+    GAMEBOY::PUSH_rr instr({helper.registers, src, helper.addressDispatcher});
     instr.tick();
     instr.tick();
     instr.tick();
     instr.tick();
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO);
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO), 0x34);
-    EXPECT_EQ(helper.addressDispatcher.read(MEMORY::WRAM_LO + 1), 0x12);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO), 0x34);
+    EXPECT_EQ(helper.addressDispatcher.read(GAMEBOY::WRAM_LO + 1), 0x12);
 }
 
 TEST(POP_rr_test, POP_BC) {
@@ -234,14 +234,14 @@ TEST(POP_rr_test, POP_BC) {
     uint16_t* dest = helper.registers.BC;
     uint16_t* sp = helper.registers.SP;
     *dest = 0;
-    *sp = MEMORY::WRAM_LO;
-    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0x34);
-    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0x12);
-    CPU::POP_rr instr({helper.registers, dest, helper.addressDispatcher});
+    *sp = GAMEBOY::WRAM_LO;
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO, 0x34);
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO + 1, 0x12);
+    GAMEBOY::POP_rr instr({helper.registers, dest, helper.addressDispatcher});
     instr.tick();
     instr.tick();
     instr.tick();
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO + 2);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO + 2);
     EXPECT_EQ(*dest, 0x1234);
 }
 
@@ -251,20 +251,20 @@ TEST(PUSH_POP_test, PUSH_POP_BC) {
     uint16_t* dest = helper.registers.BC;
     uint16_t* sp = helper.registers.SP;
     *src = 0x1234;
-    *sp = MEMORY::WRAM_LO + 2;
-    helper.addressDispatcher.write(MEMORY::WRAM_LO, 0);
-    helper.addressDispatcher.write(MEMORY::WRAM_LO + 1, 0);
-    CPU::PUSH_rr instr({helper.registers, src, helper.addressDispatcher});
+    *sp = GAMEBOY::WRAM_LO + 2;
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO, 0);
+    helper.addressDispatcher.write(GAMEBOY::WRAM_LO + 1, 0);
+    GAMEBOY::PUSH_rr instr({helper.registers, src, helper.addressDispatcher});
     instr.tick();
     instr.tick();
     instr.tick();
     instr.tick();
     *dest = 0;
-    CPU::POP_rr instr2({helper.registers, dest, helper.addressDispatcher});
+    GAMEBOY::POP_rr instr2({helper.registers, dest, helper.addressDispatcher});
     instr2.tick();
     instr2.tick();
     instr2.tick();
-    EXPECT_EQ(*sp, MEMORY::WRAM_LO + 2);
+    EXPECT_EQ(*sp, GAMEBOY::WRAM_LO + 2);
     EXPECT_EQ(*dest, 0x1234);
 }
 

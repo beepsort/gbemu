@@ -1,7 +1,7 @@
 #include "cpu.h"
 #include "cpu_instruction_decode.h"
 
-CPU::Cpu::Cpu(ROMDATA& rom)
+GAMEBOY::Cpu::Cpu(ROMDATA& rom)
     : addressDispatcher(rom)
 {}
 
@@ -11,7 +11,7 @@ CPU::Cpu::Cpu(ROMDATA& rom)
  * for a single memory read or write to take place. An M-cycle
  * totals 4 CPU clock cycles, also called T-cycles
  */
-const CPU::CpuRegisters& CPU::Cpu::tick()
+const GAMEBOY::CpuRegisters& GAMEBOY::Cpu::tick()
 {
     if (currentInstruction == nullptr &&
         registers.IME &&
@@ -19,11 +19,11 @@ const CPU::CpuRegisters& CPU::Cpu::tick()
     {
         auto interruptType = interruptHandler.pop(addressDispatcher);
         uint8_t interruptTypeMask = (uint8_t)interruptType;
-        uint8_t enabledTypes = addressDispatcher.read(MEMORY::INTERRUPT_ENABLE);
+        uint8_t enabledTypes = addressDispatcher.read(INTERRUPT_ENABLE);
         if (interruptTypeMask & enabledTypes)
         {
             currentInstruction =
-                new CPU::InterruptHandler::ServiceRoutine(
+                new InterruptHandler::ServiceRoutine(
                     registers,
                     addressDispatcher,
                     interruptType
@@ -45,7 +45,7 @@ const CPU::CpuRegisters& CPU::Cpu::tick()
     return registers;
 }
 
-void CPU::Cpu::report()
+void GAMEBOY::Cpu::report()
 {
     SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "PC: %04X\n", *registers.PC);
 }

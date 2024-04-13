@@ -9,7 +9,7 @@ TEST(ADD_r_r_test, OnePlusOne) {
     uint8_t *dest = helper.registers.B;
     *src = 1;
     *dest = 1;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 1);
     EXPECT_EQ(*dest, 2);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -24,7 +24,7 @@ TEST(ADD_r_r_test, ZeroPlusZero) {
     uint8_t *dest = helper.registers.B;
     *src = 0;
     *dest = 0;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0);
     EXPECT_EQ(*dest, 0);
     EXPECT_TRUE(helper.registers.get_flag_zero());
@@ -39,7 +39,7 @@ TEST(ADD_r_r_test, OnePlusMax_Overflow) {
     uint8_t *dest = helper.registers.B;
     *src = 1;
     *dest = 255;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 1);
     EXPECT_EQ(*dest, 0);
     EXPECT_TRUE(helper.registers.get_flag_zero());
@@ -54,7 +54,7 @@ TEST(ADD_r_r_test, MaxPlusMax_Overflow) {
     uint8_t *dest = helper.registers.B;
     *src = 255;
     *dest = 255;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 255);
     EXPECT_EQ(*dest, 254);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -69,7 +69,7 @@ TEST(ADD_r_r_test, OneUnderOverflow) {
     uint8_t *dest = helper.registers.B;
     *src = 0x01;
     *dest = 0xFE;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0x01);
     EXPECT_EQ(*dest, 0xFF);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -84,7 +84,7 @@ TEST(ADD_r_r_test, FifteenPlusOne_Halfcarry) {
     uint8_t *dest = helper.registers.B;
     *src = 0xF;
     *dest = 0x1;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0xF);
     EXPECT_EQ(*dest, 0x10);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -99,7 +99,7 @@ TEST(ADD_r_r_test, FourteenPlusOne_NoHalfcarry) {
     uint8_t *dest = helper.registers.B;
     *src = 0xE;
     *dest = 0x1;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0xE);
     EXPECT_EQ(*dest, 0xF);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -113,7 +113,7 @@ TEST(ADD_r_n_test, OnePlusOne) {
     helper.addressDispatcher.write(*helper.registers.PC + 1, 1);
     uint8_t *dest = helper.registers.B;
     *dest = 1;
-    CPU::ADD_r_n instr(dest, helper.registers, helper.addressDispatcher);
+    GAMEBOY::ADD_r_n instr(dest, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 2);
@@ -125,11 +125,11 @@ TEST(ADD_r_n_test, OnePlusOne) {
 
 TEST(ADD_r_absrr_test, OnePlusOne) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 1);
     uint8_t *dest = helper.registers.B;
     *dest = 1;
-    CPU::ADD_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::ADD_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 2);
@@ -145,7 +145,7 @@ TEST(SUB_r_r_test, OneMinusOne) {
     uint8_t *dest = helper.registers.B;
     *src = 1;
     *dest = 1;
-    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::SUB_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 1);
     EXPECT_EQ(*dest, 0);
     EXPECT_TRUE(helper.registers.get_flag_zero());
@@ -160,7 +160,7 @@ TEST(SUB_r_r_test, ZeroMinusZero) {
     uint8_t *dest = helper.registers.B;
     *src = 0;
     *dest = 0;
-    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::SUB_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0);
     EXPECT_EQ(*dest, 0);
     EXPECT_TRUE(helper.registers.get_flag_zero());
@@ -175,7 +175,7 @@ TEST(SUB_r_r_test, ZeroMinusOne_Underflow) {
     uint8_t *dest = helper.registers.B;
     *src = 1;
     *dest = 0;
-    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::SUB_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 1);
     EXPECT_EQ(*dest, 255);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -190,7 +190,7 @@ TEST(SUB_r_r_test, ZeroMinusMax_Underflow) {
     uint8_t *dest = helper.registers.B;
     *src = 255;
     *dest = 0;
-    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::SUB_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 255);
     EXPECT_EQ(*dest, 1);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -205,7 +205,7 @@ TEST(SUB_r_r_test, Minus_HalfCarry) {
     uint8_t *dest = helper.registers.B;
     *src = 0x08;
     *dest = 0xF0;
-    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::SUB_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0x08);
     EXPECT_EQ(*dest, 0xE8);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -219,7 +219,7 @@ TEST(SUB_r_n_test, OneMinusOne) {
     helper.addressDispatcher.write(*helper.registers.PC + 1, 1);
     uint8_t *dest = helper.registers.B;
     *dest = 1;
-    CPU::SUB_r_n instr(dest, helper.registers, helper.addressDispatcher);
+    GAMEBOY::SUB_r_n instr(dest, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0);
@@ -231,11 +231,11 @@ TEST(SUB_r_n_test, OneMinusOne) {
 
 TEST(SUB_r_absrr_test, OneMinusOne) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 1);
     uint8_t *dest = helper.registers.B;
     *dest = 1;
-    CPU::SUB_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::SUB_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0);
@@ -251,7 +251,7 @@ TEST(AND_r_r_test, FfAndFf) {
     uint8_t *dest = helper.registers.B;
     *src = 0xFF;
     *dest = 0xFF;
-    CPU::AND_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::AND_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0xFF);
     EXPECT_EQ(*dest, 0xFF);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -266,7 +266,7 @@ TEST(AND_r_r_test, OpposingBitsAnd) {
     uint8_t *dest = helper.registers.B;
     *src = 0xAA;
     *dest = 0x55;
-    CPU::AND_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::AND_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0xAA);
     EXPECT_EQ(*dest, 0x00);
     EXPECT_TRUE(helper.registers.get_flag_zero());
@@ -280,7 +280,7 @@ TEST(AND_r_n_test, FfAndFf) {
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0xFF);
     uint8_t *dest = helper.registers.B;
     *dest = 0xFF;
-    CPU::AND_r_n instr(dest, helper.registers, helper.addressDispatcher);
+    GAMEBOY::AND_r_n instr(dest, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0xFF);
@@ -292,11 +292,11 @@ TEST(AND_r_n_test, FfAndFf) {
 
 TEST(AND_r_absrr_test, FfAndFf) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 0xFF);
     uint8_t *dest = helper.registers.B;
     *dest = 0xFF;
-    CPU::AND_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::AND_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0xFF);
@@ -312,7 +312,7 @@ TEST(XOR_r_r_test, FfXorFf) {
     uint8_t *dest = helper.registers.B;
     *src = 0xFF;
     *dest = 0xFF;
-    CPU::XOR_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::XOR_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0xFF);
     EXPECT_EQ(*dest, 0x00);
     EXPECT_TRUE(helper.registers.get_flag_zero());
@@ -327,7 +327,7 @@ TEST(XOR_r_r_test, OpposingBitsXor) {
     uint8_t *dest = helper.registers.B;
     *src = 0xAA;
     *dest = 0x55;
-    CPU::XOR_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::XOR_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0xAA);
     EXPECT_EQ(*dest, 0xFF);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -341,7 +341,7 @@ TEST(XOR_r_n_test, FfXorFf) {
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0xFF);
     uint8_t *dest = helper.registers.B;
     *dest = 0xFF;
-    CPU::XOR_r_n instr(dest, helper.registers, helper.addressDispatcher);
+    GAMEBOY::XOR_r_n instr(dest, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0x00);
@@ -356,7 +356,7 @@ TEST(XOR_r_n_test, OpposingBitsXor) {
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x55);
     uint8_t *dest = helper.registers.B;
     *dest = 0xAA;
-    CPU::XOR_r_n instr(dest, helper.registers, helper.addressDispatcher);
+    GAMEBOY::XOR_r_n instr(dest, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0xFF);
@@ -368,11 +368,11 @@ TEST(XOR_r_n_test, OpposingBitsXor) {
 
 TEST(XOR_r_absrr_test, FfXorFf) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 0xFF);
     uint8_t *dest = helper.registers.B;
     *dest = 0xFF;
-    CPU::XOR_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::XOR_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0x00);
@@ -384,11 +384,11 @@ TEST(XOR_r_absrr_test, FfXorFf) {
 
 TEST(XOR_r_absrr_test, OpposingBitsXor) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 0x55);
     uint8_t *dest = helper.registers.B;
     *dest = 0xAA;
-    CPU::XOR_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::XOR_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0xFF);
@@ -404,7 +404,7 @@ TEST(OR_r_r_test, FfOrFf) {
     uint8_t *dest = helper.registers.B;
     *src = 0xFF;
     *dest = 0xFF;
-    CPU::OR_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::OR_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0xFF);
     EXPECT_EQ(*dest, 0xFF);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -419,7 +419,7 @@ TEST(OR_r_r_test, OpposingBitsOr) {
     uint8_t *dest = helper.registers.B;
     *src = 0xAA;
     *dest = 0x55;
-    CPU::OR_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::OR_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0xAA);
     EXPECT_EQ(*dest, 0xFF);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -434,7 +434,7 @@ TEST(OR_r_r_test, ZeroOrZero) {
     uint8_t *dest = helper.registers.B;
     *src = 0x00;
     *dest = 0x00;
-    CPU::OR_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::OR_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0x00);
     EXPECT_EQ(*dest, 0x00);
     EXPECT_TRUE(helper.registers.get_flag_zero());
@@ -448,7 +448,7 @@ TEST(OR_r_n_test, FfOrFf) {
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0xFF);
     uint8_t *dest = helper.registers.B;
     *dest = 0xFF;
-    CPU::OR_r_n instr(dest, helper.registers, helper.addressDispatcher);
+    GAMEBOY::OR_r_n instr(dest, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0xFF);
@@ -463,7 +463,7 @@ TEST(OR_r_n_test, OpposingBitsOr) {
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x55);
     uint8_t *dest = helper.registers.B;
     *dest = 0xAA;
-    CPU::OR_r_n instr(dest, helper.registers, helper.addressDispatcher);
+    GAMEBOY::OR_r_n instr(dest, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0xFF);
@@ -478,7 +478,7 @@ TEST(OR_r_n_test, ZeroOrZero) {
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x00);
     uint8_t *dest = helper.registers.B;
     *dest = 0x00;
-    CPU::OR_r_n instr(dest, helper.registers, helper.addressDispatcher);
+    GAMEBOY::OR_r_n instr(dest, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0x00);
@@ -490,11 +490,11 @@ TEST(OR_r_n_test, ZeroOrZero) {
 
 TEST(OR_r_absrr_test, FfOrFf) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 0xFF);
     uint8_t *dest = helper.registers.B;
     *dest = 0xFF;
-    CPU::OR_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::OR_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0xFF);
@@ -506,11 +506,11 @@ TEST(OR_r_absrr_test, FfOrFf) {
 
 TEST(OR_r_absrr_test, OpposingBitsOr) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 0x55);
     uint8_t *dest = helper.registers.B;
     *dest = 0xAA;
-    CPU::OR_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::OR_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0xFF);
@@ -522,11 +522,11 @@ TEST(OR_r_absrr_test, OpposingBitsOr) {
 
 TEST(OR_r_absrr_test, ZeroOrZero) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 0x00);
     uint8_t *dest = helper.registers.B;
     *dest = 0x00;
-    CPU::OR_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::OR_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0x00);
@@ -542,7 +542,7 @@ TEST(CP_r_r_test, CpOneOne) {
     uint8_t *dest = helper.registers.B;
     *src = 1;
     *dest = 1;
-    CPU::CP_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::CP_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 1);
     EXPECT_EQ(*dest, 1);
     EXPECT_TRUE(helper.registers.get_flag_zero());
@@ -557,7 +557,7 @@ TEST(CP_r_r_test, CpZeroZero) {
     uint8_t *dest = helper.registers.B;
     *src = 0;
     *dest = 0;
-    CPU::CP_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::CP_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0);
     EXPECT_EQ(*dest, 0);
     EXPECT_TRUE(helper.registers.get_flag_zero());
@@ -572,7 +572,7 @@ TEST(CP_r_r_test, CpZeroOne_Underflow) {
     uint8_t *dest = helper.registers.B;
     *src = 1;
     *dest = 0;
-    CPU::CP_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::CP_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 1);
     EXPECT_EQ(*dest, 0);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -587,7 +587,7 @@ TEST(CP_r_r_test, CpZeroMax_Underflow) {
     uint8_t *dest = helper.registers.B;
     *src = 255;
     *dest = 0;
-    CPU::CP_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::CP_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 255);
     EXPECT_EQ(*dest, 0);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -602,7 +602,7 @@ TEST(CP_r_r_test, Cp_HalfCarry) {
     uint8_t *dest = helper.registers.B;
     *src = 0x08;
     *dest = 0xF0;
-    CPU::CP_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::CP_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*src, 0x08);
     EXPECT_EQ(*dest, 0xF0);
     EXPECT_FALSE(helper.registers.get_flag_zero());
@@ -616,7 +616,7 @@ TEST(CP_r_n_test, CpOneOne) {
     helper.addressDispatcher.write(*helper.registers.PC + 1, 1);
     uint8_t *dest = helper.registers.B;
     *dest = 1;
-    CPU::CP_r_n instr(dest, helper.registers, helper.addressDispatcher);
+    GAMEBOY::CP_r_n instr(dest, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 1);
@@ -628,11 +628,11 @@ TEST(CP_r_n_test, CpOneOne) {
 
 TEST(CP_r_absrr_test, CpOneOne) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 1);
     uint8_t *dest = helper.registers.B;
     *dest = 1;
-    CPU::CP_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::CP_r_absrr instr(dest, helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 1);
@@ -646,7 +646,7 @@ TEST(INC_r_test, IncZero) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     *dest = 0;
-    CPU::INC_r({dest, helper.registers}).tick();
+    GAMEBOY::INC_r({dest, helper.registers}).tick();
     EXPECT_EQ(*dest, 1);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_FALSE(helper.registers.get_flag_sub());
@@ -659,7 +659,7 @@ TEST(INC_r_test, IncCarryUnmodified) {
     // ensure carry flag stays false
     helper.registers.set_flag_carry(false);
     *dest = 0;
-    CPU::INC_r({dest, helper.registers}).tick();
+    GAMEBOY::INC_r({dest, helper.registers}).tick();
     EXPECT_EQ(*dest, 1);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_FALSE(helper.registers.get_flag_sub());
@@ -668,7 +668,7 @@ TEST(INC_r_test, IncCarryUnmodified) {
     // ensure carry flag stays true
     helper.registers.set_flag_carry(true);
     *dest = 0;
-    CPU::INC_r({dest, helper.registers}).tick();
+    GAMEBOY::INC_r({dest, helper.registers}).tick();
     EXPECT_EQ(*dest, 1);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_FALSE(helper.registers.get_flag_sub());
@@ -680,7 +680,7 @@ TEST(INC_r_test, IncHalfCarry) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     *dest = 0x0F;
-    CPU::INC_r({dest, helper.registers}).tick();
+    GAMEBOY::INC_r({dest, helper.registers}).tick();
     EXPECT_EQ(*dest, 0x10);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_FALSE(helper.registers.get_flag_sub());
@@ -692,7 +692,7 @@ TEST(INC_r_test, IncMax) {
     uint8_t *dest = helper.registers.A;
     helper.registers.set_flag_carry(false);
     *dest = 0xFF;
-    CPU::INC_r({dest, helper.registers}).tick();
+    GAMEBOY::INC_r({dest, helper.registers}).tick();
     EXPECT_EQ(*dest, 0x0);
     EXPECT_TRUE(helper.registers.get_flag_zero());
     EXPECT_FALSE(helper.registers.get_flag_sub());
@@ -702,9 +702,9 @@ TEST(INC_r_test, IncMax) {
 
 TEST(INC_absrr_test, IncOne) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 1);
-    CPU::INC_absrr instr(helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::INC_absrr instr(helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -719,7 +719,7 @@ TEST(DEC_r_test, DecZero) {
     uint8_t *dest = helper.registers.A;
     helper.registers.set_flag_carry(false);
     *dest = 0x00;
-    CPU::DEC_r({dest, helper.registers}).tick();
+    GAMEBOY::DEC_r({dest, helper.registers}).tick();
     EXPECT_EQ(*dest, 0xFF);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_sub());
@@ -733,7 +733,7 @@ TEST(DEC_r_test, DecCarryUnmodified) {
     // ensure carry flag stays false
     helper.registers.set_flag_carry(false);
     *dest = 1;
-    CPU::DEC_r({dest, helper.registers}).tick();
+    GAMEBOY::DEC_r({dest, helper.registers}).tick();
     EXPECT_EQ(*dest, 0);
     EXPECT_TRUE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_sub());
@@ -742,7 +742,7 @@ TEST(DEC_r_test, DecCarryUnmodified) {
     // ensure carry flag stays true
     helper.registers.set_flag_carry(true);
     *dest = 1;
-    CPU::DEC_r({dest, helper.registers}).tick();
+    GAMEBOY::DEC_r({dest, helper.registers}).tick();
     EXPECT_EQ(*dest, 0);
     EXPECT_TRUE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_sub());
@@ -754,7 +754,7 @@ TEST(DEC_r_test, DecHalfCarry) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     *dest = 0x10;
-    CPU::DEC_r({dest, helper.registers}).tick();
+    GAMEBOY::DEC_r({dest, helper.registers}).tick();
     EXPECT_EQ(*dest, 0x0F);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_sub());
@@ -766,7 +766,7 @@ TEST(DEC_r_test, DecOne) {
     uint8_t *dest = helper.registers.A;
     helper.registers.set_flag_carry(false);
     *dest = 0x01;
-    CPU::DEC_r({dest, helper.registers}).tick();
+    GAMEBOY::DEC_r({dest, helper.registers}).tick();
     EXPECT_EQ(*dest, 0x00);
     EXPECT_TRUE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_sub());
@@ -775,9 +775,9 @@ TEST(DEC_r_test, DecOne) {
 
 TEST(DEC_absrr_test, DecOne) {
     CpuInitHelper helper;
-    *helper.registers.HL = MEMORY::WRAM_LO;
+    *helper.registers.HL = GAMEBOY::WRAM_LO;
     helper.addressDispatcher.write(*helper.registers.HL, 1);
-    CPU::DEC_absrr instr(helper.registers.HL, helper.registers, helper.addressDispatcher);
+    GAMEBOY::DEC_absrr instr(helper.registers.HL, helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -793,9 +793,9 @@ TEST(DAA_test, Daa_AddLeastSigFix) {
     uint8_t *src = helper.registers.B;
     *dest = 0x27;
     *src = 0x15;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*dest, 0x3C);
-    CPU::DAA({helper.registers}).tick();
+    GAMEBOY::DAA({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x42);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_FALSE(helper.registers.get_flag_carry());
@@ -808,9 +808,9 @@ TEST(DAA_test, Daa_AddHalfCarryFix) {
     uint8_t *src = helper.registers.B;
     *dest = 0x09;
     *src = 0x18;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*dest, 0x21);
-    CPU::DAA({helper.registers}).tick();
+    GAMEBOY::DAA({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x27);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_FALSE(helper.registers.get_flag_carry());
@@ -823,9 +823,9 @@ TEST(DAA_test, Daa_AddMostSigFix) {
     uint8_t *src = helper.registers.B;
     *dest = 0x99;
     *src = 0x10;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*dest, 0xA9);
-    CPU::DAA({helper.registers}).tick();
+    GAMEBOY::DAA({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x09);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_carry());
@@ -838,9 +838,9 @@ TEST(DAA_test, Daa_AddMostSigFixOverflow) {
     uint8_t *src = helper.registers.B;
     *dest = 0x51;
     *src = 0x72;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*dest, 0xC3);
-    CPU::DAA({helper.registers}).tick();
+    GAMEBOY::DAA({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x23);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_carry());
@@ -853,9 +853,9 @@ TEST(DAA_test, Daa_AddBothFix) {
     uint8_t *src = helper.registers.B;
     *dest = 0x99;
     *src = 0x99;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*dest, 0x32);
-    CPU::DAA({helper.registers}).tick();
+    GAMEBOY::DAA({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x98);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_carry());
@@ -868,9 +868,9 @@ TEST(DAA_test, Daa_SubLeastSigFix) {
     uint8_t *src = helper.registers.B;
     *dest = 0x36;
     *src = 0x27;
-    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::SUB_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*dest, 0x0F);
-    CPU::DAA({helper.registers}).tick();
+    GAMEBOY::DAA({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x09);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_FALSE(helper.registers.get_flag_carry());
@@ -883,9 +883,9 @@ TEST(DAA_test, Daa_SubMostSigFix) {
     uint8_t *src = helper.registers.B;
     *dest = 0x99;
     *src = 0x10;
-    CPU::ADD_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::ADD_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*dest, 0xA9);
-    CPU::DAA({helper.registers}).tick();
+    GAMEBOY::DAA({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x09);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_carry());
@@ -898,9 +898,9 @@ TEST(DAA_test, Daa_SubUnderflowFix) {
     uint8_t *src = helper.registers.B;
     *dest = 0x27;
     *src = 0x36;
-    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::SUB_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*dest, 0xF1);
-    CPU::DAA({helper.registers}).tick();
+    GAMEBOY::DAA({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x91);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_carry());
@@ -913,9 +913,9 @@ TEST(DAA_test, Daa_SubBothFix) {
     uint8_t *src = helper.registers.B;
     *dest = 0x11;
     *src = 0x22;
-    CPU::SUB_r_r({dest, src, helper.registers}).tick();
+    GAMEBOY::SUB_r_r({dest, src, helper.registers}).tick();
     EXPECT_EQ(*dest, 0xEF);
-    CPU::DAA({helper.registers}).tick();
+    GAMEBOY::DAA({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x89);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_TRUE(helper.registers.get_flag_carry());
@@ -930,7 +930,7 @@ TEST(DAA_test, Daa_SubZeroHalf) {
     helper.registers.set_flag_halfcarry(true);
     helper.registers.set_flag_sub(true);
     helper.registers.set_flag_zero(true);
-    CPU::DAA({helper.registers}).tick();
+    GAMEBOY::DAA({helper.registers}).tick();
     EXPECT_EQ(*dest, 0xFA);
     EXPECT_FALSE(helper.registers.get_flag_zero());
     EXPECT_FALSE(helper.registers.get_flag_carry());
@@ -942,7 +942,7 @@ TEST(CPL_test, Cpl_Zeros) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     *dest = 0x00;
-    CPU::CPL({helper.registers}).tick();
+    GAMEBOY::CPL({helper.registers}).tick();
     EXPECT_EQ(*dest, 0xFF);
     EXPECT_TRUE(helper.registers.get_flag_sub());
     EXPECT_TRUE(helper.registers.get_flag_halfcarry());
@@ -952,7 +952,7 @@ TEST(CPL_test, Cpl_Ones) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     *dest = 0xFF;
-    CPU::CPL({helper.registers}).tick();
+    GAMEBOY::CPL({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x00);
     EXPECT_TRUE(helper.registers.get_flag_sub());
     EXPECT_TRUE(helper.registers.get_flag_halfcarry());
@@ -962,7 +962,7 @@ TEST(CPL_test, Cpl_Alternating) {
     CpuInitHelper helper;
     uint8_t *dest = helper.registers.A;
     *dest = 0xAA;
-    CPU::CPL({helper.registers}).tick();
+    GAMEBOY::CPL({helper.registers}).tick();
     EXPECT_EQ(*dest, 0x55);
     EXPECT_TRUE(helper.registers.get_flag_sub());
     EXPECT_TRUE(helper.registers.get_flag_halfcarry());
@@ -974,7 +974,7 @@ TEST(ADD_HL_rr_test, OnePlusOne) {
     uint16_t *dest = helper.registers.HL;
     *src = 1;
     *dest = 1;
-    CPU::ADD_HL_rr instr({src, helper.registers});
+    GAMEBOY::ADD_HL_rr instr({src, helper.registers});
     instr.tick();
     instr.tick();
     EXPECT_EQ(*src, 1);
@@ -990,7 +990,7 @@ TEST(ADD_HL_rr_test, ZeroPlusZero) {
     uint16_t *dest = helper.registers.HL;
     *src = 0;
     *dest = 0;
-    CPU::ADD_HL_rr instr({src, helper.registers});
+    GAMEBOY::ADD_HL_rr instr({src, helper.registers});
     instr.tick();
     instr.tick();
     EXPECT_EQ(*src, 0);
@@ -1006,7 +1006,7 @@ TEST(ADD_HL_rr_test, OnePlusMax_Overflow) {
     uint16_t *dest = helper.registers.HL;
     *src = 0xFFFF;
     *dest = 1;
-    CPU::ADD_HL_rr instr({src, helper.registers});
+    GAMEBOY::ADD_HL_rr instr({src, helper.registers});
     instr.tick();
     instr.tick();
     EXPECT_EQ(*src, 0xFFFF);
@@ -1022,7 +1022,7 @@ TEST(ADD_HL_rr_test, OnePlusMax_HalfCarry) {
     uint16_t *dest = helper.registers.HL;
     *src = 0x0FFF;
     *dest = 1;
-    CPU::ADD_HL_rr instr({src, helper.registers});
+    GAMEBOY::ADD_HL_rr instr({src, helper.registers});
     instr.tick();
     instr.tick();
     EXPECT_EQ(*src, 0x0FFF);
@@ -1038,7 +1038,7 @@ TEST(ADD_SP_n_test, AddOne) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0xFF80;
     helper.addressDispatcher.write(pc_start + 1, 1);
-    CPU::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1052,7 +1052,7 @@ TEST(ADD_SP_n_test, SubOne) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0xFF80;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0xFF);
-    CPU::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1065,7 +1065,7 @@ TEST(ADD_SP_n_test, AddMax) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0xFF80;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x7F);
-    CPU::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1078,7 +1078,7 @@ TEST(ADD_SP_n_test, SubMax) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0xFF80;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x80);
-    CPU::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1091,7 +1091,7 @@ TEST(ADD_SP_n_test, AddOverflow) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0xFF81;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x7F);
-    CPU::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1104,7 +1104,7 @@ TEST(ADD_SP_n_test, SubUnderflow) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0x0000;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x80);
-    CPU::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::ADD_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1118,7 +1118,7 @@ TEST(LD_HL_SP_n_test, AddOne) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0xFF80;
     helper.addressDispatcher.write(pc_start + 1, 1);
-    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1131,7 +1131,7 @@ TEST(LD_HL_SP_n_test, SubOne) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0xFF80;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0xFF);
-    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1143,7 +1143,7 @@ TEST(LD_HL_SP_n_test, AddMax) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0xFF80;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x7F);
-    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1155,7 +1155,7 @@ TEST(LD_HL_SP_n_test, SubMax) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0xFF80;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x80);
-    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1167,7 +1167,7 @@ TEST(LD_HL_SP_n_test, AddOverflow) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0xFF81;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x7F);
-    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1179,7 +1179,7 @@ TEST(LD_HL_SP_n_test, SubUnderflow) {
     uint16_t *sp = helper.registers.SP;
     *sp = 0x0000;
     helper.addressDispatcher.write(*helper.registers.PC + 1, 0x80);
-    CPU::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
+    GAMEBOY::LD_HL_SP_n instr(helper.registers, helper.addressDispatcher);
     instr.tick();
     instr.tick();
     instr.tick();
@@ -1190,7 +1190,7 @@ TEST(INC_rr_test, IncZero) {
     CpuInitHelper helper;
     uint16_t *dest = helper.registers.BC;
     *dest = 0;
-    CPU::INC_rr instr({dest, helper.registers});
+    GAMEBOY::INC_rr instr({dest, helper.registers});
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 1);
@@ -1200,7 +1200,7 @@ TEST(INC_rr_test, IncOverflow) {
     CpuInitHelper helper;
     uint16_t *dest = helper.registers.BC;
     *dest = 0xFFFF;
-    CPU::INC_rr instr({dest, helper.registers});
+    GAMEBOY::INC_rr instr({dest, helper.registers});
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0);
@@ -1210,7 +1210,7 @@ TEST(DEC_rr_test, DecOne) {
     CpuInitHelper helper;
     uint16_t *dest = helper.registers.BC;
     *dest = 0x0001;
-    CPU::DEC_rr instr({dest, helper.registers});
+    GAMEBOY::DEC_rr instr({dest, helper.registers});
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0x0000);
@@ -1220,7 +1220,7 @@ TEST(DEC_rr_test, DecUnderflow) {
     CpuInitHelper helper;
     uint16_t *dest = helper.registers.BC;
     *dest = 0;
-    CPU::DEC_rr instr({dest, helper.registers});
+    GAMEBOY::DEC_rr instr({dest, helper.registers});
     instr.tick();
     instr.tick();
     EXPECT_EQ(*dest, 0xFFFF);

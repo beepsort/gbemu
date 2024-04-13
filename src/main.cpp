@@ -43,13 +43,13 @@ int main(int argc, char** argv)
         return -1;
     }
     ROMDATA rom = romopt.value();
-    auto str_begin = rom.cbegin() + ROM::TITLE_BEGIN;
-    auto str_end = rom.cbegin() + ROM::TITLE_END;
+    auto str_begin = rom.cbegin() + GAMEBOY::TITLE_BEGIN;
+    auto str_end = rom.cbegin() + GAMEBOY::TITLE_END;
     std::string title(str_begin, str_end);
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Loaded: %s\n", title.c_str());
     auto& serialSupervisor = GAMEBOY::SerialEventSupervisor::getInstance();
     serialSupervisor.subscribe(GAMEBOY::SerialEventType::SERIAL_OUT, new SerialPrinter());
-    CPU::Cpu gameboy(rom);
+    GAMEBOY::Cpu gameboy(rom);
     gameboy.report();
     SDL_Event event;
     bool quit = false;

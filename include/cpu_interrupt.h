@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-namespace CPU
+namespace GAMEBOY
 {
     enum class InterruptType: uint8_t
     {
@@ -20,20 +20,20 @@ namespace CPU
     class InterruptHandler
     {
     public:
-        bool isQueued(MEMORY::AddressDispatcher& memory);
-        InterruptType pop(MEMORY::AddressDispatcher& memory);
+        bool isQueued(GAMEBOY::AddressDispatcher& memory);
+        InterruptType pop(GAMEBOY::AddressDispatcher& memory);
 
         class ServiceRoutine: public CpuInstruction
         {
         private:
             CpuRegisters& registers;
-            MEMORY::AddressDispatcher& memory;
+            GAMEBOY::AddressDispatcher& memory;
             uint8_t step = 0;
             InterruptType interruptType;
         public:
-            ServiceRoutine(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, InterruptType interruptType)
+            ServiceRoutine(CpuRegisters& registers, GAMEBOY::AddressDispatcher& memory, InterruptType interruptType)
             : registers(registers), memory(memory), interruptType(interruptType) {}
-            CPU::InstructionResult tick();
+            GAMEBOY::InstructionResult tick();
         };
     };
 }

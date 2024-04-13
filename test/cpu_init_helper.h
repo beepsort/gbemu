@@ -14,11 +14,11 @@ class CpuInitHelper
 private:
     ROMDATA rom;
 public:
-    CPU::CpuRegisters registers;
-    MEMORY::AddressDispatcher addressDispatcher;
+    GAMEBOY::CpuRegisters registers;
+    GAMEBOY::AddressDispatcher addressDispatcher;
     CpuInitHelper() :
         rom(std::vector<uint8_t>(32768, 0)),
-        addressDispatcher(MEMORY::AddressDispatcher(rom))
+        addressDispatcher(GAMEBOY::AddressDispatcher(rom))
     {
         *registers.PC = 0xC000;
         SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);

@@ -6,7 +6,7 @@
 #include "cpu_registers.h"
 #include "gbmemory.h"
 
-namespace CPU
+namespace GAMEBOY
 {
     enum class AddressMutOperation
     {
@@ -27,7 +27,7 @@ namespace CPU
     private:
         uint8_t* dest;
         uint8_t* src;
-        CPU::CpuRegisters& registers;
+        GAMEBOY::CpuRegisters& registers;
     public:
         LD_r_r(CpuRegisters& registers, uint8_t* dest, uint8_t* src)
         : dest(dest), src(src), registers(registers) {}
@@ -44,10 +44,10 @@ namespace CPU
     private:
         uint8_t* dest;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        LD_r_n(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
+        LD_r_n(CpuRegisters& registers, uint8_t* dest, GAMEBOY::AddressDispatcher& memory)
         : dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -64,11 +64,11 @@ namespace CPU
         uint8_t* dest;
         uint16_t* src_addr;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
         AddressMutOperation post_operation;
     public:
-        LD_r_absrr(CpuRegisters& registers, uint8_t* dest, uint16_t* src_addr, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
+        LD_r_absrr(CpuRegisters& registers, uint8_t* dest, uint16_t* src_addr, GAMEBOY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
         : dest(dest), src_addr(src_addr), registers(registers), memory(memory), post_operation(post_operation) {}
         InstructionResult tick();
     };
@@ -85,11 +85,11 @@ namespace CPU
         uint16_t* dest_addr;
         uint8_t* src;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
         AddressMutOperation post_operation;
     public:
-        LD_absrr_r(CpuRegisters& registers, uint16_t* dest_addr, uint8_t* src, MEMORY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
+        LD_absrr_r(CpuRegisters& registers, uint16_t* dest_addr, uint8_t* src, GAMEBOY::AddressDispatcher& memory, AddressMutOperation post_operation = AddressMutOperation::NONE)
         : dest_addr(dest_addr), src(src), registers(registers), memory(memory), post_operation(post_operation) {}
         InstructionResult tick();
     };
@@ -105,10 +105,10 @@ namespace CPU
         uint16_t* dest_addr;
         uint8_t src_data;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        LD_absrr_n(CpuRegisters& registers, uint16_t* dest_addr, MEMORY::AddressDispatcher& memory)
+        LD_absrr_n(CpuRegisters& registers, uint16_t* dest_addr, GAMEBOY::AddressDispatcher& memory)
         : dest_addr(dest_addr), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -124,10 +124,10 @@ namespace CPU
         uint8_t* dest;
         uint16_t load_addr;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        LD_r_absnn(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
+        LD_r_absnn(CpuRegisters& registers, uint8_t* dest, GAMEBOY::AddressDispatcher& memory)
         : dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -143,10 +143,10 @@ namespace CPU
         uint8_t* src;
         uint16_t write_addr;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        LD_absnn_r(CpuRegisters& registers, uint8_t* src, MEMORY::AddressDispatcher& memory)
+        LD_absnn_r(CpuRegisters& registers, uint8_t* src, GAMEBOY::AddressDispatcher& memory)
         : src(src), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -163,10 +163,10 @@ namespace CPU
         uint8_t* dest;
         uint8_t* src_addr_lsb;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        LD_r_relr(CpuRegisters& registers, uint8_t* dest, uint8_t* src_addr_lsb, MEMORY::AddressDispatcher& memory)
+        LD_r_relr(CpuRegisters& registers, uint8_t* dest, uint8_t* src_addr_lsb, GAMEBOY::AddressDispatcher& memory)
         : dest(dest), src_addr_lsb(src_addr_lsb), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -183,10 +183,10 @@ namespace CPU
         uint8_t* dest_addr_lsb;
         uint8_t* src;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        LD_relr_r(CpuRegisters& registers, uint8_t* dest_addr_lsb, uint8_t* src, MEMORY::AddressDispatcher& memory)
+        LD_relr_r(CpuRegisters& registers, uint8_t* dest_addr_lsb, uint8_t* src, GAMEBOY::AddressDispatcher& memory)
         : dest_addr_lsb(dest_addr_lsb), src(src), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -203,10 +203,10 @@ namespace CPU
         uint8_t* dest;
         uint16_t load_addr;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        LD_r_reln(CpuRegisters& registers, uint8_t* dest, MEMORY::AddressDispatcher& memory)
+        LD_r_reln(CpuRegisters& registers, uint8_t* dest, GAMEBOY::AddressDispatcher& memory)
         : dest(dest), registers(registers), memory(memory) {} // src_addr_lsb(src_addr_lsb)
         InstructionResult tick();
     };
@@ -223,10 +223,10 @@ namespace CPU
         uint8_t* src;
         uint16_t write_addr;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        LD_reln_r(CpuRegisters& registers, uint8_t* src, MEMORY::AddressDispatcher& memory)
+        LD_reln_r(CpuRegisters& registers, uint8_t* src, GAMEBOY::AddressDispatcher& memory)
         : src(src), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -244,10 +244,10 @@ namespace CPU
         uint16_t* dest;
         uint16_t operand;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        LD_rr_nn(CpuRegisters& registers, uint16_t* dest, MEMORY::AddressDispatcher& memory)
+        LD_rr_nn(CpuRegisters& registers, uint16_t* dest, GAMEBOY::AddressDispatcher& memory)
         : dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -263,10 +263,10 @@ namespace CPU
         uint16_t* src;
         uint16_t dest_addr;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        LD_absnn_rr(CpuRegisters& registers, uint16_t* src, MEMORY::AddressDispatcher& memory)
+        LD_absnn_rr(CpuRegisters& registers, uint16_t* src, GAMEBOY::AddressDispatcher& memory)
         : src(src), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -282,7 +282,7 @@ namespace CPU
         uint16_t* src;
         uint16_t* dest;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
+        GAMEBOY::CpuRegisters& registers;
     public:
         LD_rr_rr(CpuRegisters& registers, uint16_t* dest, uint16_t* src)
         : src(src), dest(dest), registers(registers) {}
@@ -300,10 +300,10 @@ namespace CPU
         uint16_t* src;
         uint16_t* sp;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        PUSH_rr(CpuRegisters& registers, uint16_t* src, MEMORY::AddressDispatcher& memory)
+        PUSH_rr(CpuRegisters& registers, uint16_t* src, GAMEBOY::AddressDispatcher& memory)
         : src(src), sp(registers.SP), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -319,10 +319,10 @@ namespace CPU
         uint16_t* sp;
         uint16_t* dest;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        POP_rr(CpuRegisters& registers, uint16_t* dest, MEMORY::AddressDispatcher& memory)
+        POP_rr(CpuRegisters& registers, uint16_t* dest, GAMEBOY::AddressDispatcher& memory)
         : sp(registers.SP), dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -339,10 +339,10 @@ namespace CPU
         uint16_t* sp;
         uint16_t* dest;
         uint8_t step = 0;
-        CPU::CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        GAMEBOY::CpuRegisters& registers;
+        GAMEBOY::AddressDispatcher& memory;
     public:
-        POP_AF(CpuRegisters& registers, uint16_t* dest, MEMORY::AddressDispatcher& memory)
+        POP_AF(CpuRegisters& registers, uint16_t* dest, GAMEBOY::AddressDispatcher& memory)
         : sp(registers.SP), dest(dest), registers(registers), memory(memory) {}
         InstructionResult tick();
     };

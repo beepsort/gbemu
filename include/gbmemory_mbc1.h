@@ -9,7 +9,7 @@
 #include "rom.h"
 #include "gbmemory.h"
 
-namespace MEMORY
+namespace GAMEBOY
 {
     // https://gbdev.io/pandocs/MBC1.html
     class MapperMbc1 : public CartMapper

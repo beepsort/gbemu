@@ -5,7 +5,7 @@
 #include "cpu_registers.h"
 #include "gbmemory.h"
 
-namespace CPU
+namespace GAMEBOY
 {
     class NOP: public CpuInstruction
     {
@@ -21,10 +21,10 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         CpuInstruction* instruction = nullptr;
     public:
-        CB_PREFIX(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        CB_PREFIX(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         ~CB_PREFIX();
         InstructionResult tick();
@@ -45,11 +45,11 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint16_t shift_register;
         uint8_t step = 0;
     public:
-        RLC_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        RLC_absHL(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -69,11 +69,11 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t shift_register;
         uint8_t step = 0;
     public:
-        RRC_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        RRC_absHL(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -93,11 +93,11 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t result;
         uint8_t step = 0;
     public:
-        RL_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        RL_absHL(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -117,11 +117,11 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t result;
         uint8_t step = 0;
     public:
-        RR_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        RR_absHL(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -141,11 +141,11 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t result;
         uint8_t step = 0;
     public:
-        SLA_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        SLA_absHL(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -165,11 +165,11 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t loaded;
         uint8_t step = 0;
     public:
-        SRA_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        SRA_absHL(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -189,11 +189,11 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t loaded;
         uint8_t step = 0;
     public:
-        SWAP_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        SWAP_absHL(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -213,11 +213,11 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t result;
         uint8_t step = 0;
     public:
-        SRL_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        SRL_absHL(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -238,12 +238,12 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t loaded;
         uint8_t bitnum;
         uint8_t step = 0;
     public:
-        BIT_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, uint8_t bitnum)
+        BIT_absHL(CpuRegisters& registers, AddressDispatcher& memory, uint8_t bitnum)
         : registers(registers), memory(memory), bitnum(bitnum) {}
         InstructionResult tick();
     };
@@ -264,12 +264,12 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t bitnum;
         uint8_t result;
         uint8_t step = 0;
     public:
-        RES_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, uint8_t bitnum)
+        RES_absHL(CpuRegisters& registers, AddressDispatcher& memory, uint8_t bitnum)
         : registers(registers), memory(memory), bitnum(bitnum) {}
         InstructionResult tick();
     };
@@ -290,12 +290,12 @@ namespace CPU
     {
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t bitnum;
         uint8_t result;
         uint8_t step = 0;
     public:
-        SET_absHL(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, uint8_t bitnum)
+        SET_absHL(CpuRegisters& registers, AddressDispatcher& memory, uint8_t bitnum)
         : registers(registers), memory(memory), bitnum(bitnum) {}
         InstructionResult tick();
     };

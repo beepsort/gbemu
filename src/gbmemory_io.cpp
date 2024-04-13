@@ -2,7 +2,7 @@
 #include "cpu_interrupt.h"
 #include "serial.h"
 
-uint8_t MEMORY::IOHandler::read(uint16_t addr)
+uint8_t GAMEBOY::IOHandler::read(uint16_t addr)
 {
     switch (addr)
     {
@@ -12,6 +12,8 @@ uint8_t MEMORY::IOHandler::read(uint16_t addr)
             return ioRam[SERIAL_CONTROL];
         case 0xFF0F:
             return ioRam[IF];
+        case 0xFF44:
+            return 0x90;
         case 0xFFFF:
             return IE;
         default:
@@ -19,7 +21,7 @@ uint8_t MEMORY::IOHandler::read(uint16_t addr)
     }
 }
 
-void MEMORY::IOHandler::write(uint16_t addr, uint8_t data)
+void GAMEBOY::IOHandler::write(uint16_t addr, uint8_t data)
 {
     switch (addr)
     {

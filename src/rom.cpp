@@ -29,14 +29,14 @@ std::optional<ROMDATA> open_rom(char* rom_path) {
 
 int num_rom_banks(ROMDATA& data)
 {
-    uint8_t rom_size_byte = data[ROM::ROM_SIZE];
+    uint8_t rom_size_byte = data[GAMEBOY::ROM_SIZE];
     uint16_t bank_count = round(pow(2, rom_size_byte+1));
     return bank_count;
 }
 
 int num_ram_banks(ROMDATA& data)
 {
-    uint8_t ram_size_byte = data[ROM::RAM_SIZE];
+    uint8_t ram_size_byte = data[GAMEBOY::RAM_SIZE];
     switch (ram_size_byte)
     {
     case 0x02:

@@ -1,19 +1,19 @@
 #include "cpu_instruction_misc.h"
 #include "cpu_instruction_decode.h"
 
-CPU::InstructionResult CPU::NOP::tick()
+GAMEBOY::InstructionResult GAMEBOY::NOP::tick()
 {
     // Do no useful work, only inc PC
     ++*registers.PC;
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::CB_PREFIX::tick()
+GAMEBOY::InstructionResult GAMEBOY::CB_PREFIX::tick()
 {
     if (instruction == nullptr)
     {
         uint8_t opcode = memory.read(++*registers.PC);
-        instruction = CPU::decode_opcode_prefix(opcode, registers, memory);
+        instruction = decode_opcode_prefix(opcode, registers, memory);
         return InstructionResult::RUNNING;
     }
     else
@@ -22,7 +22,7 @@ CPU::InstructionResult CPU::CB_PREFIX::tick()
     }
 }
 
-CPU::CB_PREFIX::~CB_PREFIX()
+GAMEBOY::CB_PREFIX::~CB_PREFIX()
 {
     if (instruction != nullptr)
     {
@@ -30,7 +30,7 @@ CPU::CB_PREFIX::~CB_PREFIX()
     }
 }
 
-CPU::InstructionResult CPU::RLC_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::RLC_r::tick()
 {
     uint16_t shift_register = (uint16_t)*target;
     shift_register <<= 1;
@@ -43,7 +43,7 @@ CPU::InstructionResult CPU::RLC_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::RLC_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::RLC_absHL::tick()
 {
     switch (step++)
     {
@@ -69,7 +69,7 @@ CPU::InstructionResult CPU::RLC_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::RRC_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::RRC_r::tick()
 {
     uint8_t shift_register = *target>>1;
     *target = shift_register | *target<<7;
@@ -81,7 +81,7 @@ CPU::InstructionResult CPU::RRC_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::RRC_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::RRC_absHL::tick()
 {
     switch (step++)
     {
@@ -107,7 +107,7 @@ CPU::InstructionResult CPU::RRC_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::RL_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::RL_r::tick()
 {
     bool was_carry = registers.get_flag_carry();
     registers.set_flag_carry(*target&0x80);
@@ -120,7 +120,7 @@ CPU::InstructionResult CPU::RL_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::RL_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::RL_absHL::tick()
 {
     switch (step++)
     {
@@ -147,7 +147,7 @@ CPU::InstructionResult CPU::RL_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::RR_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::RR_r::tick()
 {
     bool was_carry = registers.get_flag_carry();
     registers.set_flag_carry(*target&0x01);
@@ -160,7 +160,7 @@ CPU::InstructionResult CPU::RR_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::RR_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::RR_absHL::tick()
 {
     switch (step++)
     {
@@ -187,7 +187,7 @@ CPU::InstructionResult CPU::RR_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::SLA_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::SLA_r::tick()
 {
     registers.set_flag_carry(*target&0x80);
     *target <<= 1;
@@ -198,7 +198,7 @@ CPU::InstructionResult CPU::SLA_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::SLA_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::SLA_absHL::tick()
 {
     switch (step++)
     {
@@ -223,7 +223,7 @@ CPU::InstructionResult CPU::SLA_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::SRA_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::SRA_r::tick()
 {
     registers.set_flag_carry(*target&0x01);
     uint8_t result = *target >> 1;
@@ -235,7 +235,7 @@ CPU::InstructionResult CPU::SRA_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::SRA_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::SRA_absHL::tick()
 {
     switch (step++)
     {
@@ -261,7 +261,7 @@ CPU::InstructionResult CPU::SRA_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::SWAP_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::SWAP_r::tick()
 {
     uint8_t result = *target << 4; // move LSB to MSB
     result |= *target >> 4; // move MSB to LSB
@@ -274,7 +274,7 @@ CPU::InstructionResult CPU::SWAP_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::SWAP_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::SWAP_absHL::tick()
 {
     switch (step++)
     {
@@ -300,7 +300,7 @@ CPU::InstructionResult CPU::SWAP_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::SRL_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::SRL_r::tick()
 {
     registers.set_flag_carry(*target&0x01);
     *target >>= 1;
@@ -311,7 +311,7 @@ CPU::InstructionResult CPU::SRL_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::SRL_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::SRL_absHL::tick()
 {
     switch (step++)
     {
@@ -336,7 +336,7 @@ CPU::InstructionResult CPU::SRL_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::BIT_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::BIT_r::tick()
 {
     uint8_t mask = 0x01 << bitnum;
     registers.set_flag_zero((*target&mask)==0);
@@ -346,7 +346,7 @@ CPU::InstructionResult CPU::BIT_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::BIT_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::BIT_absHL::tick()
 {
     switch (step++)
     {
@@ -367,7 +367,7 @@ CPU::InstructionResult CPU::BIT_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::RES_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::RES_r::tick()
 {
     uint8_t mask = ~(0x01 << bitnum);
     *target &= mask;
@@ -375,7 +375,7 @@ CPU::InstructionResult CPU::RES_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::RES_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::RES_absHL::tick()
 {
     switch (step++)
     {
@@ -397,7 +397,7 @@ CPU::InstructionResult CPU::RES_absHL::tick()
     }
 }
 
-CPU::InstructionResult CPU::SET_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::SET_r::tick()
 {
     uint8_t mask = 0x01 << bitnum;
     *target |= mask;
@@ -405,7 +405,7 @@ CPU::InstructionResult CPU::SET_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::SET_absHL::tick()
+GAMEBOY::InstructionResult GAMEBOY::SET_absHL::tick()
 {
     switch (step++)
     {

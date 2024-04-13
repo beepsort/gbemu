@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-namespace MEMORY
+namespace GAMEBOY
 {
     class IOHandler
     {

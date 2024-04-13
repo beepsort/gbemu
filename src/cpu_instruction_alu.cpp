@@ -42,7 +42,7 @@ bool is_sub_halfcarry(uint16_t a, uint16_t b)
     return (a & 0x0FFF) < (b & 0x0FFF);
 }
 
-CPU::InstructionResult CPU::ADD_r_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::ADD_r_r::tick()
 {
     bool was_carry = registers.get_flag_carry();
     registers.set_flag_carry(is_add_carry(*dest, *src));
@@ -60,7 +60,7 @@ CPU::InstructionResult CPU::ADD_r_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::ADD_r_n::tick()
+GAMEBOY::InstructionResult GAMEBOY::ADD_r_n::tick()
 {
     if (step++ == 0)
     {
@@ -83,7 +83,7 @@ CPU::InstructionResult CPU::ADD_r_n::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::ADD_r_absrr::tick()
+GAMEBOY::InstructionResult GAMEBOY::ADD_r_absrr::tick()
 {
     if (step++ == 0)
     {
@@ -106,7 +106,7 @@ CPU::InstructionResult CPU::ADD_r_absrr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::SUB_r_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::SUB_r_r::tick()
 {
     bool was_carry = registers.get_flag_carry();
     registers.set_flag_carry(is_sub_carry(*dest, *src));
@@ -124,7 +124,7 @@ CPU::InstructionResult CPU::SUB_r_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::SUB_r_n::tick()
+GAMEBOY::InstructionResult GAMEBOY::SUB_r_n::tick()
 {
     if (step++ == 0)
     {
@@ -147,7 +147,7 @@ CPU::InstructionResult CPU::SUB_r_n::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::SUB_r_absrr::tick()
+GAMEBOY::InstructionResult GAMEBOY::SUB_r_absrr::tick()
 {
     if (step++ == 0)
     {
@@ -170,7 +170,7 @@ CPU::InstructionResult CPU::SUB_r_absrr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::AND_r_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::AND_r_r::tick()
 {
     *dest &= *src;
     registers.set_flag_zero(*dest == 0);
@@ -181,7 +181,7 @@ CPU::InstructionResult CPU::AND_r_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::AND_r_n::tick()
+GAMEBOY::InstructionResult GAMEBOY::AND_r_n::tick()
 {
     if (step++ == 0)
     {
@@ -197,7 +197,7 @@ CPU::InstructionResult CPU::AND_r_n::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::AND_r_absrr::tick()
+GAMEBOY::InstructionResult GAMEBOY::AND_r_absrr::tick()
 {
     if (step++ == 0)
     {
@@ -213,7 +213,7 @@ CPU::InstructionResult CPU::AND_r_absrr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::XOR_r_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::XOR_r_r::tick()
 {
     *dest ^= *src;
     registers.set_flag_zero(*dest == 0);
@@ -224,7 +224,7 @@ CPU::InstructionResult CPU::XOR_r_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::XOR_r_n::tick()
+GAMEBOY::InstructionResult GAMEBOY::XOR_r_n::tick()
 {
     if (step++ == 0)
     {
@@ -240,7 +240,7 @@ CPU::InstructionResult CPU::XOR_r_n::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::XOR_r_absrr::tick()
+GAMEBOY::InstructionResult GAMEBOY::XOR_r_absrr::tick()
 {
     if (step++ == 0)
     {
@@ -256,7 +256,7 @@ CPU::InstructionResult CPU::XOR_r_absrr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::OR_r_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::OR_r_r::tick()
 {
     *dest |= *src;
     registers.set_flag_zero(*dest == 0);
@@ -267,7 +267,7 @@ CPU::InstructionResult CPU::OR_r_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::OR_r_n::tick()
+GAMEBOY::InstructionResult GAMEBOY::OR_r_n::tick()
 {
     if (step++ == 0)
     {
@@ -283,7 +283,7 @@ CPU::InstructionResult CPU::OR_r_n::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::OR_r_absrr::tick()
+GAMEBOY::InstructionResult GAMEBOY::OR_r_absrr::tick()
 {
     if (step++ == 0)
     {
@@ -299,7 +299,7 @@ CPU::InstructionResult CPU::OR_r_absrr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::CP_r_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::CP_r_r::tick()
 {
     registers.set_flag_carry(is_sub_carry(*dest, *src));
     registers.set_flag_halfcarry(is_sub_halfcarry(*dest, *src));
@@ -310,7 +310,7 @@ CPU::InstructionResult CPU::CP_r_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::CP_r_n::tick()
+GAMEBOY::InstructionResult GAMEBOY::CP_r_n::tick()
 {
     if (step++ == 0)
     {
@@ -326,7 +326,7 @@ CPU::InstructionResult CPU::CP_r_n::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::CP_r_absrr::tick()
+GAMEBOY::InstructionResult GAMEBOY::CP_r_absrr::tick()
 {
     if (step++ == 0)
     {
@@ -342,7 +342,7 @@ CPU::InstructionResult CPU::CP_r_absrr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::INC_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::INC_r::tick()
 {
     registers.set_flag_halfcarry(is_add_halfcarry(*dest, 1));
     *dest = *dest != UINT8_MAX ? *dest+1 : 0;
@@ -352,7 +352,7 @@ CPU::InstructionResult CPU::INC_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::INC_absrr::tick()
+GAMEBOY::InstructionResult GAMEBOY::INC_absrr::tick()
 {
     switch (step++)
     {
@@ -374,7 +374,7 @@ CPU::InstructionResult CPU::INC_absrr::tick()
     }
 }
 
-CPU::InstructionResult CPU::DEC_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::DEC_r::tick()
 {
     registers.set_flag_halfcarry(is_sub_halfcarry(*dest, 1));
     *dest = *dest != 0 ? *dest-1 : UINT8_MAX;
@@ -384,7 +384,7 @@ CPU::InstructionResult CPU::DEC_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::DEC_absrr::tick()
+GAMEBOY::InstructionResult GAMEBOY::DEC_absrr::tick()
 {
     switch (step++)
     {
@@ -406,7 +406,7 @@ CPU::InstructionResult CPU::DEC_absrr::tick()
     }
 }
 
-CPU::InstructionResult CPU::DAA::tick()
+GAMEBOY::InstructionResult GAMEBOY::DAA::tick()
 {
     if (!registers.get_flag_sub() && *registers.A >= 0x9A)
     {
@@ -441,7 +441,7 @@ CPU::InstructionResult CPU::DAA::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::CPL::tick()
+GAMEBOY::InstructionResult GAMEBOY::CPL::tick()
 {
     *(registers.A) = ~*(registers.A);
     registers.set_flag_sub(true);
@@ -454,7 +454,7 @@ CPU::InstructionResult CPU::CPL::tick()
  * 16-bit ALU Insutrctions
  */
 
-CPU::InstructionResult CPU::ADD_HL_rr::tick()
+GAMEBOY::InstructionResult GAMEBOY::ADD_HL_rr::tick()
 {
     if (step++ == 0)
     {
@@ -468,7 +468,7 @@ CPU::InstructionResult CPU::ADD_HL_rr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::ADD_SP_n::tick()
+GAMEBOY::InstructionResult GAMEBOY::ADD_SP_n::tick()
 {
     switch (step++)
     {
@@ -495,7 +495,7 @@ CPU::InstructionResult CPU::ADD_SP_n::tick()
     }
 }
 
-CPU::InstructionResult CPU::LD_HL_SP_n::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_HL_SP_n::tick()
 {
     switch (step++)
     {
@@ -520,7 +520,7 @@ CPU::InstructionResult CPU::LD_HL_SP_n::tick()
     }
 }
 
-CPU::InstructionResult CPU::INC_rr::tick()
+GAMEBOY::InstructionResult GAMEBOY::INC_rr::tick()
 {
     if (step++ == 0)
     {
@@ -531,7 +531,7 @@ CPU::InstructionResult CPU::INC_rr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::DEC_rr::tick()
+GAMEBOY::InstructionResult GAMEBOY::DEC_rr::tick()
 {
     if (step++ == 0)
     {
@@ -542,7 +542,7 @@ CPU::InstructionResult CPU::DEC_rr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::RLA_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::RLA_r::tick()
 {
     uint8_t carry = (*registers.A) >> 7;
     uint8_t lsb;
@@ -564,7 +564,7 @@ CPU::InstructionResult CPU::RLA_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::RRA_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::RRA_r::tick()
 {
     uint8_t carry = (*registers.A) << 7;
     uint8_t msb;

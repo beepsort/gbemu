@@ -7,7 +7,7 @@
 #include "cpu_registers.h"
 #include "gbmemory.h"
 
-namespace CPU
+namespace GAMEBOY
 {
     class HALT: public CpuInstruction
     {
@@ -25,10 +25,10 @@ namespace CPU
      **/
     private:
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t step = 0;
     public:
-        HALT(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        HALT(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -71,9 +71,9 @@ namespace CPU
         uint16_t jump_addr = 0;
         uint8_t step = 0;
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
     public:
-        JP_NN(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
+        JP_NN(CpuRegisters& registers, AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
         : condition(condition), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -85,9 +85,9 @@ namespace CPU
         int16_t jump_offset = 0;
         uint8_t step = 0;
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
     public:
-        JR_N(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
+        JR_N(CpuRegisters& registers, AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
         : condition(condition), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -138,9 +138,9 @@ namespace CPU
         uint16_t jump_addr = 0;
         uint8_t step = 0;
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
     public:
-        RET(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        RET(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -152,9 +152,9 @@ namespace CPU
         uint16_t jump_addr = 0;
         uint8_t step = 0;
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
     public:
-        RET_CC(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
+        RET_CC(CpuRegisters& registers, AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
         : condition(condition), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -165,9 +165,9 @@ namespace CPU
         uint16_t jump_addr = 0;
         uint8_t step = 0;
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
     public:
-        RETI(CpuRegisters& registers, MEMORY::AddressDispatcher& memory)
+        RETI(CpuRegisters& registers, AddressDispatcher& memory)
         : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -179,9 +179,9 @@ namespace CPU
         uint16_t jump_addr = 0;
         uint8_t step = 0;
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
     public:
-        CALL_NN(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
+        CALL_NN(CpuRegisters& registers, AddressDispatcher& memory, bool (*const condition)(CpuRegisters&))
         : condition(condition), registers(registers), memory(memory) {}
         InstructionResult tick();
     };
@@ -192,9 +192,9 @@ namespace CPU
         uint8_t jump_lsb;
         uint8_t step = 0;
         CpuRegisters& registers;
-        MEMORY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
     public:
-        RST(CpuRegisters& registers, MEMORY::AddressDispatcher& memory, uint8_t jump_lsb)
+        RST(CpuRegisters& registers, AddressDispatcher& memory, uint8_t jump_lsb)
         : jump_lsb(jump_lsb), registers(registers), memory(memory) {}
         InstructionResult tick();
     };

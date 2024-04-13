@@ -7,14 +7,14 @@
 #include "gbmemory.h"
 #include "rom.h"
 
-namespace CPU
+namespace GAMEBOY
 {
     class Cpu
     {
     private:
         CpuInstruction* currentInstruction = nullptr;
         CpuRegisters registers;
-        MEMORY::AddressDispatcher addressDispatcher;
+        AddressDispatcher addressDispatcher;
         InterruptHandler interruptHandler;
     public:
         Cpu(ROMDATA& rom);

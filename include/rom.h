@@ -6,7 +6,7 @@
 #include <SDL2/SDL.h>
 #include <stdint.h>
 
-namespace ROM
+namespace GAMEBOY
 {
     // https://gbdev.io/pandocs/The_Cartridge_Header.html
     const size_t TITLE_BEGIN = 0x0134;

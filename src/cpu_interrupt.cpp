@@ -1,30 +1,30 @@
 #include "cpu_interrupt.h"
 
-bool CPU::InterruptHandler::isQueued(MEMORY::AddressDispatcher& memory)
+bool GAMEBOY::InterruptHandler::isQueued(GAMEBOY::AddressDispatcher& memory)
 {
-    uint8_t queue = memory.read(MEMORY::INTERRUPT_FLAG);
-    uint8_t enabled = memory.read(MEMORY::INTERRUPT_ENABLE);
+    uint8_t queue = memory.read(INTERRUPT_FLAG);
+    uint8_t enabled = memory.read(INTERRUPT_ENABLE);
     return queue & enabled;
 }
 
-CPU::InterruptType CPU::InterruptHandler::pop(MEMORY::AddressDispatcher& memory)
+GAMEBOY::InterruptType GAMEBOY::InterruptHandler::pop(GAMEBOY::AddressDispatcher& memory)
 {
-    uint8_t current_flags = memory.read(MEMORY::INTERRUPT_FLAG);
-    uint8_t enabled = memory.read(MEMORY::INTERRUPT_ENABLE);
+    uint8_t current_flags = memory.read(INTERRUPT_FLAG);
+    uint8_t enabled = memory.read(INTERRUPT_ENABLE);
     uint8_t enabled_active_flags = current_flags & enabled;
     for (uint8_t type = 1; type<=0x10; type<<=1)
     {
         if (enabled_active_flags & type)
         {
             uint8_t updated_flags = current_flags & ~type;
-            memory.write(MEMORY::INTERRUPT_FLAG, updated_flags);
+            memory.write(INTERRUPT_FLAG, updated_flags);
             return static_cast<InterruptType>(type);
         }
     }
     return {};
 }
 
-CPU::InstructionResult CPU::InterruptHandler::ServiceRoutine::tick()
+GAMEBOY::InstructionResult GAMEBOY::InterruptHandler::ServiceRoutine::tick()
 {
     switch (step++)
     {

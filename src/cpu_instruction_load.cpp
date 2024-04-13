@@ -2,14 +2,14 @@
 
 /* 8-bit load instructions */
 
-CPU::InstructionResult CPU::LD_r_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_r_r::tick()
 {
     *dest = *src;
     ++*registers.PC;
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::LD_r_n::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_r_n::tick()
 {
     if (step++ == 0)
     {
@@ -20,7 +20,7 @@ CPU::InstructionResult CPU::LD_r_n::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::LD_r_absrr::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_r_absrr::tick()
 {
     if (step++ == 0)
     {
@@ -42,7 +42,7 @@ CPU::InstructionResult CPU::LD_r_absrr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::LD_absrr_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_absrr_r::tick()
 {
     if (step++ == 0)
     {
@@ -64,7 +64,7 @@ CPU::InstructionResult CPU::LD_absrr_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::LD_absrr_n::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_absrr_n::tick()
 {
     switch (step++)
     {
@@ -82,7 +82,7 @@ CPU::InstructionResult CPU::LD_absrr_n::tick()
     }
 }
 
-CPU::InstructionResult CPU::LD_r_absnn::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_r_absnn::tick()
 {
     switch (step++)
     {
@@ -103,7 +103,7 @@ CPU::InstructionResult CPU::LD_r_absnn::tick()
     }
 }
 
-CPU::InstructionResult CPU::LD_absnn_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_absnn_r::tick()
 {
     switch (step++)
     {
@@ -124,7 +124,7 @@ CPU::InstructionResult CPU::LD_absnn_r::tick()
     }
 }
 
-CPU::InstructionResult CPU::LD_r_relr::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_r_relr::tick()
 {
     if (step++ == 0)
     {
@@ -137,7 +137,7 @@ CPU::InstructionResult CPU::LD_r_relr::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::LD_relr_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_relr_r::tick()
 {
     if (step++ == 0)
     {
@@ -150,7 +150,7 @@ CPU::InstructionResult CPU::LD_relr_r::tick()
     return InstructionResult::FINISHED;
 }
 
-CPU::InstructionResult CPU::LD_r_reln::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_r_reln::tick()
 {
     switch (step++)
     {
@@ -169,7 +169,7 @@ CPU::InstructionResult CPU::LD_r_reln::tick()
     }
 }
 
-CPU::InstructionResult CPU::LD_reln_r::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_reln_r::tick()
 {
     switch (step++)
     {
@@ -190,7 +190,7 @@ CPU::InstructionResult CPU::LD_reln_r::tick()
 
 /* 16-bit load instructions */
 
-CPU::InstructionResult CPU::LD_rr_nn::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_rr_nn::tick()
 {
     switch (step++)
     {
@@ -212,7 +212,7 @@ CPU::InstructionResult CPU::LD_rr_nn::tick()
     }
 }
 
-CPU::InstructionResult CPU::LD_absnn_rr::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_absnn_rr::tick()
 {
     switch (step++)
     {
@@ -242,7 +242,7 @@ CPU::InstructionResult CPU::LD_absnn_rr::tick()
     }
 }
 
-CPU::InstructionResult CPU::LD_rr_rr::tick()
+GAMEBOY::InstructionResult GAMEBOY::LD_rr_rr::tick()
 {
     switch (step++)
     {
@@ -257,7 +257,7 @@ CPU::InstructionResult CPU::LD_rr_rr::tick()
     }
 }
 
-CPU::InstructionResult CPU::PUSH_rr::tick()
+GAMEBOY::InstructionResult GAMEBOY::PUSH_rr::tick()
 {
     switch (step++)
     {
@@ -283,7 +283,7 @@ CPU::InstructionResult CPU::PUSH_rr::tick()
     }
 }
 
-CPU::InstructionResult CPU::POP_rr::tick()
+GAMEBOY::InstructionResult GAMEBOY::POP_rr::tick()
 {
     switch (step++)
     {
@@ -305,7 +305,7 @@ CPU::InstructionResult CPU::POP_rr::tick()
     }
 }
 
-CPU::InstructionResult CPU::POP_AF::tick()
+GAMEBOY::InstructionResult GAMEBOY::POP_AF::tick()
 {
     switch (step++)
     {

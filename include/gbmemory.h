@@ -11,7 +11,7 @@
 
 // https://gbdev.io/pandocs/Memory_Map.html
 
-namespace MEMORY
+namespace GAMEBOY
 {
     const static uint16_t CART_ROM_LO = 0x0000;
     const static uint16_t CART_ROM_HI = 0x7FFF;
