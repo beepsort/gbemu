@@ -40,10 +40,11 @@ namespace GAMEBOY
      **/
     private:
         CpuRegisters& registers;
+        AddressDispatcher& memory;
         uint8_t step = 0;
     public:
-        STOP(CpuRegisters& registers)
-        : registers(registers) {}
+        STOP(CpuRegisters& registers, AddressDispatcher& memory)
+        : registers(registers), memory(memory) {}
         InstructionResult tick();
     };
 

@@ -45,7 +45,7 @@ GAMEBOY::CpuInstruction* GAMEBOY::decode_opcode(uint8_t opcode, GAMEBOY::CpuRegi
         case 0x0F:
             return new RRA_r(registers, false);
         case 0x10:
-            return new STOP(registers);
+            return new STOP(registers, memory);
         case 0x11:
             return new LD_rr_nn(registers, registers.DE, memory);
         case 0x12:

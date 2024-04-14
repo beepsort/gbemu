@@ -13,7 +13,7 @@ TEST(HALT_test, DoesHalt) {
 
 TEST(STOP_test, DoesStop) {
     CpuInitHelper helper;
-    GAMEBOY::STOP instr(helper.registers);
+    GAMEBOY::STOP instr(helper.registers, helper.addressDispatcher);
     GAMEBOY::InstructionResult result = instr.tick();
     EXPECT_EQ(*helper.registers.PC, 0xC001);
     EXPECT_EQ(result, GAMEBOY::InstructionResult::STOP);
