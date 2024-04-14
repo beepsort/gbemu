@@ -15,6 +15,7 @@ add_library(gameboy
     gbmemory_static.cpp
     rom.cpp
     serial.cpp
+    timer.cpp
     )
 target_include_directories(gameboy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 add_executable(gbemu main.cpp)

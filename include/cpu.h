@@ -6,6 +6,7 @@
 #include "cpu_interrupt.h"
 #include "gbmemory.h"
 #include "rom.h"
+#include "timer.h"
 
 namespace GAMEBOY
 {
@@ -16,6 +17,7 @@ namespace GAMEBOY
         CpuRegisters registers;
         AddressDispatcher addressDispatcher;
         InterruptHandler interruptHandler;
+        Timer timer;
     public:
         Cpu(ROMDATA& rom);
         const CpuRegisters& tick();
