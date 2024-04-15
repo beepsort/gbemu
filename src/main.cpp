@@ -3,9 +3,9 @@
 #include <optional>
 #include <string>
 
-#include "rom.h"
-#include "cpu.h"
-#include "serial.h"
+#include "gameboy/rom.h"
+#include "gameboy/cpu.h"
+#include "gameboy/serial.h"
 
 class SerialPrinter: public GAMEBOY::SerialEventSubscriber
 {

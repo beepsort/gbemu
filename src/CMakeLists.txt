@@ -1,21 +1,21 @@
 cmake_minimum_required(VERSION 3.14)
 add_compile_options(-Wall -Wextra -pedantic)
 add_library(gameboy
-    cpu.cpp
-    cpu_instruction_alu.cpp
-    cpu_instruction_control.cpp
-    cpu_instruction_decode.cpp
-    cpu_instruction_load.cpp
-    cpu_instruction_misc.cpp
-    cpu_interrupt.cpp
-    gbmemory.cpp
-    gbmemory_io.cpp
-    gbmemory_mbc1.cpp
-    gbmemory_mbc3.cpp
-    gbmemory_static.cpp
-    rom.cpp
-    serial.cpp
-    timer.cpp
+    gameboy/cpu.cpp
+    gameboy/cpu_instruction_alu.cpp
+    gameboy/cpu_instruction_control.cpp
+    gameboy/cpu_instruction_decode.cpp
+    gameboy/cpu_instruction_load.cpp
+    gameboy/cpu_instruction_misc.cpp
+    gameboy/cpu_interrupt.cpp
+    gameboy/memory.cpp
+    gameboy/memory_io.cpp
+    gameboy/memory_mbc1.cpp
+    gameboy/memory_mbc3.cpp
+    gameboy/memory_static.cpp
+    gameboy/rom.cpp
+    gameboy/serial.cpp
+    gameboy/timer.cpp
     )
 target_include_directories(gameboy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 add_executable(gbemu main.cpp)
