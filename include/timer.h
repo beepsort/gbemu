@@ -1,24 +1,44 @@
 #ifndef __TIMER_H__
 #define __TIMER_H__
 
+#include <stdint.h>
+
 #include "gbmemory.h"
 
 namespace GAMEBOY
 {
-    // Increments every 64 M-cycles
-    const uint16_t REG_DIV = 0xFF04;
-    const uint16_t REG_TIMA = 0xFF05;
-    const uint16_t REG_TMA = 0xFF06;
-    const uint16_t REG_TAC = 0xFF07;
-
     class Timer
     {
     private:
-        AddressDispatcher& memory;
+        static Timer* instance;
+        // Increments every 64 M-cycles
+        uint8_t registerDIV = 0;
+        uint8_t registerDIVSubTick = 0;
+        uint8_t registerTIMA = 0;
+        uint8_t registerTMA = 0;
+        uint8_t registerTAC = 0;
+        bool timerBitPrevious = false;
+        bool timaOverflow = false;
+        Timer() = default;
+        ~Timer() = default;
     public:
-        Timer(AddressDispatcher& memory)
-        : memory(memory) {}
-        void tick();
+        static Timer& getInstance()
+        {
+            if (!instance) {
+                instance = new Timer();
+            }
+            return *instance;
+        }
+        enum class Register
+        {
+            DIV,
+            TIMA,
+            TMA,
+            TAC
+        };
+        void write(Register target, uint8_t data);
+        uint8_t read(Register target);
+        void tick(AddressDispatcher& memory);
     };
 };
 

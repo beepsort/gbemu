@@ -2,7 +2,7 @@
 #include "cpu_instruction_decode.h"
 
 GAMEBOY::Cpu::Cpu(ROMDATA& rom)
-    : addressDispatcher(rom), timer(addressDispatcher)
+    : addressDispatcher(rom)
 {}
 
 /**
@@ -37,14 +37,14 @@ const GAMEBOY::CpuRegisters& GAMEBOY::Cpu::tick()
         currentInstruction = decode_opcode(opcode, registers, addressDispatcher);
     }
     InstructionResult instruction_result = currentInstruction->tick();
-    if (instruction_result != InstructionResult::STOP)
-    {
-        timer.tick();
-    }
     if (instruction_result == InstructionResult::FINISHED)
     {
         delete currentInstruction;
         currentInstruction = nullptr;
+    }
+    if (instruction_result != InstructionResult::STOP)
+    {
+        Timer::getInstance().tick(addressDispatcher);
     }
     return registers;
 }

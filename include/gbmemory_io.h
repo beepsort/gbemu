@@ -10,16 +10,28 @@ namespace GAMEBOY
     private:
         uint8_t ioRam[0x80];
         /*
+         * 0xFFFF Interrupt Enable
+         * Allows each interrupt category to be enabled or disabled separately
+         * Uses the same bitpattern as the interrupt flag IF
+         */
+        uint8_t IE = 0;
+    public:
+        /*
          * 0xFF01 Serial Transfer Data
          * Data either received or to be sent over the serial port
          */
-        static const uint16_t SERIAL_DATA = 0x01;
+        static const uint16_t SERIAL_DATA = 0xFF01;
         /*
          * 0xFF02 Serial Transfer Control
          * Bit 0: 0 = External Clock (Slave), 1 = Internal Clock (Master)
          * Bit 7: 1 when a transfer is requested, or in progress
          */
-        static const uint16_t SERIAL_CONTROL = 0x02;
+        static const uint16_t SERIAL_CONTROL = 0xFF02;
+        // TODO
+        static const uint16_t TIMER_REG_DIV = 0xFF04;
+        static const uint16_t TIMER_REG_TIMA = 0xFF05;
+        static const uint16_t TIMER_REG_TMA = 0xFF06;
+        static const uint16_t TIMER_REG_TAC = 0xFF07;
         /*
          * 0xFF0F Interrupt Flag
          * Upon triggering an interrupt, the interrupt flag is set
@@ -33,14 +45,7 @@ namespace GAMEBOY
          * 1 LCD
          * 0 VBlank
          */
-        static const uint16_t IF = 0x0F;
-        /*
-         * 0xFFFF Interrupt Enable
-         * Allows each interrupt category to be enabled or disabled separately
-         * Uses the same bitpattern as the interrupt flag IF
-         */
-        uint8_t IE = 0;
-    public:
+        static const uint16_t INTERRUPT_REG_IF = 0xFF0F;
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
     };

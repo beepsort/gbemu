@@ -1,5 +1,5 @@
 #include "cpu_instruction_control.h"
-#include "timer.h"
+#include "gbmemory_io.h"
 
 GAMEBOY::InstructionResult GAMEBOY::HALT::tick()
 {
@@ -37,7 +37,7 @@ GAMEBOY::InstructionResult GAMEBOY::STOP::tick()
     if (step == 0)
     {
         ++*registers.PC;
-        memory.write(GAMEBOY::REG_DIV, 0);
+        memory.write(GAMEBOY::IOHandler::TIMER_REG_DIV, 0);
         step++;
     }
     return InstructionResult::STOP;
