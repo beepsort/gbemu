@@ -73,6 +73,8 @@ namespace GAMEBOY
          * 0 VBlank
          */
         static const uint16_t INTERRUPT_REG_IF = 0xFF0F;
+        // TODO
+        static const uint16_t PPU_REG_LCDC = 0xFF40;
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
     };
