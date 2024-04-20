@@ -34,7 +34,7 @@ _getTileData(
     return tile_data;
 }
 
-void _tileBytesToXY(std::unique_ptr<_TILEBYTES> bytes, uint8_t* pixels)
+void _tileBytesToXY(std::unique_ptr<_TILEBYTES> bytes, std::array<uint8_t, 8*8>& pixels)
 {
     uint8_t hi_byte;
     uint8_t lo_byte;
