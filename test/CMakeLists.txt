@@ -7,7 +7,7 @@ add_executable(gbemu_test
     gameboy/cpu_instruction_control_test.cpp
     gameboy/cpu_instruction_misc_test.cpp
     gameboy/cpu_interrupt_test.cpp
-    gameboy/ppu_test.cpp
+    gameboy/ppu_tile_test.cpp
     )
 find_package(GTest REQUIRED)
 target_include_directories(gbemu_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
