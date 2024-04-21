@@ -50,9 +50,9 @@ void _tileBytesToXY(uint8_t* in_begin, uint8_t* in_end, uint8_t* out_begin, uint
         lo_byte = *in_it;
         for (size_t pix_col = 0; pix_col<8; pix_col++)
         {
-            uint8_t pix_mask = 0x01 << pix_col;
-            uint8_t hi_bit = hi_byte & pix_mask ? 0x02 : 0x01;
-            uint8_t lo_bit = lo_byte & pix_mask ? 0x02 : 0x01;
+            uint8_t pix_mask = 0x80 >> pix_col;
+            uint8_t hi_bit = hi_byte & pix_mask ? 0x02 : 0x00;
+            uint8_t lo_bit = lo_byte & pix_mask ? 0x01 : 0x00;
             if (out_it != out_end)
             {
                 *(out_it++) = hi_bit | lo_bit;
@@ -149,7 +149,6 @@ std::shared_ptr<GAMEBOY::LINE_PIXELS> GAMEBOY::PPU_Tilemap::render_line(GAMEBOY:
     {
         uint8_t map_tile_x = (map_x+i) / 8;
         uint8_t tile_index = memory.read(map_start + map_tile_y*32 + map_tile_x);
-        printf("map_start:%X (x,y):(%d,%d) map_tile(x,y):(%d,%d) map_addr:%X tile_index:%X\n",map_start,map_x+i,map_y,map_tile_x,map_tile_y,map_start+map_tile_y*32+map_tile_x,tile_index);
         auto tile = tilecache.get(tile_index);
         uint8_t tile_x = (map_x+i) % 8;
         // copy data from tile for current pixel
