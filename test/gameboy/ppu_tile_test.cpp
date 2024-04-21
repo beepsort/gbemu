@@ -36,25 +36,37 @@ TEST(PPU_Tilemap_test, Debug) {
     }
     printf("\n");
 }
-//TEST(PPU_getTileData_test, AllUnsigned) {
-//    for (uint16_t testing_tile_num = 0; testing_tile_num<=0xFF; testing_tile_num++)
-//    {
-//        CpuInitHelper helper;
-//        // set bit 4 to operate in unsigned 0x8000 base mode
-//        helper.addressDispatcher.write(GAMEBOY::IOHandler::PPU_REG_LCDC, 0x10);
-//        uint16_t tile_start = GAMEBOY::VRAM_LO + testing_tile_num * 16;
-//        for (int i=0; i<16; i++)
-//        {
-//            helper.addressDispatcher.write(tile_start+i, 0x55);
-//        }
-//        GAMEBOY::PPU_Tile tile(helper.addressDispatcher, testing_tile_num);
-//        for (int i=0; i<16; i++)
-//        {
-//            EXPECT_EQ((*tile_data)[i], 0x55);
-//        }
-//    }
-//}
-//
+
+TEST(PPU_Tile_test, AllUnsigned) {
+    CpuInitHelper helper;
+    // set bit 7 to enable PPU
+    // set bit 4 to operate in unsigned 0x8000 base mode
+    // unset bit 3 to map BG from 0x9800
+    // set bit 0 to enable BG
+    helper.addressDispatcher.write(GAMEBOY::IOHandler::PPU_REG_LCDC, 0x91);
+    // init tile 0
+    uint16_t tile_start = GAMEBOY::VRAM_LO;
+    bool lo = true;
+    for (int i=0; i<16; i++)
+    {
+        if (lo)
+        {
+
+            helper.addressDispatcher.write(tile_start+i, 0x33);
+        }
+        else
+        {
+            helper.addressDispatcher.write(tile_start+i, 0x55);
+        }
+        lo = !lo;
+    }
+    GAMEBOY::PPU_Tile tile(helper.addressDispatcher, 0);
+    for (size_t i=0; i<8; i++)
+    {
+        ASSERT_EQ(tile.get_pixel(i, 0), i%4);
+    }
+}
+
 //TEST(PPU_getTileData_test, PositiveSigned) {
 //    for (uint16_t testing_tile_num = 0; testing_tile_num<=0x7F; testing_tile_num++)
 //    {
