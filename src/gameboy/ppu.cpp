@@ -1,12 +1,19 @@
 #include "gameboy/ppu.h"
 #include <stdexcept>
 
+GAMEBOY::PPU::PPU(AddressDispatcher& memory)
+: memory(memory)
+{
+    transition(m_PPU_STATE::MODE2);
+}
+
 void GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
 {
     switch (new_mode)
     {
         case m_PPU_STATE::MODE0:
-            // unlock vram/oam
+            memory.unlock(AddressDispatcher::LOCKABLE::OAM);
+            memory.unlock(AddressDispatcher::LOCKABLE::VRAM);
             // trigger stat interrupt if mode0 stat on
             break;
         case m_PPU_STATE::MODE1:
@@ -14,12 +21,12 @@ void GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
             // trigger vblank interrupt
             break;
         case m_PPU_STATE::MODE2:
-            // lock oam
+            memory.lock(AddressDispatcher::LOCKABLE::OAM);
             // trigger stat interrupt if mode2 stat on
             break;
         case m_PPU_STATE::MODE3:
+            memory.lock(AddressDispatcher::LOCKABLE::VRAM);
             // draw line
-            // lock vram
             break;
         default:
             throw std::invalid_argument("Non-existent PPU mode supplied");

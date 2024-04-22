@@ -45,7 +45,7 @@ GAMEBOY::CartMapper* GAMEBOY::CartMapper::create_mapper(ROMDATA& rom)
     }
 }
 
-uint8_t GAMEBOY::AddressDispatcher::read(uint16_t addr)
+uint8_t GAMEBOY::AddressDispatcher::read(uint16_t addr, bool dma)
 {
     if (addr >= CART_ROM_LO && addr <= CART_ROM_HI)
     {
@@ -53,7 +53,10 @@ uint8_t GAMEBOY::AddressDispatcher::read(uint16_t addr)
     }
     else if (addr >= VRAM_LO && addr <= VRAM_HI)
     {
-        // TODO: Check VRAM memory behaviour
+        if (vramLocked && !dma)
+        {
+            return 0xFF; // return garbage
+        }
         return videoRam[addr - VRAM_LO];
     }
     else if (addr >= CART_RAM_LO && addr <= CART_RAM_HI)
@@ -66,8 +69,11 @@ uint8_t GAMEBOY::AddressDispatcher::read(uint16_t addr)
     }
     else if (addr >= OAM_LO && addr <= OAM_HI)
     {
-        // TODO: Check OAM behaviour
-        return 0x00;
+        if (oamLocked && !dma)
+        {
+            return 0xFF; // return garbage
+        }
+        return oam[addr - OAM_LO];
     }
     else if (addr >= IO_REG_LO && addr <= IO_REG_HI)
     {
@@ -84,7 +90,7 @@ uint8_t GAMEBOY::AddressDispatcher::read(uint16_t addr)
     return 0x00;
 }
 
-void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data)
+void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data, bool dma)
 {
     if (addr >= CART_ROM_LO && addr <= CART_ROM_HI)
     {
@@ -92,7 +98,10 @@ void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data)
     }
     else if (addr >= VRAM_LO && addr <= VRAM_HI)
     {
-        // TODO: Check VRAM memory behaviour
+        if (vramLocked && !dma)
+        {
+            return; // ignore write
+        }
         videoRam[addr - VRAM_LO] = data;
     }
     else if (addr >= CART_RAM_LO && addr <= CART_RAM_HI)
@@ -105,8 +114,11 @@ void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data)
     }
     else if (addr >= OAM_LO && addr <= OAM_HI)
     {
-        // TODO: Check OAM behaviour
-        // do nothing
+        if (oamLocked && !dma)
+        {
+            return; // ignore write
+        }
+        oam[addr - OAM_LO] = data;
     }
     else if (addr >= IO_REG_LO && addr <= IO_REG_HI)
     {
@@ -125,4 +137,34 @@ void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data)
 GAMEBOY::AddressDispatcher::AddressDispatcher(ROMDATA& rom)
 {
     cartMapper = CartMapper::create_mapper(rom);
+}
+
+void GAMEBOY::AddressDispatcher::lock(GAMEBOY::AddressDispatcher::LOCKABLE target)
+{
+    switch (target)
+    {
+        case LOCKABLE::VRAM:
+            vramLocked = true;
+            return;
+        case LOCKABLE::OAM:
+            oamLocked = true;
+            return;
+        default:
+            return;
+    }
+}
+
+void GAMEBOY::AddressDispatcher::unlock(GAMEBOY::AddressDispatcher::LOCKABLE target)
+{
+    switch (target)
+    {
+        case LOCKABLE::VRAM:
+            vramLocked = false;
+            return;
+        case LOCKABLE::OAM:
+            oamLocked = false;
+            return;
+        default:
+            return;
+    }
 }

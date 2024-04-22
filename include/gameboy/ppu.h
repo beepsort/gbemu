@@ -32,8 +32,7 @@ namespace GAMEBOY
         int m_dot_y = 0;
         void transition(m_PPU_STATE new_mode);
     public:
-        PPU(AddressDispatcher& memory)
-        : memory(memory) {}
+        PPU(AddressDispatcher& memory);
         void tick();
         uint8_t mode_no();
     };

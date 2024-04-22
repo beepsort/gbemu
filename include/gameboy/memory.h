@@ -45,11 +45,21 @@ namespace GAMEBOY
         IOHandler ioHandler;
         std::array<uint8_t, 0x2000> videoRam;
         std::array<uint8_t, 0x2000> workRam;
+        std::array<uint8_t, 0xA0> oam;
         std::array<uint8_t, 0x7F> highRam;
+        bool vramLocked = false;
+        bool oamLocked = false;
     public:
         AddressDispatcher(ROMDATA& rom);
-        uint8_t read(uint16_t addr);
-        void write(uint16_t addr, uint8_t data);
+        uint8_t read(uint16_t addr, bool dma=false);
+        void write(uint16_t addr, uint8_t data, bool dma=false);
+        enum class LOCKABLE
+        {
+            VRAM,
+            OAM
+        };
+        void lock(LOCKABLE target);
+        void unlock(LOCKABLE target);
     };
 };
 
