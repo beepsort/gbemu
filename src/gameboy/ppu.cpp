@@ -86,6 +86,8 @@ void GAMEBOY::PPU::tick()
             throw std::invalid_argument("Non-existent PPU mode enabled, possible memory corruption");
     }
     m_stat_line_update();
+    memory.write(IOHandler::PPU_REG_LY, m_dot_y, true);
+    memory.write(IOHandler::PPU_REG_STAT, stat(), true);
 }
 
 uint8_t GAMEBOY::PPU::mode_no()
@@ -105,25 +107,15 @@ uint8_t GAMEBOY::PPU::mode_no()
     }
 }
 
-
 uint8_t GAMEBOY::PPU::stat()
 {
     uint8_t output_register = mode_no();
     bool lyc_eq_ly = m_dot_y == memory.read(IOHandler::PPU_REG_LYC);
     output_register |= lyc_eq_ly ? 0x04 : 0x00;
-    output_register |= m_int_sel_mode0 ? 0x08 : 0x00;
-    output_register |= m_int_sel_mode1 ? 0x10 : 0x00;
-    output_register |= m_int_sel_mode2 ? 0x20 : 0x00;
-    output_register |= m_int_sel_lyc ? 0x40 : 0x00;
+    // keep user writable bits 6-3
+    uint8_t stat_mem = memory.read(IOHandler::PPU_REG_STAT) & 0x78;
+    output_register |= stat_mem;
     return output_register;
-}
-
-void GAMEBOY::PPU::stat(uint8_t value)
-{
-    m_int_sel_mode0 = value & 0x08;
-    m_int_sel_mode1 = value & 0x10;
-    m_int_sel_mode2 = value & 0x20;
-    m_int_sel_lyc = value & 0x40;
 }
 
 void GAMEBOY::PPU::m_stat_line_update()

@@ -4,7 +4,7 @@
 #include <string>
 
 #include "gameboy/rom.h"
-#include "gameboy/cpu.h"
+#include "gameboy/gameboy.h"
 #include "gameboy/serial.h"
 
 class SerialPrinter: public GAMEBOY::SerialEventSubscriber
@@ -49,8 +49,7 @@ int main(int argc, char** argv)
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Loaded: %s\n", title.c_str());
     auto& serialSupervisor = GAMEBOY::SerialEventSupervisor::getInstance();
     serialSupervisor.subscribe(GAMEBOY::SerialEventType::SERIAL_OUT, new SerialPrinter());
-    GAMEBOY::Cpu gameboy(rom);
-    gameboy.report();
+    GAMEBOY::Gameboy gameboy(rom);
     SDL_Event event;
     bool quit = false;
     while (!quit)
@@ -64,7 +63,6 @@ int main(int argc, char** argv)
         }
 
         gameboy.tick();
-        gameboy.report();
     }
     SDL_Quit();
     return 0;

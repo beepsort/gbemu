@@ -15,12 +15,12 @@ namespace GAMEBOY
     private:
         CpuInstruction* currentInstruction = nullptr;
         CpuRegisters registers;
-        AddressDispatcher addressDispatcher;
+        AddressDispatcher& memory;
         InterruptHandler interruptHandler;
     public:
-        Cpu(ROMDATA& rom);
+        Cpu(AddressDispatcher& memory)
+        : memory(memory) {}
         const CpuRegisters& tick();
-        void report();
     };
 };
 

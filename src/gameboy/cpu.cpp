@@ -1,10 +1,6 @@
 #include "gameboy/cpu.h"
 #include "gameboy/cpu_instruction_decode.h"
 
-GAMEBOY::Cpu::Cpu(ROMDATA& rom)
-    : addressDispatcher(rom)
-{}
-
 /**
  * @brief Advance 1 M-Cycle
  * M-cycles are short for memory cycle and are how long it takes
@@ -15,26 +11,26 @@ const GAMEBOY::CpuRegisters& GAMEBOY::Cpu::tick()
 {
     if (currentInstruction == nullptr &&
         registers.IME &&
-        interruptHandler.isQueued(addressDispatcher))
+        interruptHandler.isQueued(memory))
     {
-        auto interruptType = interruptHandler.pop(addressDispatcher);
+        auto interruptType = interruptHandler.pop(memory);
         uint8_t interruptTypeMask = (uint8_t)interruptType;
-        uint8_t enabledTypes = addressDispatcher.read(INTERRUPT_ENABLE);
+        uint8_t enabledTypes = memory.read(INTERRUPT_ENABLE);
         if (interruptTypeMask & enabledTypes)
         {
             currentInstruction =
                 new InterruptHandler::ServiceRoutine(
                     registers,
-                    addressDispatcher,
+                    memory,
                     interruptType
                 );
         }
     }
     if (currentInstruction == nullptr)
     {
-        uint8_t opcode = addressDispatcher.read(*registers.PC);
+        uint8_t opcode = memory.read(*registers.PC);
         SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "opcode: %02X\n", opcode);
-        currentInstruction = decode_opcode(opcode, registers, addressDispatcher);
+        currentInstruction = decode_opcode(opcode, registers, memory);
     }
     InstructionResult instruction_result = currentInstruction->tick();
     if (instruction_result == InstructionResult::FINISHED)
@@ -44,12 +40,8 @@ const GAMEBOY::CpuRegisters& GAMEBOY::Cpu::tick()
     }
     if (instruction_result != InstructionResult::STOP)
     {
-        Timer::getInstance().tick(addressDispatcher);
+        Timer::getInstance().tick(memory);
     }
     return registers;
 }
 
-void GAMEBOY::Cpu::report()
-{
-    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "PC: %04X\n", *registers.PC);
-}
