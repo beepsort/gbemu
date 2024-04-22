@@ -109,8 +109,7 @@ bg_color_id_to_shade(
         GAMEBOY::AddressDispatcher& memory,
         uint8_t pix_color_id)
 {
-    const uint16_t BGP_REGISTER = 0xFF47;
-    uint8_t bg_palette = memory.read(BGP_REGISTER);
+    uint8_t bg_palette = memory.read(GAMEBOY::IOHandler::PPU_REG_BGP);
     switch (pix_color_id)
     {
         case 0:

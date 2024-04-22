@@ -73,8 +73,42 @@ namespace GAMEBOY
          * 0 VBlank
          */
         static const uint16_t INTERRUPT_REG_IF = 0xFF0F;
-        // TODO
+        /*
+         * 0xFF40 LCDC/LCD Control
+         * LCDC controls what is displayed on the screen and how
+         * Bits
+         * 7: LCD & PPU enable (0:OFF, 1:ON)
+         * 6: Window tile map area (0:9800-9BFF, 1:9C00-9FFF)
+         * 5: Window enable (0:OFF, 1:ON)
+         * 4: BG & Window tile data area (0:8800-97FF, 1:8000-8FFF)
+         * 3: BG tile map area (0:9800-9BFF, 1:9C00-9FFF)
+         * 2: OBJ size (0:8x8, 1:8x16)
+         * 1: OBJ enable (0:OFF, 1:ON)
+         * 0: BG & Window enable (0:OFF, 1:ON)
+         */
         static const uint16_t PPU_REG_LCDC = 0xFF40;
+        /*
+         * 0xFF47 BGP/BG palette
+         * BGP assigns gray shades to color IDs for BG & window tiles
+         * Bits
+         * 7-6: Shade for ID 3
+         * 5-4: Shade for ID 2
+         * 3-2: Shade for ID 1
+         * 1-0: Shade for ID 0
+         * The two bit shade values become
+         * 00: White
+         * 01: Light gray
+         * 10: Dark gray
+         * 11: Black
+         */
+        static const uint16_t PPU_REG_BGP = 0xFF47;
+        /*
+         * 0xFF48-0xFF49 OBP0 & OBP1
+         * OBP work the same as BGP, except bits 1&0 are ignored
+         * as color ID 0 is treated as transparent for sprites/OBJS
+         */
+        static const uint16_t PPU_REG_OBP0 = 0xFF48;
+        static const uint16_t PPU_REG_OBP1 = 0xFF49;
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
     };
