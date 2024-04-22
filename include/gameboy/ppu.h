@@ -30,11 +30,21 @@ namespace GAMEBOY
         m_PPU_STATE m_state = m_PPU_STATE::MODE2;
         int m_dot_x = 0;
         int m_dot_y = 0;
+        bool m_int_sel_lyc = false;
+        bool m_int_sel_mode2 = false;
+        bool m_int_sel_mode1 = false;
+        bool m_int_sel_mode0 = false;
+        // Stores the current status of all enabled STAT interrupt sources
+        bool m_stat_line = false;
+        // Updates & then returns true on rising edge of STAT interrupt line
+        void m_stat_line_update();
         void transition(m_PPU_STATE new_mode);
     public:
         PPU(AddressDispatcher& memory);
         void tick();
         uint8_t mode_no();
+        uint8_t stat();
+        void stat(uint8_t value);
     };
 };
 

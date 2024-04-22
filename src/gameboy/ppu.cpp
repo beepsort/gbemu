@@ -1,4 +1,5 @@
 #include "gameboy/ppu.h"
+#include "gameboy/cpu_interrupt.h"
 #include <stdexcept>
 
 GAMEBOY::PPU::PPU(AddressDispatcher& memory)
@@ -12,18 +13,24 @@ void GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
     switch (new_mode)
     {
         case m_PPU_STATE::MODE0:
+        {
             memory.unlock(AddressDispatcher::LOCKABLE::OAM);
             memory.unlock(AddressDispatcher::LOCKABLE::VRAM);
-            // trigger stat interrupt if mode0 stat on
             break;
+        }
         case m_PPU_STATE::MODE1:
-            // trigger stat interrupt if mode1 stat on
+        {
             // trigger vblank interrupt
+            uint8_t interrupts = memory.read(INTERRUPT_FLAG);
+            interrupts |= (uint8_t)InterruptType::VBLANK;
+            memory.write(INTERRUPT_FLAG, interrupts);
             break;
+        }
         case m_PPU_STATE::MODE2:
+        {
             memory.lock(AddressDispatcher::LOCKABLE::OAM);
-            // trigger stat interrupt if mode2 stat on
             break;
+        }
         case m_PPU_STATE::MODE3:
             memory.lock(AddressDispatcher::LOCKABLE::VRAM);
             // draw line
@@ -78,6 +85,7 @@ void GAMEBOY::PPU::tick()
         default:
             throw std::invalid_argument("Non-existent PPU mode enabled, possible memory corruption");
     }
+    m_stat_line_update();
 }
 
 uint8_t GAMEBOY::PPU::mode_no()
@@ -94,5 +102,58 @@ uint8_t GAMEBOY::PPU::mode_no()
             return 3;
         default:
             throw std::invalid_argument("Non-existent PPU mode enabled, possible memory corruption");
+    }
+}
+
+
+uint8_t GAMEBOY::PPU::stat()
+{
+    uint8_t output_register = mode_no();
+    bool lyc_eq_ly = m_dot_y == memory.read(IOHandler::PPU_REG_LYC);
+    output_register |= lyc_eq_ly ? 0x04 : 0x00;
+    output_register |= m_int_sel_mode0 ? 0x08 : 0x00;
+    output_register |= m_int_sel_mode1 ? 0x10 : 0x00;
+    output_register |= m_int_sel_mode2 ? 0x20 : 0x00;
+    output_register |= m_int_sel_lyc ? 0x40 : 0x00;
+    return output_register;
+}
+
+void GAMEBOY::PPU::stat(uint8_t value)
+{
+    m_int_sel_mode0 = value & 0x08;
+    m_int_sel_mode1 = value & 0x10;
+    m_int_sel_mode2 = value & 0x20;
+    m_int_sel_lyc = value & 0x40;
+}
+
+void GAMEBOY::PPU::m_stat_line_update()
+{
+    bool new_stat_line = false;
+    uint8_t stat_reg = stat();
+    uint8_t mode = mode_no();
+    uint8_t lyc = memory.read(IOHandler::PPU_REG_LYC);
+    if (stat_reg & 0x04 && m_dot_y == lyc)
+    {
+        new_stat_line = true;
+    }
+    else if (stat_reg & 0x08 && mode == 0)
+    {
+        new_stat_line = true;
+    }
+    else if (stat_reg & 0x10 && mode == 1)
+    {
+        new_stat_line = true;
+    }
+    else if (stat_reg & 0x20 && mode == 2)
+    {
+        new_stat_line = true;
+    }
+    if (!m_stat_line && new_stat_line)
+    {
+        m_stat_line = new_stat_line;
+        // trigger interrupt
+        uint8_t interrupts = memory.read(INTERRUPT_FLAG);
+        interrupts |= (uint8_t)InterruptType::LCD;
+        memory.write(INTERRUPT_FLAG, interrupts);
     }
 }

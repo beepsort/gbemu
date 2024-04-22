@@ -88,6 +88,36 @@ namespace GAMEBOY
          */
         static const uint16_t PPU_REG_LCDC = 0xFF40;
         /*
+         * 0xFF41 STAT/LCD Status
+         * STAT register is used for setting PPU line drawning behaviour
+         * As well as providing information about the state of the PPU
+         * Note that multiple interrupt triggers can be selected, but
+         * interrupts only trigger on the rising edge of the combined status
+         * of all enabled interrupt sources
+         * Bits:
+         * 7: Unused
+         * 6: LYC interrupt select (0:OFF, 1:ON)
+         * 5: Mode 2 interrupt select (0:OFF, 1:ON)
+         * 4: Mode 1 interrupt select (0:OFF, 1:ON)
+         * 3: Mode 0 interrupt select (0:OFF, 1:ON)
+         * 2: LYC == LY Read-only, set by PPU (0:NEQ, 1:EQ)
+         * 1-0: PPU mode Read-only, set by PPU (0-3)
+         */
+        static const uint16_t PPU_REG_STAT = 0xFF41;
+        /*
+         * 0xFF44 LY/LCD Y
+         * Read only register which stores the current line being drawn
+         * Can hold any value from 0 to 153, where 144 to 153 indicate VBlank
+         */
+        static const uint16_t PPU_REG_LY = 0xFF44;
+        /*
+         * 0xFF45 LYC/LCD Y compare
+         * The LYC and LY registers are continuously compared, when the
+         * values are identical the LYC==LY bit of the STAT register is
+         * set and if enabled, a STAT interrupt requested
+         */
+        static const uint16_t PPU_REG_LYC = 0xFF45;
+        /*
          * 0xFF47 BGP/BG palette
          * BGP assigns gray shades to color IDs for BG & window tiles
          * Bits
