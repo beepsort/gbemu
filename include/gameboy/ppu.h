@@ -15,10 +15,11 @@ namespace GAMEBOY
         // note: extra ppu behaviour can delay mode 3
         // this is a later low priority TODO
         const int m_MODE0_LEN = 204;
-        const int m_MODE1_LEN = 4560;
         const int m_MODE2_LEN = 80;
         const int m_MODE3_LEN = 172;
         const int m_LINE_LEN = 456;
+        const int m_DRAW_LINES = 144;
+        const int m_FRAME_LINES = 154;
         enum class m_PPU_STATE
         {
             MODE0,

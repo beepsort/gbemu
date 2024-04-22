@@ -35,7 +35,7 @@ void GAMEBOY::PPU::tick()
             if (++m_dot_x == m_LINE_LEN)
             {
                 m_dot_x = 0;
-                if (++m_dot_y == 144)
+                if (++m_dot_y == m_DRAW_LINES)
                 {
                     transition(m_PPU_STATE::MODE1);
                 }
@@ -49,7 +49,7 @@ void GAMEBOY::PPU::tick()
             if (++m_dot_x == m_LINE_LEN)
             {
                 m_dot_x = 0;
-                if (++m_dot_y == 154)
+                if (++m_dot_y == m_FRAME_LINES)
                 {
                     m_dot_y = 0;
                     transition(m_PPU_STATE::MODE2);
