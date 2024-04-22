@@ -8,8 +8,6 @@
 
 namespace GAMEBOY
 {
-    typedef std::array<uint8_t, 160> LINE_PIXELS;
-
     class PPU_Tile
     {
     private:
@@ -54,6 +52,8 @@ namespace GAMEBOY
         void clear();
         std::shared_ptr<PPU_Tile> get(uint8_t index);
     };
+
+    typedef std::array<uint8_t, 160> LINE_PIXELS;
 
     class PPU_Tilemap
     {
