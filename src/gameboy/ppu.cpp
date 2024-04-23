@@ -32,9 +32,20 @@ void GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
             break;
         }
         case m_PPU_STATE::MODE3:
+        {
             memory.lock(AddressDispatcher::LOCKABLE::VRAM);
             // draw line
+            // background
+            uint8_t scy = memory.read(IOHandler::PPU_REG_SCY);
+            uint8_t scx = memory.read(IOHandler::PPU_REG_SCX);
+            uint8_t lcdc = memory.read(IOHandler::PPU_REG_LCDC);
+            // bit 3 low = MAP0, high = MAP1
+            auto map = lcdc & 0x08 ? PPU_Tilemap::MAP_SELECT::MAP1 : PPU_Tilemap::MAP_SELECT::MAP0;
+            tilemap.render_line(map, scx, scy, m_dot_y);
+            // window
+            // sprites
             break;
+        }
         default:
             throw std::invalid_argument("Non-existent PPU mode supplied");
     }

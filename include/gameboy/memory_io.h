@@ -106,6 +106,14 @@ namespace GAMEBOY
          */
         static const uint16_t PPU_REG_STAT = 0xFF41;
         /*
+         * 0xFF42 & 0xFF43 BG Scroll Registers
+         * Controls the position of the background viewport
+         * X,Y positions specify the top left corner of the
+         * 160x144px viewport over the 256x256px BG tilemap
+         */
+        static const uint16_t PPU_REG_SCY = 0xFF42;
+        static const uint16_t PPU_REG_SCX = 0xFF43;
+        /*
          * 0xFF44 LY/LCD Y
          * Read only register which stores the current line being drawn
          * Can hold any value from 0 to 153, where 144 to 153 indicate VBlank
