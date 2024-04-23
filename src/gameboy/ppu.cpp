@@ -2,14 +2,15 @@
 #include "gameboy/cpu_interrupt.h"
 #include <stdexcept>
 
-GAMEBOY::PPU::PPU(AddressDispatcher& memory)
-: memory(memory), tilemap(memory)
+GAMEBOY::PPU::PPU(AddressDispatcher& memory, std::shared_ptr<std::array<uint8_t, 160>> line_buffer)
+: memory(memory), tilemap(memory), m_line_buffer(line_buffer)
 {
     transition(m_PPU_STATE::MODE2);
 }
 
-void GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
+bool GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
 {
+    bool drawn_to_buffer = false;
     switch (new_mode)
     {
         case m_PPU_STATE::MODE0:
@@ -41,19 +42,22 @@ void GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
             uint8_t lcdc = memory.read(IOHandler::PPU_REG_LCDC);
             // bit 3 low = MAP0, high = MAP1
             auto map = lcdc & 0x08 ? PPU_Tilemap::MAP_SELECT::MAP1 : PPU_Tilemap::MAP_SELECT::MAP0;
-            tilemap.render_line(map, scx, scy, m_dot_y);
+            auto bg = tilemap.render_line(map, scx, scy, m_dot_y);
             // window
             // sprites
+            drawn_to_buffer = true;
             break;
         }
         default:
             throw std::invalid_argument("Non-existent PPU mode supplied");
     }
     m_state = new_mode;
+    return drawn_to_buffer;
 }
 
-void GAMEBOY::PPU::tick()
+bool GAMEBOY::PPU::tick()
 {
+    bool drawn_to_buffer = false;
     switch (m_state)
     {
         case m_PPU_STATE::MODE0:
@@ -84,7 +88,7 @@ void GAMEBOY::PPU::tick()
         case m_PPU_STATE::MODE2:
             if (++m_dot_x == m_MODE2_LEN)
             {
-                transition(m_PPU_STATE::MODE3);
+                drawn_to_buffer = transition(m_PPU_STATE::MODE3);
             }
             break;
         case m_PPU_STATE::MODE3:
@@ -99,6 +103,7 @@ void GAMEBOY::PPU::tick()
     m_stat_line_update();
     memory.write(IOHandler::PPU_REG_LY, m_dot_y, MemoryAccessSource::PPU);
     memory.write(IOHandler::PPU_REG_STAT, stat(), MemoryAccessSource::PPU);
+    return drawn_to_buffer;
 }
 
 uint8_t GAMEBOY::PPU::mode_no()

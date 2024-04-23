@@ -49,7 +49,8 @@ int main(int argc, char** argv)
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Loaded: %s\n", title.c_str());
     auto& serialSupervisor = GAMEBOY::SerialEventSupervisor::getInstance();
     serialSupervisor.subscribe(GAMEBOY::SerialEventType::SERIAL_OUT, new SerialPrinter());
-    GAMEBOY::Gameboy gameboy(rom);
+    auto line_buffer = std::make_shared<std::array<uint8_t, 160>>();
+    GAMEBOY::Gameboy gameboy(rom, line_buffer);
     SDL_Event event;
     bool quit = false;
     while (!quit)

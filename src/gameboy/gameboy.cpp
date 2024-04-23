@@ -1,10 +1,15 @@
 #include "gameboy/gameboy.h"
 
-void GAMEBOY::Gameboy::tick()
+bool GAMEBOY::Gameboy::tick()
 {
+    bool drawn_to_buffer = false;
     cpu.tick();
     for (uint8_t i=0; i<4; i++)
     {
-        ppu.tick();
+        if (ppu.tick())
+        {
+            drawn_to_buffer = true;
+        }
     }
+    return drawn_to_buffer;
 }

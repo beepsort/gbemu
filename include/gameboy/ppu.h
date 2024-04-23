@@ -12,6 +12,7 @@ namespace GAMEBOY
     private:
         AddressDispatcher& memory;
         PPU_Tilemap tilemap;
+        std::shared_ptr<std::array<uint8_t, 160>> m_line_buffer;
         // define mode lengths in terms of dots
         // note: extra ppu behaviour can delay mode 3
         // this is a later low priority TODO
@@ -39,10 +40,10 @@ namespace GAMEBOY
         bool m_stat_line = false;
         // Updates & then returns true on rising edge of STAT interrupt line
         void m_stat_line_update();
-        void transition(m_PPU_STATE new_mode);
+        bool transition(m_PPU_STATE new_mode);
     public:
-        PPU(AddressDispatcher& memory);
-        void tick();
+        PPU(AddressDispatcher& memory, std::shared_ptr<std::array<uint8_t, 160>> line_buffer);
+        bool tick();
         uint8_t mode_no();
         uint8_t stat();
         void stat(uint8_t value);
