@@ -29,6 +29,12 @@ namespace GAMEBOY
     const static uint16_t HRAM_LO = 0xFF80;
     const static uint16_t HRAM_HI = 0xFFFE;
     const static uint16_t INTERRUPT_ENABLE = 0xFFFF;
+    
+    enum class MemoryAccessSource
+    {
+        CPU,
+        PPU
+    };
 
     class CartMapper
     {
@@ -51,8 +57,8 @@ namespace GAMEBOY
         bool oamLocked = false;
     public:
         AddressDispatcher(ROMDATA& rom);
-        uint8_t read(uint16_t addr, bool dma=false);
-        void write(uint16_t addr, uint8_t data, bool dma=false);
+        uint8_t read(uint16_t addr, MemoryAccessSource src=MemoryAccessSource::CPU);
+        void write(uint16_t addr, uint8_t data, MemoryAccessSource src=MemoryAccessSource::CPU);
         enum class LOCKABLE
         {
             VRAM,

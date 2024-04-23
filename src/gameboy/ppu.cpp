@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 GAMEBOY::PPU::PPU(AddressDispatcher& memory)
-: memory(memory)
+: memory(memory), tilemap(memory)
 {
     transition(m_PPU_STATE::MODE2);
 }
@@ -86,8 +86,8 @@ void GAMEBOY::PPU::tick()
             throw std::invalid_argument("Non-existent PPU mode enabled, possible memory corruption");
     }
     m_stat_line_update();
-    memory.write(IOHandler::PPU_REG_LY, m_dot_y, true);
-    memory.write(IOHandler::PPU_REG_STAT, stat(), true);
+    memory.write(IOHandler::PPU_REG_LY, m_dot_y, MemoryAccessSource::PPU);
+    memory.write(IOHandler::PPU_REG_STAT, stat(), MemoryAccessSource::PPU);
 }
 
 uint8_t GAMEBOY::PPU::mode_no()

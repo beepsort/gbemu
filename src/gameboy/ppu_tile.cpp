@@ -19,7 +19,7 @@ _getTileData(
         uint16_t data_start_addr = base_addr + static_cast<uint16_t>(index)*16;
         for (size_t i=0; i<16; i++)
         {
-            uint8_t i_data = memory.read(data_start_addr + i, true);
+            uint8_t i_data = memory.read(data_start_addr + i, GAMEBOY::MemoryAccessSource::PPU);
             (*tile_data)[i] = i_data;
         }
     }
@@ -30,7 +30,7 @@ _getTileData(
         uint16_t data_start_addr = base_addr + static_cast<int16_t>(index_signed)*16;
         for (size_t i=0; i<16; i++)
         {
-            uint8_t i_data = memory.read(data_start_addr + i, true);
+            uint8_t i_data = memory.read(data_start_addr + i, GAMEBOY::MemoryAccessSource::PPU);
             (*tile_data)[i] = i_data;
         }
     }
@@ -65,7 +65,7 @@ GAMEBOY::PPU_Tile::PPU_Tile(
         GAMEBOY::AddressDispatcher& memory,
         uint8_t index)
 {
-    uint8_t lcdc_register = memory.read(GAMEBOY::IOHandler::PPU_REG_LCDC, true);
+    uint8_t lcdc_register = memory.read(GAMEBOY::IOHandler::PPU_REG_LCDC, MemoryAccessSource::PPU);
     bool unsigned_mode = lcdc_register & 0x10;
     auto tile_bytes = _getTileData(memory, index, unsigned_mode);
     _tileBytesToXY(tile_bytes->begin(), tile_bytes->end(), m_tile_data.begin(), m_tile_data.end());
@@ -109,7 +109,7 @@ bg_color_id_to_shade(
         GAMEBOY::AddressDispatcher& memory,
         uint8_t pix_color_id)
 {
-    uint8_t bg_palette = memory.read(GAMEBOY::IOHandler::PPU_REG_BGP, true);
+    uint8_t bg_palette = memory.read(GAMEBOY::IOHandler::PPU_REG_BGP, GAMEBOY::MemoryAccessSource::PPU);
     switch (pix_color_id)
     {
         case 0:
@@ -147,7 +147,7 @@ std::shared_ptr<GAMEBOY::LINE_PIXELS> GAMEBOY::PPU_Tilemap::render_line(GAMEBOY:
     for (uint8_t i = 0; i < SCREEN_SIZE_X; i++)
     {
         uint8_t map_tile_x = (map_x+i) / 8;
-        uint8_t tile_index = memory.read(map_start + map_tile_y*32 + map_tile_x, true);
+        uint8_t tile_index = memory.read(map_start + map_tile_y*32 + map_tile_x, MemoryAccessSource::PPU);
         auto tile = tilecache.get(tile_index);
         uint8_t tile_x = (map_x+i) % 8;
         // copy data from tile for current pixel

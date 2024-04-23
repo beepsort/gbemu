@@ -11,6 +11,7 @@ namespace GAMEBOY
     {
     private:
         AddressDispatcher& memory;
+        PPU_Tilemap tilemap;
         // define mode lengths in terms of dots
         // note: extra ppu behaviour can delay mode 3
         // this is a later low priority TODO
