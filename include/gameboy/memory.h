@@ -7,6 +7,7 @@
 #include <SDL2/SDL_log.h>
 
 #include "gameboy/rom.h"
+#include "gameboy/memory_access.h"
 #include "gameboy/memory_io.h"
 
 // https://gbdev.io/pandocs/Memory_Map.html
@@ -30,12 +31,6 @@ namespace GAMEBOY
     const static uint16_t HRAM_HI = 0xFFFE;
     const static uint16_t INTERRUPT_ENABLE = 0xFFFF;
     
-    enum class MemoryAccessSource
-    {
-        CPU,
-        PPU
-    };
-
     class CartMapper
     {
     public:

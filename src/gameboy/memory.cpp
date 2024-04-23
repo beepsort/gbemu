@@ -122,7 +122,7 @@ void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data, MemoryAccess
     }
     else if (addr >= IO_REG_LO && addr <= IO_REG_HI)
     {
-        ioHandler.write(addr, data);
+        ioHandler.write(addr, data, src);
     }
     else if (addr >= HRAM_LO && addr <= HRAM_HI)
     {
@@ -130,7 +130,7 @@ void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data, MemoryAccess
     }
     else if (addr == INTERRUPT_ENABLE)
     {
-        ioHandler.write(addr, data);
+        ioHandler.write(addr, data, src);
     }
 }
 

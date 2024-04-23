@@ -15,8 +15,6 @@ uint8_t GAMEBOY::IOHandler::read(uint16_t addr)
             return Timer::getInstance().read(Timer::Register::TMA);
         case TIMER_REG_TAC:
             return Timer::getInstance().read(Timer::Register::TAC);
-        case 0xFF44:
-            return 0x90;
         case 0xFFFF:
             return IE;
         default:
@@ -28,7 +26,7 @@ uint8_t GAMEBOY::IOHandler::read(uint16_t addr)
     }
 }
 
-void GAMEBOY::IOHandler::write(uint16_t addr, uint8_t data)
+void GAMEBOY::IOHandler::write(uint16_t addr, uint8_t data, MemoryAccessSource src)
 {
     switch (addr)
     {
@@ -55,13 +53,33 @@ void GAMEBOY::IOHandler::write(uint16_t addr, uint8_t data)
         case TIMER_REG_TAC:
             Timer::getInstance().write(Timer::Register::TAC, data);
             break;
+        case PPU_REG_LY:
+            if (src==MemoryAccessSource::PPU)
+            {
+                ioRam[addr - 0xFF00] = data;
+            }
+            break;
+        case PPU_REG_STAT:
+        {
+            if (src==MemoryAccessSource::PPU)
+            {
+                ioRam[addr - 0xFF00] = data;
+                break;
+            }
+            // keep bits 0-2, as not writable
+            uint8_t new_stat = ioRam[addr - 0xFF00] & 0x07;
+            // write bits 6-3
+            new_stat |= data & 0x78;
+            ioRam[addr - 0xFF00] = new_stat;
+            break;
+        }
         case 0xFFFF:
             IE = data;
             break;
         default:
             if (addr < 0xFF00 || addr > 0xFF7F)
             {
-                break;
+                break; // invalid, should probably throw an exception
             }
             ioRam[addr - 0xFF00] = data;
             break;
