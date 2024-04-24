@@ -43,6 +43,7 @@ bool GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
             // bit 3 low = MAP0, high = MAP1
             auto map = lcdc & 0x08 ? PPU_Tilemap::MAP_SELECT::MAP1 : PPU_Tilemap::MAP_SELECT::MAP0;
             auto bg = tilemap.render_line(map, scx, scy, m_dot_y);
+            *m_line_buffer =  *bg;
             // window
             // sprites
             drawn_to_buffer = true;

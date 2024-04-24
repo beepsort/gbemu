@@ -21,6 +21,6 @@ add_library(gameboy
     gameboy/gameboy.cpp
     )
 target_include_directories(gameboy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
-add_executable(gbemu main.cpp)
+add_executable(gbemu main.cpp render.cpp)
 target_link_libraries(gbemu gameboy SDL2)
 

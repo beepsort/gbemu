@@ -3,6 +3,7 @@
 #include <optional>
 #include <string>
 
+#include "render.h"
 #include "gameboy/rom.h"
 #include "gameboy/gameboy.h"
 #include "gameboy/serial.h"
@@ -39,7 +40,7 @@ int main(int argc, char** argv)
     std::optional<ROMDATA> romopt = open_rom(argv[1]);
     if (!romopt.has_value())
     {
-        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "ROM file could not be read, aborting.\n");
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "ROM file could not be read, aborting\n");
         return -1;
     }
     ROMDATA rom = romopt.value();
@@ -51,10 +52,27 @@ int main(int argc, char** argv)
     serialSupervisor.subscribe(GAMEBOY::SerialEventType::SERIAL_OUT, new SerialPrinter());
     auto line_buffer = std::make_shared<std::array<uint8_t, 160>>();
     GAMEBOY::Gameboy gameboy(rom, line_buffer);
+    SDL_Window* win = SDL_CreateWindow(
+            "GBEMU",
+            SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED,
+            160,
+            144,
+            SDL_WINDOW_SHOWN);
+    if (win == nullptr)
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL Window could not be created, aborting\n");
+        return -1;
+    }
+    Renderer renderer(line_buffer, win);
     SDL_Event event;
+    uint64_t frame_start;
+    int64_t frame_time;
+    const int64_t min_frame_time = 1000/60;
     bool quit = false;
     while (!quit)
     {
+        frame_start = SDL_GetTicks64();
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
@@ -62,8 +80,19 @@ int main(int argc, char** argv)
                 quit = true;
             }
         }
-
-        gameboy.tick();
+        for (int lines=0; lines<160;)
+        {
+            if (gameboy.tick())
+            {
+                renderer.add_line();
+                lines++;
+            }
+        }
+        frame_time = SDL_GetTicks64() - frame_start;
+        if (frame_time < min_frame_time)
+        {
+            SDL_Delay(min_frame_time - frame_time);
+        }
     }
     SDL_Quit();
     return 0;
