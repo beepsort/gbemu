@@ -2,7 +2,7 @@
 #include "gameboy/ppu_tile.h"
 #include "cpu_init_helper.h"
 
-TEST(PPU_Tilemap_test, BgSingleLine) {
+TEST(PPU_Tilemap_test, RepeatedPattern) {
     CpuInitHelper helper;
     // set bit 7 to enable PPU
     // set bit 4 to operate in unsigned 0x8000 base mode
@@ -20,7 +20,6 @@ TEST(PPU_Tilemap_test, BgSingleLine) {
         {
             if (lo)
             {
-
                 helper.addressDispatcher.write(tile_start+i, 0x33);
             }
             else
@@ -45,6 +44,88 @@ TEST(PPU_Tilemap_test, BgSingleLine) {
     for (size_t i=0; i<line->size(); i++)
     {
         EXPECT_EQ((*line)[i], i%4);
+    }
+}
+
+TEST(PPU_Tilemap_test, SingleTile) {
+    CpuInitHelper helper;
+    // set bit 7 to enable PPU
+    // set bit 4 to operate in unsigned 0x8000 base mode
+    // unset bit 3 to map BG from 0x9800
+    // set bit 0 to enable BG
+    helper.addressDispatcher.write(GAMEBOY::IOHandler::PPU_REG_LCDC, 0x91);
+    // set BG palette so 3=3, 2=2, 1=1, 0=0
+    helper.addressDispatcher.write(0xFF47, 0xE4);
+    // init tiles
+    uint16_t tile_start = GAMEBOY::VRAM_LO;
+    bool lo = true;
+    for (int i=0; i<16; i++)
+    {
+        // tile 0
+        if (lo)
+        {
+            helper.addressDispatcher.write(tile_start+i, 0x33);
+        }
+        else
+        {
+            helper.addressDispatcher.write(tile_start+i, 0x55);
+        }
+        lo = !lo;
+        // tile 1
+        helper.addressDispatcher.write(tile_start+16+i, 0x00);
+    }
+    // init map
+    uint16_t map_base_addr = 0x9800;
+    for (uint16_t map_index = 0; map_index < 0x400; map_index++)
+    {
+        helper.addressDispatcher.write(map_base_addr+map_index, 1);
+    }
+    // row 1, col 2 (zero indexed)
+    helper.addressDispatcher.write(map_base_addr+34, 0);
+    GAMEBOY::PPU_Tilemap tilemap(helper.addressDispatcher);
+    // just before row 1
+    auto line = tilemap.render_line(
+            GAMEBOY::PPU_Tilemap::MAP_SELECT::MAP0,
+            0,
+            0,
+            7);
+    for (size_t i=0; i<line->size(); i++)
+    {
+        EXPECT_EQ((*line)[i], 0);
+    }
+    // just after row 1
+    line = tilemap.render_line(
+            GAMEBOY::PPU_Tilemap::MAP_SELECT::MAP0,
+            0,
+            0,
+            16);
+    for (size_t i=0; i<line->size(); i++)
+    {
+        EXPECT_EQ((*line)[i], 0);
+    }
+    // within row 1
+    for (int i=0; i<8; i++)
+    {
+        line = tilemap.render_line(
+                GAMEBOY::PPU_Tilemap::MAP_SELECT::MAP0,
+                0,
+                0,
+                8+i);
+        // just before col 2
+        for (size_t i=0; i<16; i++)
+        {
+            EXPECT_EQ((*line)[i], 0);
+        }
+        // within col 2
+        for (size_t i=16; i<24; i++)
+        {
+            EXPECT_EQ((*line)[i], i%4);
+        }
+        // just after col 2
+        for (size_t i=24; i<144; i++)
+        {
+            EXPECT_EQ((*line)[i], 0);
+        }
     }
 }
 

@@ -58,6 +58,15 @@ bool GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
 
 bool GAMEBOY::PPU::tick()
 {
+    bool ppu_enabled = memory.read(IOHandler::PPU_REG_LCDC) & 0x80;
+    if (!ppu_enabled)
+    {
+        m_dot_y = m_FRAME_LINES - 1;
+        m_state = m_PPU_STATE::MODE1;
+        memory.unlock(AddressDispatcher::LOCKABLE::OAM);
+        memory.unlock(AddressDispatcher::LOCKABLE::VRAM);
+        return false;
+    }
     bool drawn_to_buffer = false;
     switch (m_state)
     {
