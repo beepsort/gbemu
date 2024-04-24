@@ -9,6 +9,7 @@
 #include "gameboy/rom.h"
 #include "gameboy/memory_access.h"
 #include "gameboy/memory_io.h"
+#include "gameboy/input.h"
 
 // https://gbdev.io/pandocs/Memory_Map.html
 
@@ -51,7 +52,7 @@ namespace GAMEBOY
         bool vramLocked = false;
         bool oamLocked = false;
     public:
-        AddressDispatcher(ROMDATA& rom);
+        AddressDispatcher(ROMDATA& rom, InputHandler& input_handler);
         uint8_t read(uint16_t addr, MemoryAccessSource src=MemoryAccessSource::CPU);
         void write(uint16_t addr, uint8_t data, MemoryAccessSource src=MemoryAccessSource::CPU);
         enum class LOCKABLE

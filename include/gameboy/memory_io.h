@@ -3,20 +3,23 @@
 
 #include <stdint.h>
 #include "gameboy/memory_access.h"
+#include "gameboy/input.h"
 
 namespace GAMEBOY
 {
     class IOHandler
     {
     private:
-        uint8_t ioRam[0x80];
+        uint8_t ioRam[0x80] = {0xFF};
         /*
          * 0xFFFF Interrupt Enable
          * Allows each interrupt category to be enabled or disabled separately
          * Uses the same bitpattern as the interrupt flag IF
          */
         uint8_t IE = 0;
+        InputHandler& m_input_handler;
     public:
+        static const uint16_t INPUT_JOYP = 0xFF00;
         /*
          * 0xFF01 Serial Transfer Data
          * Data either received or to be sent over the serial port
@@ -148,6 +151,8 @@ namespace GAMEBOY
          */
         static const uint16_t PPU_REG_OBP0 = 0xFF48;
         static const uint16_t PPU_REG_OBP1 = 0xFF49;
+        IOHandler(InputHandler& input_handler)
+        : m_input_handler(input_handler) {}
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data, MemoryAccessSource src);
     };

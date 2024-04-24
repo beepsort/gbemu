@@ -18,6 +18,7 @@ add_library(gameboy
     gameboy/timer.cpp
     gameboy/ppu.cpp
     gameboy/ppu_tile.cpp
+    gameboy/input.cpp
     gameboy/gameboy.cpp
     )
 target_include_directories(gameboy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)

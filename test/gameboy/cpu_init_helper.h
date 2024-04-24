@@ -4,6 +4,7 @@
 #include "gameboy/cpu_registers.h"
 #include "gameboy/memory.h"
 #include "gameboy/rom.h"
+#include "gameboy/input.h"
 #include <SDL2/SDL_log.h>
 #include <vector>
 
@@ -16,9 +17,10 @@ private:
 public:
     GAMEBOY::CpuRegisters registers;
     GAMEBOY::AddressDispatcher addressDispatcher;
+    GAMEBOY::InputHandler input_handler;
     CpuInitHelper() :
         rom(std::vector<uint8_t>(32768, 0)),
-        addressDispatcher(GAMEBOY::AddressDispatcher(rom))
+        addressDispatcher(GAMEBOY::AddressDispatcher(rom, input_handler))
     {
         *registers.PC = 0xC000;
         SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);

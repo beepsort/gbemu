@@ -134,7 +134,8 @@ void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data, MemoryAccess
     }
 }
 
-GAMEBOY::AddressDispatcher::AddressDispatcher(ROMDATA& rom)
+GAMEBOY::AddressDispatcher::AddressDispatcher(ROMDATA& rom, InputHandler& input_handler)
+: ioHandler(input_handler)
 {
     cartMapper = CartMapper::create_mapper(rom);
 }

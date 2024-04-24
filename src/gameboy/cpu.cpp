@@ -42,6 +42,15 @@ const GAMEBOY::CpuRegisters& GAMEBOY::Cpu::tick()
     {
         Timer::getInstance().tick(memory);
     }
+    if (instruction_result == InstructionResult::HALT)
+    {
+        uint8_t irq = memory.read(INTERRUPT_FLAG);
+        if (irq & 0x10)
+        {
+            delete currentInstruction;
+            currentInstruction = nullptr;
+        }
+    }
     return registers;
 }
 
