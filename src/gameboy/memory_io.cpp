@@ -9,8 +9,8 @@ uint8_t GAMEBOY::IOHandler::read(uint16_t addr)
     {
         case INPUT_JOYP:
             return m_input_handler.joyp(
-                    ioRam[0] & 0x20,
-                    ioRam[0] & 0x10);
+                    ~ioRam[0] & 0x20,
+                    ~ioRam[0] & 0x10);
         case TIMER_REG_DIV:
             return Timer::getInstance().read(Timer::Register::DIV);
         case TIMER_REG_TIMA:
@@ -90,12 +90,19 @@ void GAMEBOY::IOHandler::write(uint16_t addr, uint8_t data, MemoryAccessSource s
         case 0xFFFF:
             IE = data;
             break;
-        default:
-            if (addr < 0xFF00 || addr > 0xFF7F)
-            {
-                break; // invalid, should probably throw an exception
-            }
+        // explicitly define writable addresses
+        case INPUT_JOYP:
+        case SERIAL_DATA:
+        case PPU_REG_LCDC:
+        case PPU_REG_SCY:
+        case PPU_REG_SCX:
+        case PPU_REG_LYC:
+        case PPU_REG_BGP:
+        case PPU_REG_OBP0:
+        case PPU_REG_OBP1:
             ioRam[addr - 0xFF00] = data;
+            break;
+        default:
             break;
     }
 }
