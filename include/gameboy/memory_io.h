@@ -130,6 +130,11 @@ namespace GAMEBOY
          */
         static const uint16_t PPU_REG_LYC = 0xFF45;
         /*
+         * 0xFF46 DMA
+         * Writes to this register triger a DMA transfer to begin
+         */
+        static const uint16_t PPU_REG_DMA = 0xFF46;
+        /*
          * 0xFF47 BGP/BG palette
          * BGP assigns gray shades to color IDs for BG & window tiles
          * Bits

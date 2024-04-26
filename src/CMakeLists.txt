@@ -9,6 +9,7 @@ add_library(gameboy
     gameboy/cpu_instruction_misc.cpp
     gameboy/cpu_interrupt.cpp
     gameboy/memory.cpp
+    gameboy/memory_dma.cpp
     gameboy/memory_io.cpp
     gameboy/memory_mbc1.cpp
     gameboy/memory_mbc3.cpp

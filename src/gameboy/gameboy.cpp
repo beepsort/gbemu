@@ -11,5 +11,6 @@ bool GAMEBOY::Gameboy::tick()
             drawn_to_buffer = true;
         }
     }
+    dma.tick();
     return drawn_to_buffer;
 }

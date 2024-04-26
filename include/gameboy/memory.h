@@ -51,6 +51,7 @@ namespace GAMEBOY
         std::array<uint8_t, 0x7F> highRam;
         bool vramLocked = false;
         bool oamLocked = false;
+        bool dmaLocked = false;
     public:
         AddressDispatcher(ROMDATA& rom, InputHandler& input_handler);
         uint8_t read(uint16_t addr, MemoryAccessSource src=MemoryAccessSource::CPU);
@@ -58,7 +59,8 @@ namespace GAMEBOY
         enum class LOCKABLE
         {
             VRAM,
-            OAM
+            OAM,
+            ALL_DMA
         };
         void lock(LOCKABLE target);
         void unlock(LOCKABLE target);

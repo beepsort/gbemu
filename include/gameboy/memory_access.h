@@ -6,7 +6,8 @@ namespace GAMEBOY
     enum class MemoryAccessSource
     {
         CPU,
-        PPU
+        PPU,
+        DMA
     };
 };
 
