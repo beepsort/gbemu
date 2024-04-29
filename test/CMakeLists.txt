@@ -8,6 +8,7 @@ add_executable(gbemu_test
     gameboy/cpu_instruction_misc_test.cpp
     gameboy/cpu_interrupt_test.cpp
     gameboy/ppu_tile_test.cpp
+    gameboy/ppu_sprite_test.cpp
     gameboy/ppu_test.cpp
     )
 find_package(GTest REQUIRED)
