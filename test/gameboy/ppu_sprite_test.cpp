@@ -33,6 +33,8 @@ TEST(PPU_Spritemap_test, SingleLine) {
     helper.addressDispatcher.write(GAMEBOY::OAM_LO+2, 0);
     // oam attrs
     helper.addressDispatcher.write(GAMEBOY::OAM_LO+3, 0);
+    helper.addressDispatcher.lock(GAMEBOY::AddressDispatcher::LOCKABLE::OAM);
+    helper.addressDispatcher.lock(GAMEBOY::AddressDispatcher::LOCKABLE::VRAM);
     GAMEBOY::PPU_Spritemap spritemap(helper.addressDispatcher);
     auto line = spritemap.render_line(0);
     for (size_t i=0; i<8; i++)

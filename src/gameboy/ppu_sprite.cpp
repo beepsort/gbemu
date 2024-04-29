@@ -127,7 +127,7 @@ public:
     OAM_ENTRY(uint16_t oam_id, GAMEBOY::AddressDispatcher& memory)
     : memory(memory)
     {
-        uint8_t lcdc_register = memory.read(GAMEBOY::IOHandler::PPU_REG_LCDC);
+        uint8_t lcdc_register = memory.read(GAMEBOY::IOHandler::PPU_REG_LCDC, GAMEBOY::MemoryAccessSource::PPU);
         m_large_mode = lcdc_register & 0x04;
         uint16_t base_addr = GAMEBOY::OAM_LO + 4*oam_id;
         m_y = memory.read(base_addr, GAMEBOY::MemoryAccessSource::PPU);
