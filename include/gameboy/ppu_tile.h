@@ -22,24 +22,6 @@ namespace GAMEBOY
         uint8_t get_pixel(uint8_t x, uint8_t y);
     };
 
-    class PPU_Sprite
-    {
-    private:
-        /*
-         * Store colour IDs for each pixel of the sprite
-         * Translated to shades using the OBP registers 0xFF48 & 0xFF49
-         * Stored as rows of pixels, starting from the top left
-         */
-        std::array<uint8_t, 8*16> m_sprite_data;
-        /*
-         * True = 8x16 mode
-         * False = 8x8 Mode
-         */
-        bool large_mode;
-    public:
-        PPU_Sprite(AddressDispatcher& memory, uint8_t index);
-    };
-
     class PPU_Tilecache
     {
     private:

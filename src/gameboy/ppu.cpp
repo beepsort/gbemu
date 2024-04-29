@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 GAMEBOY::PPU::PPU(AddressDispatcher& memory, std::shared_ptr<std::array<uint8_t, 160>> line_buffer)
-: memory(memory), tilemap(memory), m_line_buffer(line_buffer)
+: memory(memory), tilemap(memory), spritemap(memory), m_line_buffer(line_buffer)
 {
     transition(m_PPU_STATE::MODE2);
 }
@@ -46,6 +46,15 @@ bool GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
             *m_line_buffer =  *bg;
             // window
             // sprites
+            auto sprites = spritemap.render_line(m_dot_y);
+            for (uint8_t x=0; x<m_line_buffer->size(); x++)
+            {
+                auto pix = (*sprites)[x];
+                if (pix.has_value())
+                {
+                    (*m_line_buffer)[x] = pix.value();
+                }
+            }
             drawn_to_buffer = true;
             break;
         }

@@ -19,6 +19,7 @@ add_library(gameboy
     gameboy/timer.cpp
     gameboy/ppu.cpp
     gameboy/ppu_tile.cpp
+    gameboy/ppu_sprite.cpp
     gameboy/input.cpp
     gameboy/gameboy.cpp
     )

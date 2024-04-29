@@ -4,7 +4,6 @@
 #include <stdexcept>
 
 typedef std::array<uint8_t, 16> _TILEBYTES;
-typedef std::array<uint8_t, 32> _TILEBYTES_LARGE;
 
 std::unique_ptr<_TILEBYTES>
 _getTileData(
@@ -13,11 +12,12 @@ _getTileData(
         bool unsigned_mode)
 {
     auto tile_data = std::make_unique<std::array<uint8_t, 16>>();
+    const uint8_t byte_count = 16;
     if (unsigned_mode)
     {
         const uint16_t base_addr = GAMEBOY::VRAM_LO;
-        uint16_t data_start_addr = base_addr + static_cast<uint16_t>(index)*16;
-        for (size_t i=0; i<16; i++)
+        uint16_t data_start_addr = base_addr + static_cast<uint16_t>(index)*byte_count;
+        for (size_t i=0; i<byte_count; i++)
         {
             uint8_t i_data = memory.read(data_start_addr + i, GAMEBOY::MemoryAccessSource::PPU);
             (*tile_data)[i] = i_data;
@@ -27,8 +27,8 @@ _getTileData(
     {
         const uint16_t base_addr = GAMEBOY::VRAM_LO + 0x1000;
         int8_t index_signed = static_cast<int8_t>(index);
-        uint16_t data_start_addr = base_addr + static_cast<int16_t>(index_signed)*16;
-        for (size_t i=0; i<16; i++)
+        uint16_t data_start_addr = base_addr + static_cast<int16_t>(index_signed)*byte_count;
+        for (size_t i=0; i<byte_count; i++)
         {
             uint8_t i_data = memory.read(data_start_addr + i, GAMEBOY::MemoryAccessSource::PPU);
             (*tile_data)[i] = i_data;
@@ -78,14 +78,6 @@ uint8_t GAMEBOY::PPU_Tile::get_pixel(uint8_t x, uint8_t y)
         throw std::out_of_range("Requested pixel out of range");
     }
     return m_tile_data.at(y*8 + x);
-}
-
-GAMEBOY::PPU_Sprite::PPU_Sprite(
-        GAMEBOY::AddressDispatcher& memory,
-        uint8_t index)
-{
-    auto sprite_bytes = _getTileData(memory, index, true);
-    _tileBytesToXY(sprite_bytes->begin(), sprite_bytes->end(), m_sprite_data.begin(), m_sprite_data.end());
 }
 
 void GAMEBOY::PPU_Tilecache::clear()
@@ -158,3 +150,4 @@ std::shared_ptr<GAMEBOY::LINE_PIXELS> GAMEBOY::PPU_Tilemap::render_line(GAMEBOY:
     }
     return line_pix;
 }
+
