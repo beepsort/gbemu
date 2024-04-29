@@ -3,7 +3,7 @@
 #include "gameboy/serial.h"
 #include "gameboy/timer.h"
 
-uint8_t GAMEBOY::IOHandler::read(uint16_t addr)
+uint8_t GAMEBOY::IOHandler::read(uint16_t addr, MemoryAccessSource src)
 {
     switch (addr)
     {
@@ -25,6 +25,12 @@ uint8_t GAMEBOY::IOHandler::read(uint16_t addr)
             return (joyp_irq & 0x10)
                 | (ioRam[addr - 0xFF00] & 0xEF);
         }
+        case PPU_REG_DMA:
+            if (src!=MemoryAccessSource::DMA)
+            {
+                return 0xFF;
+            }
+            return ioRam[addr - 0xFF00];
         case 0xFFFF:
             return IE;
         default:
@@ -97,6 +103,7 @@ void GAMEBOY::IOHandler::write(uint16_t addr, uint8_t data, MemoryAccessSource s
         case PPU_REG_SCY:
         case PPU_REG_SCX:
         case PPU_REG_LYC:
+        case PPU_REG_DMA:
         case PPU_REG_BGP:
         case PPU_REG_OBP0:
         case PPU_REG_OBP1:

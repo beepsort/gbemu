@@ -97,7 +97,7 @@ uint8_t GAMEBOY::AddressDispatcher::read(uint16_t addr, MemoryAccessSource src)
     }
     else if (addr >= IO_REG_LO && addr <= IO_REG_HI)
     {
-        return ioHandler.read(addr);
+        return ioHandler.read(addr, src);
     }
     else if (addr >= HRAM_LO && addr <= HRAM_HI)
     {
@@ -105,7 +105,7 @@ uint8_t GAMEBOY::AddressDispatcher::read(uint16_t addr, MemoryAccessSource src)
     }
     else if (addr == INTERRUPT_ENABLE)
     {
-        return ioHandler.read(addr);
+        return ioHandler.read(addr, src);
     }
     return 0x00;
 }

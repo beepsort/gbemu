@@ -137,13 +137,15 @@ public:
     }
     std::shared_ptr<GAMEBOY::LINE_PIXELS_OPT> render_line(uint8_t line, GAMEBOY::PPU_Spritecache& spritecache)
     {
+        const uint8_t y_len = m_large_mode ? 16 : 8;
+        const uint8_t x_len = 8;
         uint8_t obj_y = line + 16; // objs have 16 y pixels off-frame
         auto tile = spritecache.get(m_tile_index, m_large_mode);
         uint8_t palette_no = (m_attrs & 0x10) ? 1 : 0;
         auto line_pix = std::make_shared<GAMEBOY::LINE_PIXELS_OPT>();
         for (uint8_t obj_x=8; obj_x<line_pix->size()+8; obj_x++)
         {
-            if (obj_x>=m_x && obj_x<m_x+8 && obj_y>=m_y && obj_y<m_y+8)
+            if (obj_x>=m_x && obj_x<m_x+x_len && obj_y>=m_y && obj_y<m_y+y_len)
             {
                 uint8_t sprite_x = obj_x - m_x;
                 uint8_t sprite_y = obj_y - m_y;
@@ -161,6 +163,11 @@ std::shared_ptr<GAMEBOY::LINE_PIXELS_OPT> GAMEBOY::PPU_Spritemap::render_line(ui
     // Visible area is 160x144 pixels out of 256x256 tile map
     const uint8_t SCREEN_SIZE_X = 160;
     auto line_pix = std::make_shared<LINE_PIXELS_OPT>();
+    bool obj_enabled = memory.read(IOHandler::PPU_REG_LCDC) & 0x02;
+    if (!obj_enabled)
+    {
+        return line_pix;
+    }
     for (uint16_t i=0; i<40; i++)
     {
         OAM_ENTRY oam_entry(i, memory);
