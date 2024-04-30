@@ -46,22 +46,7 @@ bool GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
             *m_line_buffer =  *bg;
             // window
             // sprites
-            auto sprites = spritemap.render_line(m_dot_y);
-            for (uint8_t i=0; i<40; i++)
-            {
-                uint8_t y = memory.read(OAM_LO + i*4, MemoryAccessSource::PPU);
-                uint8_t x = memory.read(OAM_LO + i*4 + 1, MemoryAccessSource::PPU);
-                uint8_t tile = memory.read(OAM_LO + i*4 + 2, MemoryAccessSource::PPU);
-                uint8_t attrs = memory.read(OAM_LO + i*4 + 3, MemoryAccessSource::PPU);
-            }
-            for (uint8_t x=0; x<sprites->size(); x++)
-            {
-                auto pix = (*sprites)[x];
-                if (pix.has_value())
-                {
-                    (*m_line_buffer)[x] = pix.value();
-                }
-            }
+            spritemap.render_line(m_dot_y, m_line_buffer);
             drawn_to_buffer = true;
             break;
         }

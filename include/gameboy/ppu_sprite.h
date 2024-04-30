@@ -41,7 +41,7 @@ namespace GAMEBOY
         std::shared_ptr<PPU_Sprite> get(uint8_t index, bool large_mode);
     };
 
-    typedef std::array<std::optional<uint8_t>, 160> LINE_PIXELS_OPT;
+    typedef std::array<uint8_t, 160> LINE_PIXELS;
 
     class PPU_Spritemap
     {
@@ -51,7 +51,7 @@ namespace GAMEBOY
     public:
         PPU_Spritemap(AddressDispatcher& memory)
         : memory(memory), spritecache(memory) {}
-        std::shared_ptr<LINE_PIXELS_OPT> render_line(uint8_t line);
+        void render_line(uint8_t line, std::shared_ptr<LINE_PIXELS> line_buffer);
     };
 };
 
