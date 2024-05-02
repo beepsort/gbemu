@@ -83,7 +83,7 @@ std::shared_ptr<GAMEBOY::PPU_Sprite> GAMEBOY::PPU_Spritecache::get(uint8_t index
     return tile;
 }
 
-    std::optional<uint8_t>
+std::optional<uint8_t>
 object_color_id_to_shade(
         GAMEBOY::AddressDispatcher& memory,
         uint8_t pix_color_id,
@@ -113,72 +113,61 @@ object_color_id_to_shade(
     }
 }
 
-class OAM_ENTRY
+GAMEBOY::PPU_OamEntry::PPU_OamEntry(uint16_t oam_id, GAMEBOY::AddressDispatcher& memory)
+: memory(memory)
 {
-private:
-    GAMEBOY::AddressDispatcher& memory;
-    uint8_t m_x;
-    uint8_t m_y;
-    uint8_t m_tile_index;
-    // attributes
-    uint8_t m_attrs;
-    bool m_large_mode;
-public:
-    OAM_ENTRY(uint16_t oam_id, GAMEBOY::AddressDispatcher& memory)
-    : memory(memory)
+    uint8_t lcdc_register = memory.read(GAMEBOY::IOHandler::PPU_REG_LCDC, GAMEBOY::MemoryAccessSource::PPU);
+    m_large_mode = lcdc_register & 0x04;
+    uint16_t base_addr = GAMEBOY::OAM_LO + 4*oam_id;
+    m_y = memory.read(base_addr, GAMEBOY::MemoryAccessSource::PPU);
+    m_x = memory.read(base_addr+1, GAMEBOY::MemoryAccessSource::PPU);
+    m_tile_index = memory.read(base_addr+2, GAMEBOY::MemoryAccessSource::PPU);
+    m_attrs = memory.read(base_addr+3, GAMEBOY::MemoryAccessSource::PPU);
+}
+
+void GAMEBOY::PPU_OamEntry::render_line(uint8_t line, std::shared_ptr<GAMEBOY::LINE_PIXELS> line_buffer, GAMEBOY::PPU_Spritecache& spritecache)
+{
+    bool flip_y = m_attrs & 0x40;
+    bool flip_x = m_attrs & 0x20;
+    const uint8_t y_len = m_large_mode ? 16 : 8;
+    const uint8_t x_len = 8;
+    uint8_t obj_y = line + 16; // objs have 16 y pixels off-frame
+    auto tile = spritecache.get(m_tile_index, m_large_mode);
+    uint8_t palette_no = (m_attrs & 0x10) ? 1 : 0;
+    for (uint8_t obj_x=8; obj_x<line_buffer->size()+8; obj_x++)
     {
-        uint8_t lcdc_register = memory.read(GAMEBOY::IOHandler::PPU_REG_LCDC, GAMEBOY::MemoryAccessSource::PPU);
-        m_large_mode = lcdc_register & 0x04;
-        uint16_t base_addr = GAMEBOY::OAM_LO + 4*oam_id;
-        m_y = memory.read(base_addr, GAMEBOY::MemoryAccessSource::PPU);
-        m_x = memory.read(base_addr+1, GAMEBOY::MemoryAccessSource::PPU);
-        m_tile_index = memory.read(base_addr+2, GAMEBOY::MemoryAccessSource::PPU);
-        m_attrs = memory.read(base_addr+3, GAMEBOY::MemoryAccessSource::PPU);
-    }
-    void render_line(uint8_t line, std::shared_ptr<GAMEBOY::LINE_PIXELS> line_buffer, GAMEBOY::PPU_Spritecache& spritecache)
-    {
-        bool flip_y = m_attrs & 0x40;
-        bool flip_x = m_attrs & 0x20;
-        const uint8_t y_len = m_large_mode ? 16 : 8;
-        const uint8_t x_len = 8;
-        uint8_t obj_y = line + 16; // objs have 16 y pixels off-frame
-        auto tile = spritecache.get(m_tile_index, m_large_mode);
-        uint8_t palette_no = (m_attrs & 0x10) ? 1 : 0;
-        for (uint8_t obj_x=8; obj_x<line_buffer->size()+8; obj_x++)
+        if (obj_x>=m_x && obj_x<m_x+x_len && obj_y>=m_y && obj_y<m_y+y_len)
         {
-            if (obj_x>=m_x && obj_x<m_x+x_len && obj_y>=m_y && obj_y<m_y+y_len)
+            uint8_t sprite_x = obj_x - m_x;
+            if (flip_x)
             {
-                uint8_t sprite_x = obj_x - m_x;
-                if (flip_x)
-                {
-                    sprite_x = x_len - sprite_x;
-                }
-                uint8_t sprite_y = obj_y - m_y;
-                if (flip_y)
-                {
-                    sprite_y = y_len - sprite_y;
-                }
-                auto pix_raw = tile->get_pixel(sprite_x, sprite_y);
-                std::optional<uint8_t> shade = object_color_id_to_shade(memory, pix_raw, palette_no);
-                // pixel of sprite is transparent
-                if (!shade.has_value())
-                {
-                    continue;
-                }
-                // no BG priority
-                else if (!(m_attrs & 0x80))
-                {
-                    (*line_buffer)[obj_x-8] = shade.value();
-                }
-                // only draw over existing shade 0
-                else if ((*line_buffer)[obj_x-8] == 0)
-                {
-                    (*line_buffer)[obj_x-8] = shade.value();
-                }
+                sprite_x = x_len - sprite_x;
+            }
+            uint8_t sprite_y = obj_y - m_y;
+            if (flip_y)
+            {
+                sprite_y = y_len - sprite_y;
+            }
+            auto pix_raw = tile->get_pixel(sprite_x, sprite_y);
+            std::optional<uint8_t> shade = object_color_id_to_shade(memory, pix_raw, palette_no);
+            // pixel of sprite is transparent
+            if (!shade.has_value())
+            {
+                continue;
+            }
+            // no BG priority
+            else if (!(m_attrs & 0x80))
+            {
+                (*line_buffer)[obj_x-8] = shade.value();
+            }
+            // only draw over existing shade 0
+            else if ((*line_buffer)[obj_x-8] == 0)
+            {
+                (*line_buffer)[obj_x-8] = shade.value();
             }
         }
     }
-};
+}
 
 void GAMEBOY::PPU_Spritemap::render_line(uint8_t line, std::shared_ptr<LINE_PIXELS> line_buffer)
 {
@@ -190,7 +179,7 @@ void GAMEBOY::PPU_Spritemap::render_line(uint8_t line, std::shared_ptr<LINE_PIXE
     }
     for (uint16_t i=39; i<40; i--)
     {
-        OAM_ENTRY oam_entry(i, memory);
+        PPU_OamEntry oam_entry(i, memory);
         oam_entry.render_line(line, line_buffer, spritecache);
     }
 }

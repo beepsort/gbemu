@@ -43,6 +43,21 @@ namespace GAMEBOY
 
     typedef std::array<uint8_t, 160> LINE_PIXELS;
 
+    class PPU_OamEntry
+    {
+    private:
+        GAMEBOY::AddressDispatcher& memory;
+        uint8_t m_x;
+        uint8_t m_y;
+        uint8_t m_tile_index;
+        // attributes
+        uint8_t m_attrs;
+        bool m_large_mode;
+    public:
+        PPU_OamEntry(uint16_t oam_id, GAMEBOY::AddressDispatcher& memory);
+        void render_line(uint8_t line, std::shared_ptr<GAMEBOY::LINE_PIXELS> line_buffer, GAMEBOY::PPU_Spritecache& spritecache);
+    };
+
     class PPU_Spritemap
     {
     private:
