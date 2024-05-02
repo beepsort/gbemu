@@ -79,6 +79,38 @@ TEST(PPU_Sprite_test, SpriteAlone) {
     }
 }
 
+TEST(PPU_Sprite_test, ArrowSprite) {
+    CpuInitHelper helper;
+    // set bit 7 to enable PPU
+    // set bit 1 to enable sprites
+    helper.addressDispatcher.write(GAMEBOY::IOHandler::PPU_REG_LCDC, 0x82);
+    // init tile 0
+    uint16_t tile_start = GAMEBOY::VRAM_LO;
+    uint8_t sprite_bytes[] = {0x00, 0x00, 0x60, 0x60, 0x70, 0x70, 0x78, 0x78, 0x78, 0x78, 0x70, 0x70, 0x60, 0x60, 0x00, 0x00};
+    for (int i=0; i<16; i++)
+    {
+        helper.addressDispatcher.write(tile_start+i, sprite_bytes[i]);
+    }
+    GAMEBOY::PPU_Sprite sprite(helper.addressDispatcher, 0, false);
+    uint8_t sprite_render_bytes[] = {
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 3, 3, 0, 0, 0, 0, 0,
+        0, 3, 3, 3, 0, 0, 0, 0,
+        0, 3, 3, 3, 3, 0, 0, 0,
+        0, 3, 3, 3, 3, 0, 0, 0,
+        0, 3, 3, 3, 0, 0, 0, 0,
+        0, 3, 3, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
+    };
+    for (size_t y=0; y<8; y++)
+    {
+        for (size_t x=0; x<8; x++)
+        {
+            EXPECT_EQ(sprite.get_pixel(x, y), sprite_render_bytes[y*8+x]);
+        }
+    }
+}
+
 TEST(PPU_test, SpriteIntegration) {
     CpuInitHelper helper;
     // set bit 7 to enable PPU
@@ -116,12 +148,10 @@ TEST(PPU_test, SpriteIntegration) {
     while (!ppu.tick()) {}
     for (size_t i=0; i<8; i++)
     {
-        printf("%d ", (*line_buffer)[i]);
         EXPECT_EQ((*line_buffer)[i], i%4);
     }
     for (size_t i=8; i<line_buffer->size(); i++)
     {
-        printf("%d ", (*line_buffer)[i]);
         EXPECT_EQ((*line_buffer)[i], 0);
     }
 }
