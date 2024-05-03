@@ -85,13 +85,13 @@ uint8_t GAMEBOY::AddressDispatcher::read(uint16_t addr, MemoryAccessSource src)
     }
     else if (addr >= OAM_LO && addr <= OAM_HI)
     {
-        if (oamLocked && src!=MemoryAccessSource::PPU)
-        {
-            return 0xFF; // return garbage
-        }
-        if (dmaLocked && src!=MemoryAccessSource::DMA)
+        if (dmaLocked && src !=MemoryAccessSource::DMA)
         {
             return 0xFF;
+        }
+        if (oamLocked && src!=MemoryAccessSource::PPU && src!=MemoryAccessSource::DMA)
+        {
+            return 0xFF; // return garbage
         }
         return oam[addr - OAM_LO];
     }
@@ -154,7 +154,7 @@ void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data, MemoryAccess
         {
             return;
         }
-        if (oamLocked && src!=MemoryAccessSource::PPU)
+        if (oamLocked && src!=MemoryAccessSource::PPU && src!=MemoryAccessSource::DMA)
         {
             return; // ignore write
         }
