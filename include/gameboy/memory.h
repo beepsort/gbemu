@@ -45,10 +45,10 @@ namespace GAMEBOY
     private:
         CartMapper* cartMapper;
         IOHandler ioHandler;
-        std::array<uint8_t, 0x2000> videoRam;
-        std::array<uint8_t, 0x2000> workRam;
-        std::array<uint8_t, 0xA0> oam;
-        std::array<uint8_t, 0x7F> highRam;
+        std::array<uint8_t, 0x2000> videoRam = {0};
+        std::array<uint8_t, 0x2000> workRam = {0};
+        std::array<uint8_t, 0xA0> oam = {0};
+        std::array<uint8_t, 0x7F> highRam = {0};
         bool vramLocked = false;
         bool oamLocked = false;
         bool dmaLocked = false;
