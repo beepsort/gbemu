@@ -141,12 +141,12 @@ void GAMEBOY::PPU_OamEntry::render_line(uint8_t line, std::shared_ptr<GAMEBOY::L
             uint8_t sprite_x = obj_x - m_x;
             if (flip_x)
             {
-                sprite_x = x_len - sprite_x;
+                sprite_x = x_len - sprite_x - 1;
             }
             uint8_t sprite_y = obj_y - m_y;
             if (flip_y)
             {
-                sprite_y = y_len - sprite_y;
+                sprite_y = y_len - sprite_y - 1;
             }
             auto pix_raw = tile->get_pixel(sprite_x, sprite_y);
             std::optional<uint8_t> shade = object_color_id_to_shade(memory, pix_raw, palette_no);
