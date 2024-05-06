@@ -17,8 +17,8 @@ namespace GAMEBOY
         PPU ppu;
         DmaController dma;
     public:
-        Gameboy(ROMDATA& rom, InputHandler& input_handler, std::shared_ptr<std::array<uint8_t, 160>> line_buffer)
-        : memory(rom, input_handler), cpu(memory), ppu(memory, line_buffer), dma(memory) {}
+        Gameboy(ROMDATA& rom, InputHandler& input_handler, LINE_BUFFERS line_buffers)
+        : memory(rom, input_handler), cpu(memory), ppu(memory, line_buffers), dma(memory) {}
         bool tick();
     };
 };

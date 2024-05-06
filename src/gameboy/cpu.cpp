@@ -42,6 +42,7 @@ const GAMEBOY::CpuRegisters& GAMEBOY::Cpu::tick()
     {
         Timer::getInstance().tick(memory);
     }
+    // Exit HALT on button press
     if (instruction_result == InstructionResult::HALT)
     {
         uint8_t irq = memory.read(INTERRUPT_FLAG);

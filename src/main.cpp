@@ -83,9 +83,9 @@ int main(int argc, char** argv)
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Loaded: %s\n", title.c_str());
     auto& serialSupervisor = GAMEBOY::SerialEventSupervisor::getInstance();
     serialSupervisor.subscribe(GAMEBOY::SerialEventType::SERIAL_OUT, new SerialPrinter());
-    auto line_buffer = std::make_shared<std::array<uint8_t, 160>>();
+    GAMEBOY::LINE_BUFFERS line_buffers;
     GAMEBOY::InputHandler input_handler;
-    GAMEBOY::Gameboy gameboy(rom, input_handler, line_buffer);
+    GAMEBOY::Gameboy gameboy(rom, input_handler, line_buffers);
     SDL_Window* win = SDL_CreateWindow(
             "GBEMU",
             SDL_WINDOWPOS_UNDEFINED,
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL Window could not be created, aborting\n");
         return -1;
     }
-    Renderer renderer(line_buffer, win);
+    Renderer renderer(line_buffers, win);
     SDL_Event event;
     uint64_t frame_start;
     int64_t frame_time;

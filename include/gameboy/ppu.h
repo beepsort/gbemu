@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "gameboy/memory.h"
+#include "gameboy/ppu_def.h"
 #include "gameboy/ppu_tile.h"
 #include "gameboy/ppu_sprite.h"
 
@@ -14,7 +15,7 @@ namespace GAMEBOY
         AddressDispatcher& memory;
         PPU_Tilemap tilemap;
         PPU_Spritemap spritemap;
-        std::shared_ptr<std::array<uint8_t, 160>> m_line_buffer;
+        LINE_BUFFERS m_line_buffers;
         // define mode lengths in terms of dots
         // note: extra ppu behaviour can delay mode 3
         // this is a later low priority TODO
@@ -44,7 +45,7 @@ namespace GAMEBOY
         void m_stat_line_update();
         bool transition(m_PPU_STATE new_mode);
     public:
-        PPU(AddressDispatcher& memory, std::shared_ptr<std::array<uint8_t, 160>> line_buffer);
+        PPU(AddressDispatcher& memory, LINE_BUFFERS line_buffers);
         bool tick();
         uint8_t mode_no();
         uint8_t stat();

@@ -1,10 +1,8 @@
 #ifndef __PPU_TILE_H__
 #define __PPU_TILE_H__
 
-#include <stdint.h>
-#include <memory>
-#include <array>
 #include "gameboy/memory.h"
+#include "gameboy/ppu_def.h"
 
 namespace GAMEBOY
 {
@@ -34,8 +32,6 @@ namespace GAMEBOY
         void clear();
         std::shared_ptr<PPU_Tile> get(uint8_t index);
     };
-
-    typedef std::array<uint8_t, 160> LINE_PIXELS;
 
     class PPU_Tilemap
     {

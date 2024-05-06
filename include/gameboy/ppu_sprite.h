@@ -1,11 +1,9 @@
 #ifndef __PPU_SPRITE_H__
 #define __PPU_SPRITE_H__
 
-#include <stdint.h>
-#include <memory>
-#include <array>
 #include <vector>
 #include "gameboy/memory.h"
+#include "gameboy/ppu_def.h"
 
 namespace GAMEBOY
 {
@@ -41,12 +39,10 @@ namespace GAMEBOY
         std::shared_ptr<PPU_Sprite> get(uint8_t index, bool large_mode);
     };
 
-    typedef std::array<uint8_t, 160> LINE_PIXELS;
-
     class PPU_OamEntry
     {
     private:
-        GAMEBOY::AddressDispatcher& memory;
+        AddressDispatcher& memory;
         uint8_t m_x;
         uint8_t m_y;
         uint8_t m_tile_index;
@@ -54,8 +50,8 @@ namespace GAMEBOY
         uint8_t m_attrs;
         bool m_large_mode;
     public:
-        PPU_OamEntry(uint16_t oam_id, GAMEBOY::AddressDispatcher& memory);
-        void render_line(uint8_t line, std::shared_ptr<GAMEBOY::LINE_PIXELS> line_buffer, GAMEBOY::PPU_Spritecache& spritecache);
+        PPU_OamEntry(uint16_t oam_id, AddressDispatcher& memory);
+        void render_line(uint8_t line, LINE_BUFFERS line_buffers, PPU_Spritecache& spritecache);
     };
 
     class PPU_Spritemap
@@ -66,7 +62,7 @@ namespace GAMEBOY
     public:
         PPU_Spritemap(AddressDispatcher& memory)
         : memory(memory), spritecache(memory) {}
-        void render_line(uint8_t line, std::shared_ptr<LINE_PIXELS> line_buffer);
+        void render_line(uint8_t line, LINE_BUFFERS line_buffers);
     };
 };
 

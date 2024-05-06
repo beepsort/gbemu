@@ -1,8 +1,8 @@
 #include "render.h"
 #include <array>
 
-Renderer::Renderer(std::shared_ptr<std::array<uint8_t, 160>> line_buffer, SDL_Window* win)
-: m_line_buffer(line_buffer)
+Renderer::Renderer(GAMEBOY::LINE_BUFFERS& line_buffers, SDL_Window* win)
+: m_line_buffers(line_buffers)
 {
     m_sdl_renderer = SDL_CreateRenderer(
             win,
@@ -25,6 +25,23 @@ Renderer::~Renderer()
     // (alongside the window too, unsure if there will be issues)
 }
 
+inline uint32_t gb2bpp_to_rgba(uint8_t gbpix)
+{
+    switch(gbpix)
+    {
+        case 0:
+            return 0xFFFFFF88;
+        case 1:
+            return 0xB8B8B888;
+        case 2:
+            return 0x68686888;
+        case 3:
+            return 0x00000088;
+        default:
+            return 0xFFFFFF88;
+    }
+}
+
 bool Renderer::add_line()
 {
     SDL_LockTexture(m_sdl_texture, NULL, (void**)&m_screen_buffer, &m_buffer_pitch);
@@ -32,24 +49,11 @@ bool Renderer::add_line()
     // copy line to screen buffer until full
     for (int i=0; i<GB_W; i++)
     {
-        uint32_t pixel;
-        switch((*m_line_buffer)[i])
+        uint32_t pixel = gb2bpp_to_rgba((*m_line_buffers.bg)[i]);
+        auto sprite_pix = (*m_line_buffers.sprite)[i];
+        if (sprite_pix.has_value())
         {
-            case 0:
-                pixel = 0xFFFFFF88;
-                break;
-            case 1:
-                pixel = 0xB8B8B888;
-                break;
-            case 2:
-                pixel = 0x68686888;
-                break;
-            case 3:
-                pixel = 0x00000088;
-                break;
-        }
-        if (i<40) {
-
+            pixel = gb2bpp_to_rgba(sprite_pix.value());
         }
         m_screen_buffer[base_index + i] = pixel;
     }
