@@ -83,6 +83,7 @@ std::shared_ptr<GAMEBOY::PPU_Sprite> GAMEBOY::PPU_Spritecache::get(uint8_t index
     return tile;
 }
 
+inline
 std::optional<uint8_t>
 object_color_id_to_shade(
         GAMEBOY::AddressDispatcher& memory,
@@ -172,7 +173,10 @@ void GAMEBOY::PPU_OamEntry::render_line(uint8_t line, LINE_BUFFERS line_buffers,
 
 void GAMEBOY::PPU_Spritemap::render_line(uint8_t line, GAMEBOY::LINE_BUFFERS line_buffers)
 {
-    spritecache.clear();
+    if (memory.vram_pop_modified())
+    {
+        spritecache.clear();
+    }
     (*line_buffers.sprite).fill({});
     bool obj_enabled = memory.read(IOHandler::PPU_REG_LCDC) & 0x02;
     if (!obj_enabled)

@@ -90,8 +90,8 @@ int main(int argc, char** argv)
             "GBEMU",
             SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
-            160,
-            144,
+            2*160,
+            2*144,
             SDL_WINDOW_SHOWN);
     if (win == nullptr)
     {

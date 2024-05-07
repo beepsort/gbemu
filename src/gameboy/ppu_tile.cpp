@@ -119,7 +119,10 @@ bg_color_id_to_shade(
 
 std::shared_ptr<GAMEBOY::LINE_PIXELS> GAMEBOY::PPU_Tilemap::render_line(GAMEBOY::PPU_Tilemap::MAP_SELECT map, uint8_t scroll_x, uint8_t scroll_y, uint8_t line)
 {
-    tilecache.clear();
+    if (memory.vram_poll_modified())
+    {
+        tilecache.clear();
+    }
     // Visible area is 160x144 pixels out of 256x256 tile map
     const uint8_t SCREEN_SIZE_X = 160;
     const uint8_t SCREEN_SIZE_Y = 144;

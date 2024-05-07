@@ -124,12 +124,9 @@ void GAMEBOY::AddressDispatcher::write(uint16_t addr, uint8_t data, MemoryAccess
     {
         if (dmaLocked && src!=MemoryAccessSource::DMA)
         {
-            return;
-        }
-        if (vramLocked && src!=MemoryAccessSource::PPU)
-        {
             return; // ignore write
         }
+        vramModified = true;
         videoRam[addr - VRAM_LO] = data;
     }
     else if (addr >= CART_RAM_LO && addr <= CART_RAM_HI)
@@ -213,4 +210,19 @@ void GAMEBOY::AddressDispatcher::unlock(GAMEBOY::AddressDispatcher::LOCKABLE tar
         default:
             return;
     }
+}
+
+bool GAMEBOY::AddressDispatcher::vram_poll_modified()
+{
+    return vramModified;
+}
+
+bool GAMEBOY::AddressDispatcher::vram_pop_modified()
+{
+    if (vramModified)
+    {
+        vramModified = false;
+        return true;
+    }
+    return false;
 }

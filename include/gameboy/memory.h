@@ -49,6 +49,7 @@ namespace GAMEBOY
         std::array<uint8_t, 0x2000> workRam = {0};
         std::array<uint8_t, 0xA0> oam = {0};
         std::array<uint8_t, 0x7F> highRam = {0};
+        bool vramModified = false;
         bool vramLocked = false;
         bool oamLocked = false;
         bool dmaLocked = false;
@@ -64,6 +65,8 @@ namespace GAMEBOY
         };
         void lock(LOCKABLE target);
         void unlock(LOCKABLE target);
+        bool vram_poll_modified();
+        bool vram_pop_modified();
     };
 };
 
