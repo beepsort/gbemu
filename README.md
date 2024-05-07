@@ -1,6 +1,14 @@
 # Gameboy Emulator
 
-Emulator written using C++ for learning purposes.
+Emulator written using C++ for fun.
+
+Here it is playing Tetris
+
+![](assets/tetris.png)
+
+As well as a battleships game I made as part of a hackathon
+
+![](assets/battleships.png)
 
 Development is completed using various resources, including:
 - https://gbdev.io/pandocs/
@@ -13,15 +21,28 @@ The project only currently targets Linux, although should be fairly portable to 
 
 Dependencies for the project are `sdl2` as well as `gtest` for the test suite.
 
+### Development
 With the dependencies installed and from the repository root run the following commands to build
 ```
 mkdir build
 cd build
-cmake -S .. -B .
+cmake -S .. -B . -DCMAKE_BUILD_TYPE=Debug
 make
 ```
 
 To run the test suite
 ```
 make test
+```
+### Release
+```
+mkdir build
+cd build
+cmake -S .. -B . -DCMAKE_BUILD_TYPE=Debug
+make
+```
+
+## Usage
+```
+gbemu romfile.gb
 ```
