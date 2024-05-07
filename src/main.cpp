@@ -60,32 +60,7 @@ std::optional<GAMEBOY::InputHandler::BUTTON> map_key(SDL_Keycode key)
 int main(int argc, char** argv)
 {
     SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
-    char* debug_env = std::getenv("DEBUG");
-    if (debug_env != nullptr)
-    {
-        SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
-    }
-    if (argc!=2)
-    {
-        display_help(argv[0]);
-        return 0;
-    }
-    std::optional<ROMDATA> romopt = open_rom(argv[1]);
-    if (!romopt.has_value())
-    {
-        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "ROM file could not be read, aborting\n");
-        return -1;
-    }
-    ROMDATA rom = romopt.value();
-    auto str_begin = rom.cbegin() + GAMEBOY::TITLE_BEGIN;
-    auto str_end = rom.cbegin() + GAMEBOY::TITLE_END;
-    std::string title(str_begin, str_end);
-    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Loaded: %s\n", title.c_str());
-    auto& serialSupervisor = GAMEBOY::SerialEventSupervisor::getInstance();
-    serialSupervisor.subscribe(GAMEBOY::SerialEventType::SERIAL_OUT, new SerialPrinter());
     GAMEBOY::LINE_BUFFERS line_buffers;
-    GAMEBOY::InputHandler input_handler;
-    GAMEBOY::Gameboy gameboy(rom, input_handler, line_buffers);
     SDL_Window* win = SDL_CreateWindow(
             "GBEMU",
             SDL_WINDOWPOS_UNDEFINED,
@@ -100,6 +75,59 @@ int main(int argc, char** argv)
     }
     Renderer renderer(line_buffers, win);
     SDL_Event event;
+    std::optional<ROMDATA> romopt;
+    char* debug_env = std::getenv("DEBUG");
+    if (debug_env != nullptr)
+    {
+        SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
+    }
+    if (argc==2)
+    {
+        romopt = open_rom(argv[1]);
+    }
+    else
+    {
+        bool loop = true;
+        while (loop)
+        {
+            while (SDL_PollEvent(&event))
+            {
+                if (event.type == SDL_QUIT)
+                {
+                    SDL_Quit();
+                    exit(0);
+                }
+                else if (event.type == SDL_DROPFILE)
+                {
+                    auto fname = event.drop.file;
+                    romopt = open_rom(fname);
+                    free(fname);
+                    if (romopt.has_value())
+                    {
+                        loop = false;
+                    }
+                    else
+                    {
+                        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Invalid file", "Could not read rom", win);
+                    }
+                }
+            }
+        }
+    }
+    if (!romopt.has_value())
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "ROM file could not be read, aborting\n");
+        return -1;
+    }
+    ROMDATA rom = romopt.value();
+    auto str_begin = rom.cbegin() + GAMEBOY::TITLE_BEGIN;
+    auto str_end = rom.cbegin() + GAMEBOY::TITLE_END;
+    std::string title(str_begin, str_end);
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,"Loaded: %s\n", title.c_str());
+    auto& serialSupervisor = GAMEBOY::SerialEventSupervisor::getInstance();
+    serialSupervisor.subscribe(GAMEBOY::SerialEventType::SERIAL_OUT, new SerialPrinter());
+    GAMEBOY::InputHandler input_handler;
+    GAMEBOY::Gameboy gameboy(rom, input_handler, line_buffers);
     uint64_t frame_start;
     int64_t frame_time;
     const int64_t min_frame_time = 1000/60;
