@@ -12,10 +12,10 @@ _getSpriteData(
         bool large_sprite)
 {
     const uint16_t base_addr = GAMEBOY::VRAM_LO;
-    const uint8_t byte_count = large_sprite ? 32 : 16;
+    const uint16_t byte_count = large_sprite ? 32 : 16;
     std::vector<uint8_t> sprite_data;
     sprite_data.reserve(byte_count);
-    uint16_t data_start_addr = base_addr + static_cast<uint16_t>(index)*8;
+    uint16_t data_start_addr = base_addr + static_cast<uint16_t>(index)*byte_count;
     for (size_t i=0; i<byte_count; i++)
     {
         uint8_t i_data = memory.read(data_start_addr + i, GAMEBOY::MemoryAccessSource::PPU);
