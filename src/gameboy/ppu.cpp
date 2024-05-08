@@ -54,6 +54,8 @@ bool GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
             throw std::invalid_argument("Non-existent PPU mode supplied");
     }
     m_state = new_mode;
+    m_stat_line_update();
+    memory.write(IOHandler::PPU_REG_STAT, stat(), MemoryAccessSource::PPU);
     return drawn_to_buffer;
 }
 
@@ -83,6 +85,7 @@ bool GAMEBOY::PPU::tick()
                 {
                     transition(m_PPU_STATE::MODE2);
                 }
+                memory.write(IOHandler::PPU_REG_LY, m_dot_y, MemoryAccessSource::PPU);
             }
             break;
         case m_PPU_STATE::MODE1:
@@ -94,6 +97,7 @@ bool GAMEBOY::PPU::tick()
                     m_dot_y = 0;
                     transition(m_PPU_STATE::MODE2);
                 }
+                memory.write(IOHandler::PPU_REG_LY, m_dot_y, MemoryAccessSource::PPU);
             }
             break;
         case m_PPU_STATE::MODE2:
@@ -111,9 +115,6 @@ bool GAMEBOY::PPU::tick()
         default:
             throw std::invalid_argument("Non-existent PPU mode enabled, possible memory corruption");
     }
-    m_stat_line_update();
-    memory.write(IOHandler::PPU_REG_LY, m_dot_y, MemoryAccessSource::PPU);
-    memory.write(IOHandler::PPU_REG_STAT, stat(), MemoryAccessSource::PPU);
     return drawn_to_buffer;
 }
 
