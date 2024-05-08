@@ -26,4 +26,12 @@ add_library(gameboy
 target_include_directories(gameboy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 add_executable(gbemu main.cpp render.cpp)
 target_link_libraries(gbemu gameboy SDL2)
+include(CheckIPOSupported)
+check_ipo_supported(RESULT supported OUTPUT error)
+if( supported )
+    message(STATUS "IPO / LTO enabled")
+    set_property(TARGET gbemu PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+else()
+    message(STATUS "IPO / LTO not supported: <${error}>")
+endif()
 
