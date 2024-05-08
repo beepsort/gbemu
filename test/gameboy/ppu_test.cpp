@@ -6,8 +6,8 @@ TEST(PPU_test, StateMachine) {
     CpuInitHelper helper;
     // set bit 7 to enable PPU
     helper.addressDispatcher.write(GAMEBOY::IOHandler::PPU_REG_LCDC, 0x80);
-    GAMEBOY::LINE_BUFFERS lbs;
-    GAMEBOY::PPU ppu(helper.addressDispatcher, lbs);
+    auto lb = std::make_shared<GAMEBOY::LINE_PIXELS>();
+    GAMEBOY::PPU ppu(helper.addressDispatcher, lb);
     for (int k=0; k<10; k++)
     {
         for (int i=0; i<144; i++)

@@ -37,24 +37,15 @@ TEST(PPU_Spritemap_test, SingleLine) {
     helper.addressDispatcher.lock(GAMEBOY::AddressDispatcher::LOCKABLE::OAM);
     helper.addressDispatcher.lock(GAMEBOY::AddressDispatcher::LOCKABLE::VRAM);
     GAMEBOY::PPU_Spritemap spritemap(helper.addressDispatcher);
-    GAMEBOY::LINE_BUFFERS line_buffers;
-    spritemap.render_line(0, line_buffers);
-    auto line = line_buffers.sprite;
+    auto line_buffer = std::make_shared<GAMEBOY::LINE_PIXELS>();
+    spritemap.render_line(0, line_buffer);
     for (size_t i=0; i<8; i++)
     {
-        if (i%4==0)
-        {
-            EXPECT_FALSE((*line)[i].has_value());
-        }
-        else
-        {
-            EXPECT_TRUE((*line)[i].has_value());
-            EXPECT_EQ((*line)[i], i%4);
-        }
+        EXPECT_EQ((*line_buffer)[i], i%4);
     }
-    for (size_t i=8; i<line_buffers.sprite->size(); i++)
+    for (size_t i=8; i<line_buffer->size(); i++)
     {
-        EXPECT_FALSE((*line)[i].has_value());
+        EXPECT_EQ((*line_buffer)[i], 0);
     }
 }
 
@@ -157,17 +148,18 @@ TEST(PPU_OamEntry_test, ArrowSprite) {
     };
     for (uint8_t line=0; line<8; line++)
     {
-        GAMEBOY::LINE_BUFFERS line_buffers;
-        oam0.render_line(line, line_buffers, sprite_cache);
+        GAMEBOY::LINE_PIXELS bg;
+        auto line_buffer = std::make_shared<GAMEBOY::LINE_PIXELS>();
+        oam0.render_line(line, bg, line_buffer, sprite_cache);
         for (size_t x=0; x<8; x++)
         {
             if (sprite_render_bytes[line*8+x]!=0)
             {
-                EXPECT_EQ((*line_buffers.sprite)[x], sprite_render_bytes[line*8+x]);
+                EXPECT_EQ((*line_buffer)[x], sprite_render_bytes[line*8+x]);
             }
             else
             {
-                EXPECT_FALSE((*line_buffers.sprite)[x].has_value());
+                EXPECT_EQ((*line_buffer)[x], 0);
             }
         }
     }
@@ -205,25 +197,17 @@ TEST(PPU_test, SpriteIntegration) {
     helper.addressDispatcher.write(GAMEBOY::OAM_LO+2, 0);
     // oam attrs
     helper.addressDispatcher.write(GAMEBOY::OAM_LO+3, 0);
-    GAMEBOY::LINE_BUFFERS line_buffers;
-    GAMEBOY::PPU ppu(helper.addressDispatcher, line_buffers);
+    auto line_buffer = std::make_shared<GAMEBOY::LINE_PIXELS>();
+    GAMEBOY::PPU ppu(helper.addressDispatcher, line_buffer);
     // run until outputs first line
     while (!ppu.tick()) {}
     for (size_t i=0; i<8; i++)
     {
-        if (i%4==0)
-        {
-            EXPECT_FALSE((*line_buffers.sprite)[i].has_value());
-        }
-        else
-        {
-            EXPECT_TRUE((*line_buffers.sprite)[i].has_value());
-            EXPECT_EQ((*line_buffers.sprite)[i], i%4);
-        }
+        EXPECT_EQ((*line_buffer)[i], i%4);
     }
-    for (size_t i=8; i<line_buffers.sprite->size(); i++)
+    for (size_t i=8; i<line_buffer->size(); i++)
     {
-        EXPECT_FALSE((*line_buffers.sprite)[i].has_value());
+        EXPECT_EQ((*line_buffer)[i], 0);
     }
 }
 

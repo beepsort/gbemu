@@ -60,7 +60,7 @@ std::optional<GAMEBOY::InputHandler::BUTTON> map_key(SDL_Keycode key)
 int main(int argc, char** argv)
 {
     SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
-    GAMEBOY::LINE_BUFFERS line_buffers;
+    auto line_buffer = std::make_shared<GAMEBOY::LINE_PIXELS>();
     SDL_Window* win = SDL_CreateWindow(
             "GBEMU",
             SDL_WINDOWPOS_UNDEFINED,
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL Window could not be created, aborting\n");
         return -1;
     }
-    Renderer renderer(line_buffers, win);
+    Renderer renderer(line_buffer, win);
     SDL_Event event;
     std::optional<ROMDATA> romopt;
     char* debug_env = std::getenv("DEBUG");
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
     auto& serialSupervisor = GAMEBOY::SerialEventSupervisor::getInstance();
     serialSupervisor.subscribe(GAMEBOY::SerialEventType::SERIAL_OUT, new SerialPrinter());
     GAMEBOY::InputHandler input_handler;
-    GAMEBOY::Gameboy gameboy(rom, input_handler, line_buffers);
+    GAMEBOY::Gameboy gameboy(rom, input_handler, line_buffer);
     uint64_t frame_start;
     int64_t frame_time;
     const int64_t min_frame_time = 1000/60;

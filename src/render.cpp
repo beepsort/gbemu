@@ -1,8 +1,8 @@
 #include "render.h"
 #include <array>
 
-Renderer::Renderer(GAMEBOY::LINE_BUFFERS& line_buffers, SDL_Window* win)
-: m_line_buffers(line_buffers)
+Renderer::Renderer(std::shared_ptr<GAMEBOY::LINE_PIXELS> line_buffer, SDL_Window* win)
+: m_line_buffer(line_buffer)
 {
     m_sdl_renderer = SDL_CreateRenderer(
             win,
@@ -49,12 +49,7 @@ bool Renderer::add_line()
     // copy line to screen buffer until full
     for (int i=0; i<GB_W; i++)
     {
-        uint32_t pixel = gb2bpp_to_rgba((*m_line_buffers.bg)[i]);
-        auto sprite_pix = (*m_line_buffers.sprite)[i];
-        if (sprite_pix.has_value())
-        {
-            pixel = gb2bpp_to_rgba(sprite_pix.value());
-        }
+        uint32_t pixel = gb2bpp_to_rgba((*m_line_buffer)[i]);
         m_screen_buffer[base_index + i] = pixel;
     }
     SDL_UnlockTexture(m_sdl_texture);

@@ -51,7 +51,7 @@ namespace GAMEBOY
         bool m_large_mode;
     public:
         PPU_OamEntry(uint16_t oam_id, AddressDispatcher& memory);
-        void render_line(uint8_t line, LINE_BUFFERS line_buffers, PPU_Spritecache& spritecache);
+        void render_line(uint8_t line, LINE_PIXELS& bg, std::shared_ptr<LINE_PIXELS> line_buffer, PPU_Spritecache& spritecache);
     };
 
     class PPU_Spritemap
@@ -62,7 +62,7 @@ namespace GAMEBOY
     public:
         PPU_Spritemap(AddressDispatcher& memory)
         : memory(memory), spritecache(memory) {}
-        void render_line(uint8_t line, LINE_BUFFERS line_buffers);
+        void render_line(uint8_t line, std::shared_ptr<GAMEBOY::LINE_PIXELS> line_buffer);
     };
 };
 

@@ -2,8 +2,8 @@
 #include "gameboy/cpu_interrupt.h"
 #include <stdexcept>
 
-GAMEBOY::PPU::PPU(AddressDispatcher& memory, GAMEBOY::LINE_BUFFERS line_buffers)
-: memory(memory), tilemap(memory), spritemap(memory), m_line_buffers(line_buffers)
+GAMEBOY::PPU::PPU(AddressDispatcher& memory, std::shared_ptr<GAMEBOY::LINE_PIXELS> line_buffer)
+: memory(memory), tilemap(memory), spritemap(memory), m_line_buffer(line_buffer)
 {
     transition(m_PPU_STATE::MODE2);
 }
@@ -43,10 +43,10 @@ bool GAMEBOY::PPU::transition(m_PPU_STATE new_mode)
             // bit 3 low = MAP0, high = MAP1
             auto map = lcdc & 0x08 ? PPU_Tilemap::MAP_SELECT::MAP1 : PPU_Tilemap::MAP_SELECT::MAP0;
             auto bg = tilemap.render_line(map, scx, scy, m_dot_y);
-            *m_line_buffers.bg = *bg;
+            *m_line_buffer = *bg;
             // window
             // sprites
-            spritemap.render_line(m_dot_y, m_line_buffers);
+            spritemap.render_line(m_dot_y, m_line_buffer);
             drawn_to_buffer = true;
             break;
         }
