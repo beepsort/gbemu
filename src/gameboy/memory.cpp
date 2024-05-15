@@ -27,7 +27,7 @@ GAMEBOY::CartMapper* GAMEBOY::CartMapper::create_mapper(ROMDATA& rom)
     case 0x10:
         cartRam = true;
         [[fallthrough]];
-    case 0x7F:
+    case 0x0F:
         cartTimer = true;
         cartBattery = true;
         [[fallthrough]];
