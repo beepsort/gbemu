@@ -13,11 +13,10 @@ namespace GAMEBOY
     class MapperStatic : public CartMapper
     {
     private:
-        std::array<uint8_t, CART_ROM_HI+1> rom = {};
-        std::array<uint8_t, CART_RAM_HI-CART_RAM_LO+1> ram = {};
+        std::array<uint8_t, 0x8000> rom = {};
+        std::array<uint8_t, 0x2000> ram = {};
     public:
         MapperStatic(ROMDATA& rom);
-        bool is_mapped(uint16_t addr);
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
     };

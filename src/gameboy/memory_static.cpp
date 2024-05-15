@@ -17,13 +17,6 @@ GAMEBOY::MapperStatic::MapperStatic(ROMDATA& rom)
     }
 }
 
-bool GAMEBOY::MapperStatic::is_mapped(uint16_t addr)
-{
-    bool in_rom = addr >= CART_ROM_LO && addr <= CART_ROM_HI;
-    bool in_ram = addr >= CART_RAM_LO && addr <= CART_RAM_HI;
-    return in_rom || in_ram;
-}
-
 uint8_t GAMEBOY::MapperStatic::read(uint16_t addr)
 {
     if (addr >= CART_ROM_LO && addr <= CART_ROM_HI)

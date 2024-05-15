@@ -57,6 +57,21 @@ GAMEBOY::MapperMbc3::MapperMbc3(ROMDATA& rom, bool cartRam, [[maybe_unused]] boo
     }
     m_rambanks = std::vector<std::array<uint8_t, 0x2000>>(ram_bank_count);
     m_rombanks = std::vector<std::array<uint8_t, 0x4000>>(rom_bank_count);
+    // init rom banks
+    auto src_it = rom.cbegin();
+    auto src_end = rom.cend();
+    for (uint8_t i=0; i<m_rombanks.size(); i++)
+    {
+        auto& rom_bank = m_rombanks[i];
+        auto dest_it = rom_bank.begin();
+        auto dest_end = rom_bank.end();
+        while (src_it != src_end && dest_it != dest_end) // while neither end reached
+        {
+            *dest_it = *src_it;
+            src_it++;
+            dest_it++;
+        }
+    }
 }
 
 uint8_t GAMEBOY::MapperMbc3::read(uint16_t addr)
