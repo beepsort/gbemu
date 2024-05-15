@@ -1,5 +1,6 @@
 #include "gameboy/cpu.h"
 #include "gameboy/cpu_instruction_decode.h"
+#include "gameboy/memory_io.h"
 
 /**
  * @brief Advance 1 M-Cycle
@@ -42,11 +43,20 @@ const GAMEBOY::CpuRegisters& GAMEBOY::Cpu::tick()
     {
         Timer::getInstance().tick(memory);
     }
-    // Exit HALT on button press
+    // Exit HALT on interrupt
     if (instruction_result == InstructionResult::HALT)
     {
-        uint8_t irq = memory.read(INTERRUPT_FLAG);
-        if (irq & 0x10)
+        if (interruptHandler.isQueued(memory))
+        {
+            delete currentInstruction;
+            currentInstruction = nullptr;
+        }
+    }
+    // Exit STOP on button press
+    if (instruction_result == InstructionResult::STOP)
+    {
+        uint8_t joypad = memory.read(IOHandler::INPUT_JOYP);
+        if ((joypad & 0xF) == 0x0)
         {
             delete currentInstruction;
             currentInstruction = nullptr;

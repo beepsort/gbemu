@@ -3,33 +3,12 @@
 
 GAMEBOY::InstructionResult GAMEBOY::HALT::tick()
 {
-    uint8_t IE = memory.read(INTERRUPT_ENABLE);
-    uint8_t IF = memory.read(INTERRUPT_FLAG);
-    bool interrupt_pending = IE & IF;
-    if (registers.IME)
+    if (step == 0)
     {
         ++*registers.PC;
-        return InstructionResult::HALT;
+        step++;
     }
-    else if (interrupt_pending)
-    {
-        if (step == 0)
-        {
-            // Waste an M-cycle. This is a replication of a hardware bug
-            return InstructionResult::RUNNING;
-        }
-        else if (step == 1)
-        {
-            // We have either waited an extra M-cycle with an already pending interrupt
-            // or we have waited until a new interrupt arrived
-            // Interrupt is not handled as the Interrupt Master Enable is not set
-            ++*registers.PC;
-            return InstructionResult::FINISHED;
-        }
-        step = 1;
-    }
-    // Wait until an interrupt is available to be handled
-    return InstructionResult::RUNNING;
+    return InstructionResult::HALT;
 }
 
 GAMEBOY::InstructionResult GAMEBOY::STOP::tick()

@@ -3,6 +3,15 @@
 #include "gameboy/serial.h"
 #include "gameboy/timer.h"
 
+GAMEBOY::IOHandler::IOHandler(InputHandler& input_handler)
+: m_input_handler(input_handler)
+{
+    ioRam[0x0F] = 0xE1;
+    ioRam[0x40] = 0x91;
+    ioRam[0x41] = 0x85;
+    ioRam[0x47] = 0xFC;
+}
+
 uint8_t GAMEBOY::IOHandler::read(uint16_t addr, MemoryAccessSource src)
 {
     switch (addr)

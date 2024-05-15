@@ -156,8 +156,7 @@ namespace GAMEBOY
          */
         static const uint16_t PPU_REG_OBP0 = 0xFF48;
         static const uint16_t PPU_REG_OBP1 = 0xFF49;
-        IOHandler(InputHandler& input_handler)
-        : m_input_handler(input_handler) {}
+        IOHandler(InputHandler& input_handler);
         uint8_t read(uint16_t addr, MemoryAccessSource src);
         void write(uint16_t addr, uint8_t data, MemoryAccessSource src);
     };
